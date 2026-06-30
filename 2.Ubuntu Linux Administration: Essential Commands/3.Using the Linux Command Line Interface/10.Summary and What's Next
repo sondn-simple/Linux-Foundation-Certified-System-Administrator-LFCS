@@ -1,0 +1,48 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                   SUMMARY AND WHAT’S NEXT                                    ║
+║               (Tóm tắt và Tiếp theo là gì)                                   ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : Summary and What's Next
+  Mục tiêu   : Tóm tắt module và hướng dẫn tiếp theo
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • Tóm tắt Kiến thức
+      • Shortcuts: Ctrl+A, Ctrl+E, !!, ESC+., cd -, Ctrl+R
+      • mkdir, touch, redirection, pipe, tee
+      • cp, mv, rm
+      • Aliases
+      • Nano, Vim, Sed
+
+  • Lời khuyên
+      • Practice thường xuyên trên command line
+      • Sử dụng shortcuts và commands để quen tay
+
+  • Tiếp theo
+      • Managing Linux permissions
+      • chmod, umask, ls -l, sticky bit
+
+  • Chúc mừng
+      • Bạn đã trở thành guru command line
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Module đã trang bị kỹ năng command line cơ bản và shortcuts. 
+
+  Tiếp tục practice để chuẩn bị cho LFCS exam.
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Chúc bạn thành công.
+────────────────────────────────────────────────────────────────
