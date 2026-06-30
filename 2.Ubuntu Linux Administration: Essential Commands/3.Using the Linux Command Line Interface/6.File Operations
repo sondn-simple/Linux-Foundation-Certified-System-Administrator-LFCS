@@ -1,0 +1,52 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                        FILE OPERATIONS                                       ║
+║               (Thao tác với File)                                            ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : File Operations (cp, mv, rm)
+  Mục tiêu   : Thao tác copy, move, rename, delete
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • cp (copy)
+      • cp source destination
+      • Cần read source + write target
+      • cp -i (interactive), cp --backup=numbered
+
+  • mv (move/rename)
+      • mv old new : Rename
+      • mv source dir : Move
+      • Cần read/write trên source & target
+
+  • rm (remove)
+      • rm file : Xóa file
+      • rm -rf dir : Xóa recursive directory
+      • Không có trash bin – xóa vĩnh viễn
+
+  • Minh họa
+      • Copy hosts file
+      • Backup với --backup
+      • Rename file1 → stdout
+      • Move file
+      • Xóa recursive directory
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  cp, mv, rm là các lệnh cơ bản để thao tác file. 
+
+  Hiểu quyền read/write và options giúp tránh mất dữ liệu không mong muốn.
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Tiếp theo chúng ta sẽ học Creating Shortcuts Using Aliases.
+────────────────────────────────────────────────────────────────

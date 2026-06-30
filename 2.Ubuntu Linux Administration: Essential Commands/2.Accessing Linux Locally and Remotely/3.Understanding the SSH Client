@@ -1,0 +1,52 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                  UNDERSTANDING THE SSH CLIENT                                ║
+║               (Hiểu về SSH Client)                                           ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : Understanding the SSH Client
+  Mục tiêu   : Access via SSH, key-based authentication
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • SSH là gì?
+      • Secure Shell: Command line access an toàn
+      • Quan trọng cho cloud servers
+
+  • Kết nối cơ bản
+      • ssh user@IP or hostname
+      • vagrant ssh (từ Vagrant)
+      • First time: Accept public key, enter password
+
+  • Key-based Authentication
+      • ssh-keygen : Tạo key pair (private + public)
+      • ssh-copy-id : Copy public key đến remote
+      • ssh-agent & ssh-add : Cache passphrase
+
+  • Minh họa
+      • Kết nối password-based
+      • Generate keys, copy, login không password
+
+  • Lợi ích
+      • An toàn hơn password
+      • Tiện lợi khi cache passphrase
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  SSH Client là công cụ quan trọng để quản lý remote Linux systems. 
+
+  Key-based authentication mang lại security và convenience.
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Tiếp theo chúng ta sẽ học Understanding Serverless Computing.
+────────────────────────────────────────────────────────────────Simple SSH Connections

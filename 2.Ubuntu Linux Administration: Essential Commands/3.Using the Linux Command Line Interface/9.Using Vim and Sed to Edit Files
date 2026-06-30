@@ -1,0 +1,52 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║               USING VIM AND SED TO EDIT FILES                                ║
+║               (Sử dụng Vim và Sed để Edit Files)                             ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : Using Vim and Sed
+  Mục tiêu   : Edit file với powerful tools
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • Vim
+      • vim filename
+      • Modes: Normal, Insert (i), Command (:)
+      • :x : Save & exit
+      • :q! : Quit without save
+      • +line or +/text : Mở tại line hoặc search
+
+  • Sed (Stream Editor)
+      • sed -i : Edit in-place
+      • $d : Delete last line
+      • 1i : Insert at line 1
+      • s/old/new : Substitute
+
+  • Minh họa
+      • vim +$ hosts
+      • sed -i '$d' hosts
+      • sed -i '1i This is hosts file' hosts
+      • sed -i 's/google/googledns/' hosts
+
+  • Vim Tutor
+      • vimtutor : Học vim cơ bản
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Vim và Sed là công cụ mạnh mẽ cho edit file, đặc biệt trong script và automation. 
+
+  Học vimtutor để nắm vững Vim.
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Tiếp theo chúng ta sẽ học Conclusion to System Administration Fundamentals.
+────────────────────────────────────────────────────────────────

@@ -1,0 +1,50 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                   IMPRESSING USING SHORTCUTS                                 ║
+║               (Ấn tượng với Shortcuts)                                       ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : Impressing Using Shortcuts
+  Mục tiêu   : Thực hành command line shortcuts
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • Chuẩn bị Lab
+      • vagrant up
+      • vagrant ssh ubuntu1
+
+  • Shortcuts Thực hành
+      • Up arrow: Repeat previous command
+      • Ctrl + L: Clear screen
+      • ls -la: Hidden files
+      • Ctrl + A / Ctrl + E: Move to start/end of line
+      • !! : Repeat last command
+      • sudo !! : Add sudo to previous command
+      • cd - : Toggle directories
+      • ESC + . : Repeat last argument
+      • Ctrl + R : Reverse search history
+
+  • Minh họa
+      • SSH với IP
+      • Create directory, navigate
+      • Cache passphrase với ssh-agent
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Shortcuts giúp làm việc command line nhanh chóng và hiệu quả. 
+
+  Thực hành thường xuyên để đưa vào muscle memory.
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Tiếp theo chúng ta sẽ học Creating Directories.
+────────────────────────────────────────────────────────────────

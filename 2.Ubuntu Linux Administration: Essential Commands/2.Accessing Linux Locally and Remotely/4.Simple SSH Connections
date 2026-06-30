@@ -1,0 +1,51 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                   SIMPLE SSH CONNECTIONS                                     ║
+║               (Kết nối SSH Cơ bản)                                           ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : Simple SSH Connections
+  Mục tiêu   : Kết nối SSH giữa Ubuntu1 và Ubuntu2
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • SSH Command
+      • ssh user@IP or hostname
+      • First time: Accept public key (type "yes")
+      • Password authentication (default vagrant/vagrant)
+
+  • Known Hosts
+      • ~/.ssh/known_hosts : Lưu public key remote
+      • Trust relationship
+
+  • Authorized Keys
+      • ~/.ssh/authorized_keys : Public key cho login
+
+  • Minh họa
+      • ssh vagrant@192.168.56.102
+      • ls -a ~/.ssh
+      • cat known_hosts, authorized_keys
+
+  • Inconvenience of Password
+      • Insecure & repetitive
+      • Giải pháp: Key-based authentication
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  SSH cung cấp command line access an toàn. 
+
+  Key-based authentication sẽ được học chi tiết tiếp theo để tiện lợi hơn.
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Tiếp theo chúng ta sẽ học SSH Key-based Authentication.
+────────────────────────────────────────────────────────────────

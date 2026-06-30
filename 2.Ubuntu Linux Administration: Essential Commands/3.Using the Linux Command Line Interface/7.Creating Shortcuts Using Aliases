@@ -1,0 +1,47 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║              CREATING SHORTCUTS USING ALIASES                                ║
+║               (Tạo Shortcuts với Aliases)                                    ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : Creating Shortcuts Using Aliases
+  Mục tiêu   : Tạo và quản lý aliases
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • Lệnh Alias
+      • alias : Hiển thị hoặc tạo alias
+      • unalias : Xóa alias
+      • \command : Chạy lệnh mà không dùng alias
+
+  • Minh họa
+      • ls aliased to ls --color=auto
+      • type ls : Kiểm tra alias
+      • alias cp='cp -i' (interactive)
+      • alias safecp='cp --backup'
+      • unalias cp
+
+  • Best Practices
+      • Thêm alias vào login script (.bashrc)
+      • Tạo alias cho commands thường dùng
+      • Sử dụng --backup để an toàn
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Aliases giúp rút ngắn lệnh, thêm options mặc định và tăng productivity. 
+
+  Hiểu alias, unalias và \ là kỹ năng command line cơ bản.
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Tiếp theo chúng ta sẽ học Redirecting Output.
+────────────────────────────────────────────────────────────────

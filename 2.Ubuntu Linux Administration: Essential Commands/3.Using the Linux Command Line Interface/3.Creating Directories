@@ -1,0 +1,47 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                      CREATING DIRECTORIES                                    ║
+║               (Tạo Thư mục)                                                  ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : Creating Directories
+  Mục tiêu   : Sử dụng mkdir với options nâng cao
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • Lệnh mkdir cơ bản
+      • mkdir dir1 : Tạo thư mục trong current dir
+      • mkdir ~/dir1 : Chỉ định path
+
+  • Tạo Parent Directories
+      • mkdir -p dir2/dir3 : Tạo thư mục cha nếu chưa tồn tại
+
+  • Brace Expansion
+      • mkdir -p ubuntu/{14.04,16.04,18.04,20.04,22.04}/{current,gold}
+
+  • Xem cấu trúc
+      • ls -R
+      • tree (cài sudo apt install tree)
+
+  • Minh họa
+      • Tạo cấu trúc phức tạp cho Ubuntu LTS versions
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  mkdir với -p và brace expansion giúp tạo thư mục phức tạp nhanh chóng. 
+
+  Tree command rất hữu ích để xem cấu trúc thư mục.
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Tiếp theo chúng ta sẽ học Creating Files Using Touch.
+────────────────────────────────────────────────────────────────

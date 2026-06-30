@@ -1,0 +1,55 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                     REDIRECTING OUTPUT                                       ║
+║               (Chuyển hướng Output)                                          ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : Redirecting Output
+  Mục tiêu   : >, >>, |, tee
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • Redirect Standard Output
+      • > : Tạo/overwrite file
+      • >> : Append
+
+  • Redirect Standard Error
+      • 2> : Redirect error
+
+  • Combined
+      • &> : Both stdout & stderr
+
+  • Pipe (|)
+      • | : Chuyển output của lệnh này làm input của lệnh khác
+
+  • Tee Command
+      • tee : Output đến screen và file
+      • tee -a : Append
+      • sudo tee : Elevate privileges
+
+  • Minh họa
+      • Clear log: > file
+      • ls > file1
+      • ls nonexist 2> error.txt
+      • ls nonexist &> combined.txt
+      • echo >> /etc/hosts với sudo tee -a
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Redirection (> >> | tee) giúp xử lý output, error và log hiệu quả. 
+
+  Tee kết hợp với sudo rất hữu ích cho privileged operations.
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Tiếp theo chúng ta sẽ học Setting Requirements and Performing Functional Analysis.
+────────────────────────────────────────────────────────────────

@@ -1,0 +1,49 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                   CREATING FILES USING TOUCH                                 ║
+║               (Tạo File bằng Touch)                                          ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : Creating Files Using Touch
+  Mục tiêu   : Sử dụng touch command
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • Lệnh touch
+      • touch file1 : Tạo file rỗng nếu chưa tồn tại
+      • Cập nhật timestamp nếu file đã tồn tại
+
+  • Kiểm tra File
+      • ls -l : Metadata (size, timestamp)
+      • file file1 : Loại file (empty file)
+      • cat file1 : Xem nội dung (rỗng)
+
+  • Minh họa
+      • Tạo file1
+      • Kiểm tra timestamp (ls -l)
+      • Cập nhật timestamp bằng touch
+      • Sử dụng !l để repeat command
+
+  • Key Takeaways
+      • Touch tạo hoặc update timestamp
+      • Kết hợp với ls, file, cat để kiểm tra
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Touch là lệnh đơn giản nhưng hữu ích để tạo file rỗng và quản lý timestamp. 
+
+  Kết hợp với các lệnh khác để quản lý file hiệu quả.
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Tiếp theo chúng ta sẽ học Redirecting Output.
+────────────────────────────────────────────────────────────────

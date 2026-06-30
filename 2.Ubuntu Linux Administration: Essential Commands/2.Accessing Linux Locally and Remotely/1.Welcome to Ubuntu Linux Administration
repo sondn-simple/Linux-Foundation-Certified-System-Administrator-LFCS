@@ -1,0 +1,51 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                 WELCOME TO UBUNTU LINUX ADMINISTRATION                       ║
+║               (Chào mừng đến Ubuntu Linux Administration)                    ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN KHÓA HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : Ubuntu Linux Administration: Essential Commands
+  Mục tiêu   : Giới thiệu khóa học và lab environment
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • Giới thiệu Khóa học
+      • Tập trung command line access (module này)
+      • Sau đó: Shortcuts, file permissions, search, archiving, elevate privileges
+
+  • Chủ đề Chính
+      • File permissions
+      • Search files & content
+      • Archiving (tar, gzip, bzip)
+      • Elevate privileges (sudo, su)
+      • Access: Local console, SSH (key-based), TightVNC (graphical)
+
+  • Lab Systems
+      • Ubuntu 20.04 (Ubuntu1, Ubuntu2)
+      • Quản lý bằng Vagrant + VirtualBox
+      • Free, open-source, hỗ trợ Windows/macOS/Linux
+      • Vagrantfile từ Git repository
+
+  • Lý do chọn Ubuntu 20.04
+      • Phù hợp LFCS exam
+      • Track Red Hat cho CentOS
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Khóa học giới thiệu cách access Linux locally/remotely và lab environment. 
+
+  Chuẩn bị tốt để học các lệnh essential Ubuntu Linux.
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Tiếp theo chúng ta sẽ học Working with the Lab Systems.
+────────────────────────────────────────────────────────────────

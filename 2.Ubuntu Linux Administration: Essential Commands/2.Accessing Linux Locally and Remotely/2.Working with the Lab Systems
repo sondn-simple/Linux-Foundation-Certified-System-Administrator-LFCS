@@ -1,0 +1,56 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    WORKING WITH THE LAB SYSTEMS                              ║
+║               (Làm việc với Lab Systems)                                     ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : Working with Lab Systems
+  Mục tiêu   : Thiết lập Vagrant + VirtualBox
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • Yêu cầu
+      • Vagrant & VirtualBox (free, multi-platform)
+      • Tạo working directory (vagrant/lfcs)
+
+  • Clone Repository
+      • git clone https://github.com/theurbanpenguin/lfcs
+
+  • Vagrantfile
+      • ubuntu/focal64
+      • 2GB RAM, 2 vCPU
+      • Hostname, IP: ubuntu1 (192.168.56.101), ubuntu2 (.102)
+      • Provision với Ansible (ubuntu.yml)
+
+  • Thực hiện
+      • vagrant up : Khởi động VMs
+      • vagrant ssh ubuntu1
+      • Kiểm tra: nproc, free -h, ip addr, ping
+
+  • Quản lý VMs
+      • vagrant status
+      • vagrant halt : Tắt
+      • vagrant destroy : Xóa
+
+  • Minh họa
+      • SSH, ping, config verification
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Lab systems với Vagrant + VirtualBox giúp thực hành dễ dàng trên Ubuntu 20.04. 
+
+  Đây là nền tảng để học các module sau.
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Tiếp theo chúng ta sẽ học Understanding the SSH Client.
+────────────────────────────────────────────────────────────────

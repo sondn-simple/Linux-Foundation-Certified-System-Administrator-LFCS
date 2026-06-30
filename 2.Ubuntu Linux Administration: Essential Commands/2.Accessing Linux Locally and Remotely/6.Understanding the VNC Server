@@ -1,0 +1,52 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                   UNDERSTANDING THE VNC SERVER                               ║
+║               (Hiểu về VNC Server)                                           ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : Understanding the VNC Server
+  Mục tiêu   : Remote graphical access
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • VNC là gì?
+      • Remote graphical access
+      • Sử dụng TightVNC Server
+
+  • Cài đặt
+      • sudo apt install xfce4 xfce4-goodies
+      • sudo apt install tightvncserver
+      • vncserver (set password)
+      • vncserver -kill :1
+
+  • Config Startup
+      • Edit ~/.vnc/xstartup (nano or vim)
+      • Start xfce4 desktop
+
+  • Kết nối
+      • VNC Viewer (RealVNC, TightVNC)
+      • IP:192.168.56.102:1
+
+  • Lưu ý
+      • Không encrypted mặc định (có thể config sau)
+      • Thực hành trên lab
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  VNC cung cấp graphical access remote cho Linux. 
+
+  Kết hợp với SSH để quản lý hệ thống linh hoạt.
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Tiếp theo chúng ta sẽ học Installing VNC Server.
+────────────────────────────────────────────────────────────────

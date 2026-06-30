@@ -1,0 +1,48 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                   SUMMARY AND WHAT’S NEXT                                    ║
+║               (Tóm tắt và Tiếp theo)                                         ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : Summary and What’s Next
+  Mục tiêu   : Tóm tắt module và hướng dẫn tiếp theo
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • Tắt Lab Systems
+      • vagrant halt : Tắt VMs
+      • vagrant up : Khởi động lại
+      • vagrant destroy : Xóa VMs
+
+  • Tóm tắt Module
+      • Lab setup với Vagrant + VirtualBox
+      • SSH connections (password & key-based)
+      • Graphical access với TightVNC
+
+  • Kiến thức đã học
+      • ssh-keygen, ssh-copy-id, ssh-agent
+      • VNC Server setup & viewer
+
+  • Tiếp theo
+      • Linux command-line interface
+      • Shortcuts để trở thành command-line guru
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Module Essential Commands đã giới thiệu lab, SSH và VNC. 
+
+  Tiếp tục hành trình với command line shortcuts!
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Chúc bạn thành công với khóa học.
+────────────────────────────────────────────────────────────────

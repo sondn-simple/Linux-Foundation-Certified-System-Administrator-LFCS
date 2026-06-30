@@ -1,0 +1,54 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                     INSTALLING VNC SERVER                                    ║
+║               (Cài đặt VNC Server)                                           ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : Installing VNC Server
+  Mục tiêu   : Cài đặt graphical environment và TightVNC
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • Chuẩn bị trên Ubuntu2
+      • ssh từ Ubuntu1
+      • sudo apt install xfce4 xfce4-goodies
+      • sudo apt install tightvncserver
+
+  • Cài đặt VNC Server
+      • vncserver (set password)
+      • vncserver -kill :1
+
+  • Config xstartup
+      • nano ~/.vnc/xstartup
+      • Start xfce4 desktop
+
+  • Kết nối từ Host
+      • VNC Viewer: IP:display (:1)
+      • Nhập password
+
+  • Graphical Desktop
+      • Terminal Emulator, logout
+
+  • Lưu ý
+      • Cài graphical trước VNC
+      • Encryption có thể config sau
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  VNC Server cho phép remote graphical access. 
+
+  Kết hợp SSH + VNC cung cấp đầy đủ công cụ quản lý Ubuntu.
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Tiếp theo chúng ta sẽ học Summary and What's Next.
+────────────────────────────────────────────────────────────────

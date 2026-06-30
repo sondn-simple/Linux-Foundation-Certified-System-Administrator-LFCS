@@ -1,0 +1,51 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                 WORKING AT THE LINUX COMMAND LINE                            ║
+║               (Làm việc tại Linux Command Line)                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : Using the Linux Command Line Interface
+  Mục tiêu   : Shortcuts và file operations
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • Command Line Shortcuts
+      • Ctrl + a : Move to beginning of line
+      • Ctrl + e : Move to end of line
+      • !! : Repeat last command
+      • ESC + . : Repeat last argument
+      • cd - : Toggle previous directory
+      • Ctrl + r : Search command history
+
+  • File Operations
+      • mkdir, cd, ls
+      • cp, mv (move/rename), rm
+      • Aliases (alias, unalias)
+
+  • Editing Files
+      • nano, vim
+      • sed (stream editor)
+
+  • Other
+      • diff (compare files)
+      • Redirection, piping
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Master command line shortcuts giúp làm việc nhanh, hiệu quả trên Linux. 
+
+  Thực hành để đưa vào muscle memory.
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Tiếp theo chúng ta sẽ học Impressing Using Shortcuts.
+────────────────────────────────────────────────────────────────

@@ -1,0 +1,50 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                     USING NANO AND DIFF                                      ║
+║               (Sử dụng Nano và Diff)                                         ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : Using Nano and Diff
+  Mục tiêu   : So sánh file và edit với nano
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • Diff Command
+      • diff file1 file2 : So sánh sự khác biệt
+      • Hiển thị lines khác nhau
+
+  • Nano Text Editor
+      • nano filename : Mở file để edit
+      • Ctrl + X : Exit
+      • Y/N : Save changes
+
+  • Minh họa
+      • Copy /etc/hosts
+      • Edit hosts với nano
+      • Thêm entry (1.0.0.1 cf)
+      • So sánh với diff
+
+  • Key Takeaways
+      • Diff để so sánh
+      • Nano cho edit nhanh, dễ học
+      • Vim cho power user (sẽ học sau)
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Nano và diff giúp edit và so sánh file dễ dàng. 
+
+  Kỹ năng quan trọng cho quản trị Linux.
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Tiếp theo chúng ta sẽ học Conclusion to System Administration Fundamentals.
+────────────────────────────────────────────────────────────────

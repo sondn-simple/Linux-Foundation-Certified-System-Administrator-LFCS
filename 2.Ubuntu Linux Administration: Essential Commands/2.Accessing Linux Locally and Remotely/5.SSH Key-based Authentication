@@ -1,0 +1,53 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║               SSH KEY-BASED AUTHENTICATION                                   ║
+║               (Xác thực SSH dựa trên Key)                                    ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : SSH Key-based Authentication
+  Mục tiêu   : Tạo và sử dụng key pair
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • Tạo Key Pair
+      • ssh-keygen (trên Ubuntu1)
+      • Private key: id_rsa
+      • Public key: id_rsa.pub
+      • Set passphrase để bảo vệ
+
+  • Copy Public Key
+      • ssh-copy-id vagrant@192.168.56.102
+      • Thêm vào ~/.ssh/authorized_keys trên remote
+
+  • Sử dụng Key
+      • ssh vagrant@IP
+      • ssh-agent & ssh-add : Cache passphrase
+
+  • Minh họa
+      • Generate keys
+      • Copy và login không cần password
+      • Kiểm tra authorized_keys
+
+  • Lợi ích
+      • An toàn hơn password
+      • Tiện lợi sau khi cache passphrase
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  SSH Key-based Authentication là cách an toàn và tiện lợi để quản lý remote systems. 
+
+  Thực hành trên lab để nắm vững cho LFCS exam.
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Tiếp theo chúng ta sẽ học Understanding the VNC Server.
+────────────────────────────────────────────────────────────────
