@@ -1,0 +1,53 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                       THE LINUX FOUNDATION                                   ║
+║               (Linux Foundation)                                             ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : Linux Foundation
+  Mục tiêu   : Giới thiệu tổ chức và chứng chỉ LFCS
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • Linux Foundation là gì?
+      • Vendor agnostic, thúc đẩy Linux
+      • Non-profit, hỗ trợ Linus Torvalds và Linux Kernel
+      • Quản lý nhiều dự án (Kubernetes, container...)
+
+  • Chứng chỉ và Training
+      • LFCS (System Administrator)
+      • LFCE (Engineer)
+      • Training cho system admin và kernel development
+
+  • Tầm quan trọng của Linux
+      • Phổ biến trong IT marketplace
+      • Appliances, servers, cloud
+      • Free và open-source
+
+  • Platforms cho LFCS Exam
+      • Ubuntu 20.04 (khóa học này)
+      • CentOS Stream (có track riêng)
+
+  • Pluralsight Support
+      • Red Hat track cho RHCSA
+      • Ubuntu track cho LFCS
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Linux Foundation thúc đẩy Linux và cung cấp chứng chỉ uy tín. 
+
+  LFCS là bước đầu tiên quan trọng cho sự nghiệp Linux Admin.
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Tiếp theo chúng ta sẽ học LFCS Exam.
+────────────────────────────────────────────────────────────────

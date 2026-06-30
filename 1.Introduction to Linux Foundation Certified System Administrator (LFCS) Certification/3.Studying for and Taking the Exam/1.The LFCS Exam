@@ -1,0 +1,54 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                         THE LFCS EXAM                                        ║
+║               (Kỳ thi LFCS)                                                  ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallett
+  Chủ đề     : Studying and Taking the LFCS Exam
+  Mục tiêu   : Hướng dẫn chuẩn bị và thi LFCS
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • Đặc điểm Kỳ thi LFCS
+      • Performance-based (thực hành command line)
+      • 20-25 tasks trong 2 giờ (120 phút)
+      • Pass 66% hoặc cao hơn
+      • Online, proctored, từ nhà hoặc văn phòng
+
+  • Chuẩn bị
+      • Hands-on practice với labs (Vagrant + VirtualBox)
+      • Practice demonstrations, viết lệnh thay vì copy
+      • Xây dựng scenarios riêng
+      • Sử dụng man pages, documentation
+
+  • Lab Environment
+      • Ubuntu 20.04 (course này)
+      • CentOS track riêng
+      • Download Vagrantfile từ GitHub
+
+  • Linux Foundation Handbook
+      • Cách booking exam
+      • Chi tiết kỳ thi
+
+  • Lời khuyên
+      • Practice nhiều, effort trong lab quyết định thành công
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  LFCS là kỳ thi performance-based, yêu cầu thực hành tốt. 
+
+  Chuẩn bị với labs và handbook sẽ giúp bạn tự tin thi đậu.
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Tiếp theo chúng ta sẽ học Certification Handbook.
+────────────────────────────────────────────────────────────────

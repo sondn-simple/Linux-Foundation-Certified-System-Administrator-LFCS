@@ -1,0 +1,50 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    INVESTIGATING THE WEBSITE                                 ║
+║               (Khám phá Trang Web)                                           ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : Investigating Linux Foundation Website
+  Mục tiêu   : Khám phá linuxfoundation.com/org
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • Truy cập Website
+      • linuxfoundation.com hoặc .org → Redirect tự động
+
+  • Con số ấn tượng
+      • 850 open source projects
+      • >2 triệu developers trained
+      • 777.000 developers collaborating
+      • 51 triệu lines of code added weekly
+      • 17.000 organizations contributing
+      • >70 upcoming events
+
+  • Linux Kernel Project
+      • Click Tux → Xem source code latest kernel (6.1.9)
+
+  • Training & Certification
+      • Micro-certifications: YAML, Git, Bash, Vim...
+      • Full catalog courses & certifications
+      • Nhiều lĩnh vực Linux chuyên sâu
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Linux Foundation là tổ chức thúc đẩy Linux mạnh mẽ với training, certification 
+  và quản lý nhiều dự án open source quan trọng.
+
+  Đây là nơi tuyệt vời để bắt đầu hành trình LFCS.
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Tiếp theo chúng ta sẽ học LFCS Exam.
+────────────────────────────────────────────────────────────────

@@ -1,0 +1,69 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                       COURSES IN THE TRACK                                   ║
+║               (Các Khóa học trong Track)                                     ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : Courses in the LFCS Track
+  Mục tiêu   : Nội dung khóa học LFCS trên Ubuntu 20.04
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • Lý do chọn LFCS
+      • Quản lý Linux systems (Ubuntu 20.04 LTS)
+      • Command line skills (Bash shell)
+      • Manage software, security, users, services
+
+  • Essential Commands
+      • Login local/remote, file permissions
+      • Search data, archiving
+      • Administrative access (su, sudo)
+
+  • Operating a Running System
+      • Shutdown, reboot, boot process, GRUB
+      • Manage software (install, remove, audit)
+      • Services with systemd, scheduling tasks
+
+  • Networking
+      • IP configuration, hostname, NTP
+      • Routing, firewalls (IPTables, UFW)
+
+  • Main Services
+      • SSH, DNS, Apache, MariaDB, Email
+
+  • Containers & VMs
+      • Manage Docker containers
+      • Setting up virtual machines
+
+  • User Management
+      • Create/manage users, passwords, login scripts
+      • Pluggable Authentication Modules (PAM)
+
+  • Storage
+      • Block devices, partitioning
+      • Filesystems (ext4, XFS)
+      • LVM, RAID, Disk Encryption
+
+  • Kết thúc Track
+      • Linux Foundation promotion, projects (Kernel, Kubernetes)
+      • LFCS Certification path
+      • Study tips for exam
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Track LFCS trên Ubuntu 20.04 cung cấp kiến thức toàn diện từ commands cơ bản 
+  đến storage, networking, services – chuẩn bị tốt cho vai trò System Admin.
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Tiếp theo chúng ta sẽ học LFCS Exam.
+────────────────────────────────────────────────────────────────
