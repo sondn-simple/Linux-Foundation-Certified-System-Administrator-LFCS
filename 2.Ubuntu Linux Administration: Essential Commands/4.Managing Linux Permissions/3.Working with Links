@@ -1,0 +1,53 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                       WORKING WITH LINKS                                     ║
+║               (Làm việc với Links)                                           ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : Working with Links
+  Mục tiêu   : Hard links và Symbolic links
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • Hard Links
+      • Số names trỏ đến metadata
+      • Minimum 1 cho file, 2 cho directory
+      • Không tốn thêm disk space
+      • ln file1 file2
+      • Cùng filesystem
+
+  • Symbolic (Soft) Links
+      • Separate file trỏ đến target
+      • ln -s target linkname
+      • Có thể cross filesystem
+      • Hiển thị l trong ls -l
+
+  • Minh họa
+      • mkdir links
+      • Hard link: file1 & file2
+      • Symbolic link: ln -s /usr/share/doc doc
+      • Delete link không ảnh hưởng target
+
+  • Lợi ích
+      • Hard link: Multiple names same file
+      • Symbolic: Convenient access, new naming
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Links giúp quản lý file linh hoạt. 
+
+  Symbolic links thường dùng hơn hard links.
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Tiếp theo chúng ta sẽ học Managing File Permissions.
+────────────────────────────────────────────────────────────────

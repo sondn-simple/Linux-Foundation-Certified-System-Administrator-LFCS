@@ -1,0 +1,51 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    UNDERSTANDING FILE METADATA                               ║
+║               (Hiểu về File Metadata)                                        ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : Understanding File Metadata
+  Mục tiêu   : ls -l, stat, file types
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • Liệt kê Metadata
+      • ls -l : Permissions, owner, size, timestamp
+      • stat : Chi tiết metadata
+      • stat -c : Extract specific field (ví dụ permissions octal)
+
+  • Cấu trúc Permissions
+      • 10 characters: Type + 9 permission bits
+      • Type: - (regular), d (directory), l (link)...
+      • User, Group, Other
+
+  • Link Count
+      • Số hard links đến file
+
+  • Các Loại File
+      • Regular files, Directories, Symbolic Links
+      • Pipes, Block/Character devices, Sockets
+
+  • Minh họa
+      • ls -l /etc/hosts, /etc/shadow
+      • stat /etc/hosts
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Hiểu file metadata giúp quản lý permissions và troubleshoot access issues.
+
+  Đây là nền tảng cho quản lý Linux file systems.
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Tiếp theo chúng ta sẽ học Managing File Permissions.
+────────────────────────────────────────────────────────────────
