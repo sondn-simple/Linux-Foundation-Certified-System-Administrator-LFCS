@@ -1,0 +1,54 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║           UNDERSTANDING CHMOD AND SETTING FILE PERMISSIONS                   ║
+║               (Hiểu về Chmod và Thiết lập File Permissions)                  ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : Chmod và Setting Permissions
+  Mục tiêu   : Thay đổi permissions
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • Permissions Objects
+      • User (u), Group (g), Others (o)
+      • Permissions không cumulative
+
+  • Chmod
+      • Octal: chmod 777 file
+      • Symbolic: chmod o+w file, chmod a+x dir
+      • Recursive: chmod -R
+
+  • Umask Effect
+      • +x vs a+x
+      • Umask hạn chế permissions cho others
+
+  • Minh họa
+      • touch file_perms
+      • chmod -v o+w
+      • chmod -R a+X directory
+      • chmod a+x vs +x
+
+  • Key Takeaways
+      • Chmod thay đổi mode
+      • Sử dụng symbolic hoặc octal
+      • a+ cho all objects
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Chmod giúp thiết lập permissions linh hoạt. 
+
+  Kết hợp umask để kiểm soát default permissions.
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Tiếp theo chúng ta sẽ học Working with Umask and Default Permissions.
+────────────────────────────────────────────────────────────────

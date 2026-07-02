@@ -1,0 +1,51 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                  OWNERSHIP AND FILE ACCESS                                   ║
+║               (Ownership và File Access)                                     ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : Ownership and File Access
+  Mục tiêu   : Chown, chgrp và effective permissions
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • Ownership
+      • User owner, Group owner
+      • Permissions không cumulative
+
+  • Commands
+      • chown : Thay đổi user owner
+      • chgrp : Thay đổi group owner
+      • chmod : Thay đổi permissions
+
+  • Minh họa
+      • Change owner to root
+      • Change group to sudo
+      • Access file dựa trên matching user/group/others
+
+  • id Command
+      • Xem user ID, group ID, groups
+
+  • Key Takeaways
+      • Sudo để change ownership
+      • Effective permissions dựa trên matching
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Ownership và permissions quyết định file access. 
+
+  Chown, chgrp, chmod là công cụ chính để quản lý.
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Tiếp theo chúng ta sẽ học Special Permissions.
+────────────────────────────────────────────────────────────────

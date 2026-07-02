@@ -1,0 +1,51 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║              ADVANCED PERMISSIONS USING SYMBOLS                              ║
+║               (Quyền Nâng cao với Symbols)                                   ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : Advanced Permissions Using Symbols
+  Mục tiêu   : Sử dụng symbolic permissions nâng cao
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • Umask Setup
+      • umask 007 : Remove all from others
+
+  • Recursive + Uppercase X
+      • chmod -R a+X directory : Thêm execute nơi đã có
+      • Chỉ áp dụng cho directories
+
+  • +x vs a+x
+      • +x : Áp dụng umask
+      • a+x : Áp dụng cho tất cả objects
+
+  • Minh họa
+      • mkdir -p upper/d1/d2
+      • touch upper/d1/file1
+      • chmod -R a+X upper
+      • chmod -v +x file
+
+  • Key Takeaways
+      • Symbolic cho phép operations linh hoạt
+      • a+ để ignore umask
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Symbolic permissions mạnh mẽ hơn octal trong nhiều trường hợp nâng cao. 
+
+  Hiểu + vs = và a+ giúp quản lý permissions chính xác.
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Tiếp theo chúng ta sẽ học Special Permissions.
+────────────────────────────────────────────────────────────────

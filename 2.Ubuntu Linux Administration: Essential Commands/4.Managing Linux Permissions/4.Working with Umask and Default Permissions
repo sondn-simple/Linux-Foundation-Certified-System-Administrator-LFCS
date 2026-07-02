@@ -1,0 +1,50 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║              WORKING WITH UMASK AND DEFAULT PERMISSIONS                      ║
+║               (Làm việc với Umask và Default Permissions)                    ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : Working with Umask
+  Mục tiêu   : Default permissions và umask
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • File Permissions (Octal)
+      • Read = 4, Write = 2, Execute = 1
+
+  • Default Permissions
+      • File: 666 (rw-rw-rw-)
+      • Directory: 777 (rwxrwxrwx)
+
+  • Umask
+      • 002 (Ubuntu default): Remove write from others
+      • 000 : No removal
+      • 077 : Remove all from group & others
+
+  • Minh họa
+      • touch f1, mkdir dir1
+      • umask 0, umask 077
+      • ls -l để xem permissions
+
+  • Set Persistent Umask
+      • Thêm vào login script (.bashrc)
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Umask điều chỉnh default permissions khi tạo file/directory. 
+
+  Hiểu umask giúp quản lý quyền truy cập mặc định hiệu quả.
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Tiếp theo chúng ta sẽ học Changing File Permissions.
+────────────────────────────────────────────────────────────────

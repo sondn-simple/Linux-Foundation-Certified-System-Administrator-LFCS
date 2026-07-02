@@ -1,0 +1,46 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                 MINIMUM DIRECTORY PERMISSIONS                                ║
+║               (Quyền Tối thiểu cho Directory)                                ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : Minimum Directory Permissions
+  Mục tiêu   : Execute permission cho directory
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • Minimum Permissions cho Directory
+      • Execute (x) : Cho phép enter directory
+      • Không có read (r) : Không list contents
+      • Read trên file vẫn cần để đọc file
+
+  • Minh họa
+      • sudo mkdir -m 751 shared
+      • ls -ld shared : rwx r-x --x
+      • Create file với sudo vim
+      • cat file1 (biết tên file)
+      • cd shared, ls (không được vì không read)
+
+  • Key Takeaways
+      • Execute đủ để truy cập file nếu biết tên
+      • Tăng security bằng cách hạn chế list directory
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Quyền execute là minimum cho directory. 
+
+  Kết hợp với file permissions để kiểm soát access chặt chẽ.
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Tiếp theo chúng ta sẽ học Special Permissions.
+────────────────────────────────────────────────────────────────

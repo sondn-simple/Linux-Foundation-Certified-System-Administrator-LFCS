@@ -1,0 +1,45 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                  SUMMARY AND WHAT'S NEXT                                     ║
+║               (Tóm tắt và Tiếp theo là gì)                                   ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : Summary and What's Next
+  Mục tiêu   : Tóm tắt module và giới thiệu module sau
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • Tóm tắt Module
+      • Default permissions: 666 (file), 777 (directory)
+      • Umask: Điều chỉnh default (ví dụ 077)
+      • Liệt kê: ls -l, stat (a/A)
+      • Chmod: Symbolic hoặc octal
+      • Chown, Chgrp: Thay đổi ownership
+
+  • Tiếp theo
+      • Searching for content
+      • find command
+      • grep để search nội dung file
+
+  • Lời khuyên
+      • Practice thường xuyên
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Module đã trang bị kiến thức quản lý permissions và ownership. 
+
+  Tiếp tục với searching tools để trở thành Linux guru.
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Chúc bạn thành công.
+────────────────────────────────────────────────────────────────

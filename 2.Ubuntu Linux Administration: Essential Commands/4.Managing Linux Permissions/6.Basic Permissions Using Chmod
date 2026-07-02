@@ -1,0 +1,54 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║               BASIC PERMISSIONS USING CHMOD                                  ║
+║               (Quyền Cơ bản với Chmod)                                       ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : Basic Permissions Using Chmod
+  Mục tiêu   : Thay đổi permissions với chmod
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • Objects & Permissions
+      • User (u), Group (g), Others (o)
+      • Permissions không cumulative
+
+  • Chmod Symbolic
+      • chmod o+w file : Thêm write cho others
+      • chmod g=rw file : Set group
+      • chmod o= file : Remove others
+      • chmod g-w file : Remove write từ group
+
+  • Octal
+      • chmod 666 file : Read/write all
+      • chmod 640 file : User rw, Group r, Others none
+
+  • Minh họa
+      • Create file với echo
+      • chmod -v 006
+      • chmod g=rw, o=
+      • Kiểm tra access với cat
+
+  • Key Takeaways
+      • = set, + add, - remove
+      • Sử dụng a cho all objects
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Chmod cho phép thay đổi permissions linh hoạt. 
+
+  Hiểu symbolic và octal giúp quản lý file permissions hiệu quả.
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Tiếp theo chúng ta sẽ học Working with Umask and Default Permissions.
+────────────────────────────────────────────────────────────────
