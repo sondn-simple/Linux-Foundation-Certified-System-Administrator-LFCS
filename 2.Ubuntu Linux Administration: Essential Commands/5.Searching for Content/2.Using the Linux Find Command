@@ -1,0 +1,59 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║              USING THE LINUX FIND COMMAND                                    ║
+║               (SỬ DỤNG LỆNH FIND TRONG LINUX)                                ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : Lệnh find
+  Mục tiêu   : Tìm kiếm file nâng cao với find, thực hành các tùy chọn
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • Giới thiệu lệnh find
+      • Lệnh find rất mạnh mẽ, khuyến khích thực hành nhiều
+      • Tìm file theo thời gian sửa đổi (-mmin), thời gian truy cập
+      • Tìm theo loại file (-type), tên file (-name), độ sâu (-maxdepth)
+
+  • Các ví dụ tùy chọn
+      • -mmin -60 : File được sửa trong 60 phút qua
+      • -mmin +60 : File sửa cách đây hơn 60 phút
+      • -maxdepth 1 : Chỉ tìm ở mức thư mục gốc
+      • -type l : Tìm symbolic links
+      • -type f -name "*.html" : Tìm file HTML thông thường
+
+  • Minh họa thực hành
+      • find . -type f -name "*.html" (tìm trong thư mục hiện tại)
+      • find /usr/share/doc -type f -name "*.html"
+      • -exec cp {} ~/links \; : Copy file tìm được vào thư mục links
+      • \; : Kết thúc lệnh exec (escape semicolon)
+      • -delete : Xóa file tìm được (shortcut)
+      • Tìm symbolic links: find / -maxdepth 1 -type l
+      • Tìm file sửa đổi gần đây: -mmin -5 -type f
+
+  • Best Practices
+      • Dùng quotes cho pattern tên file (*)
+      • Chạy từ thư mục hiện tại hoặc chỉ định rõ đường dẫn
+      • Kết hợp -exec để thực thi lệnh trên file tìm được
+      • Cẩn thận với quyền truy cập (Permission denied)
+      • Sử dụng find để kiểm tra file vừa chỉnh sửa
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Lệnh find cực kỳ mạnh mẽ để tìm kiếm file theo nhiều tiêu chí (thời gian, 
+  loại, tên, hành động). Thực hành thường xuyên sẽ giúp bạn thành thạo.
+
+  Đây là công cụ quan trọng trong module tìm kiếm nội dung trên Linux.
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Tiếp theo chúng ta sẽ học thêm về locate và các lệnh tìm kiếm khác.
+────────────────────────────────────────────────────────────────

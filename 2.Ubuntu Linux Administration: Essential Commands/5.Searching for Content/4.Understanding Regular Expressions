@@ -1,0 +1,58 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║              UNDERSTANDING REGULAR EXPRESSIONS                               ║
+║               (HIỂU VỀ BIỂU THỨC CHÍNH QUY)                                  ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : Regular Expressions (Regex)
+  Mục tiêu   : Tìm kiếm nội dung bên trong file và package bằng regex
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • Giới thiệu Regular Expressions
+      • Tìm kiếm text thuần và regex trong file, package database
+      • Hữu ích khi search nội dung file text và documentation
+
+  • Meta characters cơ bản
+      • ^ (caret): Bắt đầu dòng
+      • $ : Kết thúc dòng
+      • . : Bất kỳ ký tự nào
+      • * : Lặp lại 0 hoặc nhiều lần ký tự trước
+
+  • Minh họa với apt search
+      • apt search python3 : Tìm chuỗi python3
+      • apt search ^python3$ : Chính xác tên package python3
+
+  • Minh họa với grep
+      • grep password /etc/ssh/sshd_config
+      • grep -i password : Ignore case
+      • grep ^Password : Dòng bắt đầu bằng Password
+      • grep '^[^#].*yes$' : Dòng không comment (#), kết thúc bằng yes
+
+  • Best Practices
+      • Dùng quotes để bảo vệ meta characters khỏi shell
+      • Kết hợp ^ $ để tìm chính xác
+      • Sử dụng -i để ignore case
+      • Hiểu regex giúp tìm kiếm mạnh mẽ hơn trong file và output
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Regular Expressions là công cụ mạnh mẽ để tìm kiếm chính xác nội dung 
+  trong file và output lệnh. Bắt đầu với ^, $, ., * sẽ giúp bạn kiểm soát 
+  tìm kiếm hiệu quả.
+
+  Thực hành trên command line là cách tốt nhất để nắm vững regex.
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Tiếp theo chúng ta sẽ thực hành grep và regex chi tiết hơn.
+────────────────────────────────────────────────────────────────

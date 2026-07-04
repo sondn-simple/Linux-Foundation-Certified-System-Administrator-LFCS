@@ -1,0 +1,58 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              USING COMPRESSION UTILITIES                                     ║  
+║               (Sử Dụng Công Cụ Nén)                                         ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallett  
+  Chủ đề     : Thực hành các công cụ nén gzip, bzip2, xz  
+  Mục tiêu   : So sánh hiệu suất và kích thước file sau nén  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Chuẩn bị môi trường  
+      • Di chuyển về home directory (cd ~ hoặc cd -)  
+      • Xóa màn hình (Ctrl + L)  
+      • Kiểm tra file etc.tar (khoảng 3MB)  
+
+  • Sử dụng gzip  
+      • gzip etc.tar → Tạo file etc.tar.gz  
+      • Kích thước giảm từ 3MB xuống khoảng 500K  
+      • Giải nén: gunzip etc.tar.gz → Trở về file .tar  
+
+  • Sử dụng bzip2  
+      • bzip2 etc.tar → Tạo file etc.tar.bz2  
+      • Kích thước khoảng 497K (nén tốt hơn gzip một chút)  
+      • Tốn thêm thời gian CPU  
+      • Giải nén: bunzip2 etc.tar.bz2  
+
+  • Sử dụng xz (nén mạnh nhất)  
+      • xz -z etc.tar → Tạo file etc.tar.xz  
+      • Kích thước khoảng 426K  
+      • Tốn nhiều thời gian CPU hơn  
+      • Giải nén: unxz etc.tar.xz hoặc xz -d etc.tar.xz  
+
+  • So sánh các công cụ  
+      • gzip: Nhanh, nén tốt  
+      • bzip2: Nén tốt hơn, tốn thời gian trung bình  
+      • xz: Nén mạnh nhất, tốn nhiều CPU và thời gian  
+      • Càng tốn CPU → File càng nhỏ  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Các công cụ nén giúp giảm đáng kể kích thước file archive.  
+  Chọn công cụ phù hợp tùy theo nhu cầu cân bằng giữa tốc độ và tỷ lệ nén.  
+  Luôn thực hành để quen với các lệnh gzip, gunzip, bzip2, bunzip2, xz.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Tiếp theo chúng ta sẽ học cách kết hợp nén trực tiếp trong lệnh tar.  
+────────────────────────────────────────────────────────────────  

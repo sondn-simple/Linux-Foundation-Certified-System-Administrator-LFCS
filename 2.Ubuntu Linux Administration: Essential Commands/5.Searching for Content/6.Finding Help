@@ -1,0 +1,54 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║              FINDING HELP                                                    ║
+║               (TÌM KIẾM TRỢ GIÚP)                                            ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : Tìm kiếm tài liệu trợ giúp
+  Mục tiêu   : Sử dụng --help, man pages và tài liệu trong /usr/share/doc
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • Các cách tìm help
+      • command --help : Trợ giúp ngắn gọn
+      • man command : Manual pages chi tiết
+      • man 5 filename : Trợ giúp cho file cấu hình (section 5)
+
+  • Minh họa thực hành
+      • passwd --help : Help ngắn gọn
+      • find --help : Help dài, phức tạp
+      • man find : Đọc manual, dùng /perm để search, n cho next
+      • man 5 passwd : Manual cho file cấu hình passwd
+      • man man : Xem các section (1-user, 5-config, 8-admin)
+
+  • Best Practices
+      • Sử dụng / để search trong man page
+      • Nhấn q để thoát man page
+      • Kiểm tra /usr/share/doc cho tài liệu HTML/PDF
+      • Hiểu các section của man: 1 (commands), 5 (config), 8 (admin)
+
+  • Lưu ý
+      • Một số lệnh có help tốt với --help, một số cần man page
+      • Tài liệu trong /usr/share/doc rất hữu ích
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Hệ thống tài liệu trợ giúp (man pages, --help, /usr/share/doc) là nguồn 
+  tài nguyên mạnh mẽ. Học cách sử dụng chúng sẽ giúp bạn tự giải quyết vấn đề 
+  trên Linux mà không cần hỏi ai.
+
+  Documentation là người bạn tốt của admin!
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Kết thúc module Searching for Content. Chúc bạn thực hành thành công!
+────────────────────────────────────────────────────────────────

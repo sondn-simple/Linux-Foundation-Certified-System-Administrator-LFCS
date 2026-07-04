@@ -1,0 +1,55 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║              USING SORT OPTIONS WITHIN LS                                    ║
+║               (SỬ DỤNG CÁC TÙY CHỌN SẮP XẾP TRONG LS)                       ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : Tùy chọn sắp xếp trong lệnh ls
+  Mục tiêu   : Hiểu và sử dụng các tùy chọn sắp xếp hữu ích của ls
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • Giới thiệu module
+      • Module: Searching for Content (Tìm kiếm nội dung)
+      • Các công cụ: ls (với sort), find, locate, grep
+      • Tài liệu trợ giúp (help documentation)
+
+  • Lệnh ls cơ bản nhưng mạnh mẽ
+      • ls -ltr : Sắp xếp theo thời gian sửa đổi gần nhất (mới nhất ở cuối)
+      • -r : Reverse (đảo ngược thứ tự)
+      • ls -lS : Sắp xếp theo kích thước file (lớn nhất ở cuối khi dùng -r)
+
+  • Minh họa thực hành
+      • cd /etc
+      • ls -l : Hiển thị danh sách dài với timestamp
+      • ls -lt : Sắp xếp theo timestamp (mới nhất đầu tiên)
+      • ls -ltr : Mới nhất ở cuối (most recently edited)
+      • ls -lSr : Sắp xếp theo size, human-readable, lớn nhất ở cuối
+      • File fstab được chỉnh sửa gần nhất (July 30th)
+      • ld.so.cache khoảng 25K (kernel modules)
+
+  • Best Practices
+      • Sử dụng -t cho timestamp, -S cho size
+      • Kết hợp -l (long listing), -h (human readable)
+      • Thực hành trực tiếp trên command line để học hiệu quả
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Lệnh ls với các tùy chọn sắp xếp (-t, -S, -r) giúp nhanh chóng tìm file
+  theo thời gian sửa đổi hoặc kích thước, tăng năng suất làm việc.
+
+  Đây là bước đầu tiên trong module tìm kiếm nội dung trên command line.
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Tiếp theo chúng ta sẽ học các lệnh tìm kiếm khác như find và locate.
+────────────────────────────────────────────────────────────────

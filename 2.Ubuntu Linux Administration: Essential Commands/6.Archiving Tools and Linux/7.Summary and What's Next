@@ -1,0 +1,56 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              SUMMARY AND WHAT'S NEXT                                         ║  
+║               (Tóm Tắt Và Nội Dung Tiếp Theo)                               ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallett  
+  Chủ đề     : Tóm tắt Archiving Tools trong Linux  
+  Mục tiêu   : Ôn lại kiến thức và hướng dẫn nội dung tiếp theo  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Tóm tắt về lệnh tar  
+      • Tạo một file archive chứa nhiều file và thư mục  
+      • Không nén nhưng tiết kiệm không gian nhờ block usage hiệu quả  
+      • Tùy chọn: -c (create), -t (list), -x (extract)  
+
+  • Nén dữ liệu  
+      • Kết hợp trong tar: -z (gzip), -j (bzip2), -J (xz)  
+      • Sử dụng riêng: gzip/gunzip, bzip2/bunzip2, xz/unxz  
+      • gzip: Nhanh, thực tế nhất  
+      • xz: Nén mạnh nhất nhưng tốn nhiều CPU  
+
+  • Đặc điểm quan trọng  
+      • Nén chạy độc lập với tar (kiểm tra bằng ps)  
+      • Cân bằng giữa thời gian CPU và kích thước file  
+
+  • Công cụ cpio  
+      • Copy Input/Output – Kết hợp tốt với find và pipe  
+      • Tạo backup: find ... | cpio -ov > backup.cpio  
+      • Restore: cpio -iv --no-absolute-filenames < backup.cpio  
+      • Sử dụng --no-absolute-filenames để khôi phục tương đối  
+
+  • Lời khuyên  
+      • Thực hành thường xuyên các lệnh  
+      • Hiểu rõ đường dẫn tuyệt đối/tương đối khi backup/restore  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Archiving là kỹ năng quan trọng giúp quản lý và bảo vệ dữ liệu trong Linux.  
+  Tar và cpio là hai công cụ chính, kết hợp với nén để tối ưu không gian.  
+  Tiếp theo chúng ta sẽ học về nâng cao quyền người dùng (su, sudo, pkexec).  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Chúc mừng bạn đã hoàn thành module Archiving Tools.  
+Hãy tiếp tục thực hành để củng cố kiến thức.  
+────────────────────────────────────────────────────────────────  

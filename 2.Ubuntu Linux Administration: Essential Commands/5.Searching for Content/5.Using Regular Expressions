@@ -1,0 +1,57 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║              USING REGULAR EXPRESSIONS                                       ║
+║               (SỬ DỤNG BIỂU THỨC CHÍNH QUY)                                  ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : Sử dụng Regular Expressions với grep và lệnh khác
+  Mục tiêu   : Áp dụng regex để lọc output và tìm kiếm nội dung file
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • Tìm kiếm với apt search
+      • apt search python3 | wc -l : Đếm số dòng kết quả
+      • apt search '^python3$' : Chính xác package bắt đầu và kết thúc bằng python3
+      • Sử dụng quotes để bảo vệ meta characters (^ $)
+
+  • Tìm kiếm trong file với grep
+      • grep '^#' /etc/ssh/sshd_config : Dòng comment bắt đầu bằng #
+      • grep -v '^#' : Loại bỏ dòng comment
+      • grep -E '^(#|$)' : Loại bỏ comment và dòng trống
+      • grep -i password : Tìm password không phân biệt hoa thường
+      • grep '^Password' : Dòng bắt đầu bằng Password
+
+  • Regex nâng cao
+      • ^ : Bắt đầu dòng
+      • $ : Kết thúc dòng
+      • . : Bất kỳ ký tự nào
+      • .* : Bất kỳ chuỗi ký tự nào
+      • [^#] : Không bắt đầu bằng #
+      • grep '^[^#].*yes$' : Dòng không comment và kết thúc bằng yes
+
+  • Best Practices
+      • Kết hợp grep với pipe (| wc -l) để đếm kết quả
+      • Sử dụng -E cho extended regex
+      • Kiểm tra cấu hình file (như sshd_config)
+      • Lọc bỏ comment và dòng trống để xem setting thực tế
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Regular Expressions giúp lọc dữ liệu mạnh mẽ từ output lệnh và nội dung file. 
+  Kết hợp ^, $, [^#], .* cho phép tìm kiếm chính xác và loại bỏ nhiễu.
+
+  Grep (Global Regular Expression Print) là công cụ thiết yếu cho admin Linux.
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Tiếp theo chúng ta sẽ học thêm về tài liệu trợ giúp và các lệnh khác.
+────────────────────────────────────────────────────────────────

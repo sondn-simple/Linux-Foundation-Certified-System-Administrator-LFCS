@@ -1,0 +1,59 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║              USING THE LOCATE COMMAND IN LINUX                               ║
+║               (SỬ DỤNG LỆNH LOCATE TRONG LINUX)                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : Lệnh locate
+  Mục tiêu   : Tìm kiếm file nhanh chóng qua cơ sở dữ liệu indexed
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • Giới thiệu lệnh locate
+      • Hiệu quả hơn find vì tìm trên database indexed
+      • Cài đặt: sudo apt install mlocate (trên Debian/Ubuntu)
+      • Cập nhật database: updatedb (thường chạy tự động hàng ngày)
+
+  • Các tùy chọn chính
+      • locate -S : Xem thống kê database
+      • locate hosts : Tìm chuỗi "hosts" trong tên file
+      • -i : Ignore case (không phân biệt hoa thường)
+      • -e : Existing (kiểm tra file còn tồn tại thực tế)
+
+  • Minh họa thực hành
+      • sudo apt update && sudo apt install -y mlocate
+      • locate -S : Thống kê (số thư mục, file, bytes)
+      • locate hosts : Tìm theo tên
+      • locate -b hosts : Tìm chỉ trong base name (không path)
+      • locate '^hosts' : Regex - bắt đầu bằng hosts
+      • locate 'hosts$' : Kết thúc bằng hosts
+      • locate -e hosts : Chỉ hiện file còn tồn tại
+      • rm hosts sau đó kiểm tra với/without -e
+
+  • Best Practices
+      • Dùng quotes cho pattern và regex (^ $)
+      • Cập nhật database sau khi cài hoặc thay đổi lớn
+      • Kết hợp -e để tránh kết quả file đã xóa
+      • Hiệu quả hơn find khi tìm trên toàn hệ thống
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Lệnh locate nhanh và tiện lợi nhờ sử dụng database. Kết hợp với -e, -i, 
+  regex giúp tìm kiếm chính xác. Nên dùng locate cho tìm kiếm nhanh, find cho 
+  tìm kiếm phức tạp và thời gian thực.
+
+  Đây là công cụ quan trọng trong module tìm kiếm nội dung.
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Tiếp theo chúng ta sẽ học lệnh grep để tìm kiếm nội dung bên trong file.
+────────────────────────────────────────────────────────────────

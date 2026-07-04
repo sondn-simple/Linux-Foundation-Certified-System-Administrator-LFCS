@@ -1,0 +1,61 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              USING TAR                                                       ║  
+║               (Sử Dụng Lệnh Tar)                                            ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallett  
+  Chủ đề     : Các thao tác cơ bản với Tar  
+  Mục tiêu   : Tạo, liệt kê và giải nén archive bằng lệnh tar  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Khám phá lệnh tar  
+      • Xem man tar để tìm hiểu chi tiết  
+      • Tên lệnh: Archiving utility  
+      • Kiểm tra thư mục /etc trước khi backup (sudo du -sh /etc)  
+
+  • Tạo archive  
+      • sudo tar --create --file etc.tar /etc  
+      • Hoặc dùng tùy chọn ngắn: sudo tar -cf etc.tar /etc  
+      • Kết quả: File etc.tar nhỏ hơn thư mục gốc (5.3M → 3.0M)  
+      • Không nén mà chỉ tối ưu không gian block (block size 4K)  
+
+  • Liệt kê nội dung archive  
+      • tar -tf etc.tar  
+      • Đường dẫn là tương đối (etc/ thay vì /etc)  
+
+  • Giải nén archive  
+      • tar -xf etc.tar → Giải nén vào thư mục hiện tại  
+      • Tạo thư mục etc trong home directory  
+      • Để khôi phục vào vị trí gốc: cd / và sudo tar -xf ~/etc.tar  
+
+  • Khôi phục file cụ thể  
+      • Xóa file gốc: sudo rm /etc/hosts  
+      • Khôi phục: sudo tar -xf /home/vagrant/etc.tar etc/hosts  
+      • Kiểm tra: cat /etc/hosts  
+
+  • Lưu ý quan trọng  
+      • Tar loại bỏ leading '/' khi tạo archive  
+      • Luôn kiểm tra thư mục hiện tại trước khi extract  
+      • Sử dụng sudo khi cần quyền truy cập thư mục hệ thống  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Các thao tác cơ bản với tar: -c (create), -t (table of contents), -x (extract).  
+  Hiểu cách hoạt động của đường dẫn tương đối giúp khôi phục archive chính xác.  
+
+  Thực hành thường xuyên để thành thạo lệnh tar.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Tiếp theo chúng ta sẽ học các tùy chọn nâng cao hơn của tar.  
+────────────────────────────────────────────────────────────────  

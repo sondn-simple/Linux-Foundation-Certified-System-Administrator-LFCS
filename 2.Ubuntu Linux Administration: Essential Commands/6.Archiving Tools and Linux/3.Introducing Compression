@@ -1,0 +1,53 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              INTRODUCING COMPRESSION                                         ║  
+║               (Giới Thiệu Nén Dữ Liệu)                                      ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallett  
+  Chủ đề     : Giới thiệu về Nén dữ liệu với Tar  
+  Mục tiêu   : Hiểu sự khác biệt giữa archive và nén, sử dụng gzip, bzip2, xz  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Archive không phải là nén  
+      • Tar thông thường chỉ tối ưu không gian block, không nén  
+      • Kết quả file nhỏ hơn nhờ giảm lãng phí block  
+
+  • Các công cụ nén phổ biến  
+      • gzip và gunzip  
+      • bzip2 và bunzip2  
+      • xz (có tùy chọn decompress hoặc dùng unxz)  
+
+  • Kết hợp nén trực tiếp trong tar  
+      • -z : Sử dụng gzip  
+      • -j : Sử dụng bzip2  
+      • -J : Sử dụng xz (nén mạnh nhất)  
+
+  • Cách hoạt động của nén  
+      • Nén chạy độc lập với tar (không phải tích hợp)  
+      • Ví dụ: tar chạy song song với xz (kiểm tra bằng ps)  
+      • xz là nén mạnh nhưng tốn nhiều thời gian hơn  
+
+  • Lời khuyên thực hành  
+      • Chạy nén nền để quan sát tiến trình  
+      • Thực hành trên command line để nắm vững cách dùng  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Nén giúp làm file archive nhỏ hơn đáng kể.  
+  Các tùy chọn -z, -j, -J cho phép nén trực tiếp khi tạo tar.  
+  Hiểu rằng nén chạy độc lập giúp quản lý và xử lý lỗi tốt hơn.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Tiếp theo chúng ta sẽ thực hành các lệnh nén trên command line.  
+────────────────────────────────────────────────────────────────  

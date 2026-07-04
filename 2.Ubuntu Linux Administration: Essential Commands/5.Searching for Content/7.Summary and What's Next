@@ -1,0 +1,50 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║              SUMMARY AND WHAT'S NEXT                                         ║
+║               (TÓM TẮT VÀ TIẾP THEO)                                         ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallet
+  Chủ đề     : Tóm tắt module Searching for Content
+  Mục tiêu   : Ôn lại kiến thức và giới thiệu module tiếp theo
+
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • Tóm tắt các nội dung đã học
+      • ls với -t (timestamp), -S (size), -r (reverse)
+      • find : Tìm file mạnh mẽ, -delete, -exec
+      • locate : Tìm nhanh qua database (cài mlocate, updatedb)
+      • Regular Expressions : ^ (bắt đầu), $ (kết thúc), grep
+      • Help system : --help, man pages (section 1,5,8), / để search
+
+  • Điểm nổi bật
+      • ls -ltr : File sửa gần đây nhất
+      • find -exec cp {} ... \; : Thực thi lệnh trên file tìm được
+      • grep -E '^[^#].*yes$' : Lọc setting thực tế trong config
+      • man 5 passwd : Tài liệu file cấu hình
+
+  • Best Practices
+      • Sử dụng regex để lọc kết quả chính xác
+      • Kết hợp các lệnh qua pipe
+      • Luôn tham khảo man pages và /usr/share/doc
+
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Module Searching for Content đã giúp bạn thành thạo cách tìm file và 
+  nội dung trên Linux. Từ ls, find, locate, grep đến regular expressions 
+  và help system.
+
+  Chúc mừng bạn đã hoàn thành module!
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi! 
+Tiếp theo chúng ta sẽ học module Archiving Tools trong Linux.
+────────────────────────────────────────────────────────────────

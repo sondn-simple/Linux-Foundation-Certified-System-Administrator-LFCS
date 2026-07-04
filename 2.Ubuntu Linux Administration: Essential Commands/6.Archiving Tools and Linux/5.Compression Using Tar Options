@@ -1,0 +1,65 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              COMPRESSION USING TAR OPTIONS                                   ║  
+║               (Nén Dữ Liệu Sử Dụng Tùy Chọn Tar)                            ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallett  
+  Chủ đề     : Kết hợp nén trực tiếp trong lệnh tar  
+  Mục tiêu   : So sánh thời gian và kích thước khi dùng các tùy chọn nén  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Chuẩn bị  
+      • Nâng quyền root: sudo -i  
+      • Sử dụng lệnh time để đo thời gian thực thi  
+
+  • Tạo archive không nén  
+      • time tar -cf etc.tar /etc  
+      • Thời gian: ~0.019 giây  
+      • Kích thước: 3.0M  
+
+  • Nén với gzip (-z)  
+      • time tar -czf etc.tar.gz /etc  
+      • Thời gian: ~0.087 giây  
+      • Kích thước: 518K  
+
+  • Nén với bzip2 (-j)  
+      • time tar -cjf etc.tar.bz2 /etc  
+      • Thời gian: ~0.44 giây  
+      • Kích thước: 497K  
+
+  • Nén với xz (-J)  
+      • time tar -cJf etc.tar.xz /etc  
+      • Thời gian: ~0.855 giây  
+      • Kích thước: 426K  
+
+  • So sánh kết quả  
+      • gzip: Nhanh, nén tốt  
+      • bzip2: Chậm hơn, nén tốt hơn một chút  
+      • xz: Chậm nhất nhưng nén mạnh nhất  
+      • Cân bằng giữa thời gian CPU và không gian đĩa  
+
+  • Thử nghiệm với thư mục lớn hơn  
+      • Backup /usr/share/doc với xz: tar -cJf doc.tar.xz /usr/share/doc &  
+      • Chuyển hướng output: > /dev/null  
+      • Kiểm tra tiến trình: ps (thấy tar và xz chạy riêng biệt)  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Tùy chọn -z, -j, -J cho phép nén trực tiếp khi tạo archive với tar.  
+  Nén chạy độc lập với tar dù dùng tùy chọn bên trong.  
+  Chọn phương pháp nén phù hợp với nhu cầu backup (tốc độ hay kích thước).  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Tiếp theo chúng ta sẽ khám phá thêm các công cụ lưu trữ khác.  
+────────────────────────────────────────────────────────────────  

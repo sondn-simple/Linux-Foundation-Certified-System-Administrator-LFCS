@@ -1,0 +1,57 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              ARCHIVING IN LINUX                                              ║  
+║               (Lưu Trữ Trong Linux)                                          ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallett  
+  Chủ đề     : Công cụ Lưu trữ và Linux  
+  Mục tiêu   : Hiểu và sử dụng các công cụ lưu trữ như tar, gzip, bzip2, xz và cpio  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Giới thiệu về Archiving  
+      • Chào mừng đến với mô-đun Archiving Tools and Linux  
+      • Chúng ta sẽ khám phá lệnh tape archive (tar)  
+      • Học cách nén và giải nén file với gzip và gunzip  
+      • Khám phá các tiện ích khác như bzip2 và xz  
+      • Tìm hiểu cpio để lưu trữ từ standard input  
+
+  • Sử dụng lệnh tar  
+      • tar không chỉ dành cho băng từ mà còn backup lên đĩa  
+      • Ví dụ: Backup thư mục /etc (kích thước khoảng 22M)  
+      • Tạo file etc.tar từ /etc  
+      • Kích thước file .tar sau backup khoảng 21M (không nén nhưng tiết kiệm không gian block)  
+
+  • Lý do tiết kiệm không gian  
+      • Hệ thống Linux Intel sử dụng block size 4K  
+      • Nhiều file nhỏ gây lãng phí không gian block  
+      • Một file lớn chỉ lãng phí tối đa dưới 4K  
+
+  • Các thao tác chính với tar  
+      • -c : Tạo archive (-cf để chỉ định file đích)  
+      • -t : Liệt kê nội dung archive  
+      • -x : Giải nén (extract) archive  
+
+  • Lời khuyên thực hành  
+      • Thực hành ngay trên command line để ghi nhớ lệnh  
+      • Sử dụng sudo khi cần truy cập thư mục hệ thống như /etc  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Lệnh tar giúp tạo archive hiệu quả, kết hợp với các công cụ nén như gzip, bzip2, xz để tối ưu không gian lưu trữ.  
+
+  Hiểu rõ các tùy chọn -c, -t, -x là nền tảng quan trọng cho công việc quản trị Linux.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Tiếp theo chúng ta sẽ học chi tiết hơn về các lệnh và ví dụ thực tế.  
+────────────────────────────────────────────────────────────────  

@@ -1,0 +1,56 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              USING CPIO FOR BACKUPS                                          ║  
+║               (Sử Dụng CPIO Để Sao Lưu)                                     ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallett  
+  Chủ đề     : Sử dụng lệnh cpio cho backup và restore  
+  Mục tiêu   : Hiểu cách cpio hoạt động với standard input/output  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Giới thiệu cpio  
+      • Copy Input Output – Đọc từ standard output để backup  
+      • Đọc từ standard input để restore  
+
+  • Tạo backup với cpio  
+      • find /usr/share/doc -type f -name "*.html" | cpio -ov > backup.cpio  
+      • -o: Tạo archive từ output  
+      • -v: Verbose (hiển thị chi tiết)  
+
+  • Khôi phục backup  
+      • mkdir restore && cd restore  
+      • cpio -iv --no-absolute-filenames < ~/backup.cpio  
+      • -i: Khôi phục từ input  
+      • --no-absolute-filenames: Loại bỏ dấu / đầu để restore tương đối  
+
+  • So sánh với tar  
+      • Tar thường dùng đường dẫn tương đối  
+      • Cpio mặc định dùng đường dẫn tuyệt đối (cần tùy chọn để thay đổi)  
+
+  • Thực hành chi tiết  
+      • Tìm file .html bằng find  
+      • Backup cấu trúc thư mục và file  
+      • Restore vào thư mục mới, kiểm tra bằng ls và tree  
+      • Sửa lỗi lệnh (ví dụ: mkdir sai chính tả)  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Cpio là công cụ mạnh mẽ để backup và restore qua pipe.  
+  Kết hợp tốt với find để chọn file theo điều kiện.  
+  Hiểu rõ --no-absolute-filenames giúp kiểm soát vị trí khôi phục.  
+  Cả tar và cpio đều là các tiện ích lưu trữ quan trọng trong Linux.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Tiếp theo chúng ta sẽ ôn lại các kiến thức chính về archiving.  
+────────────────────────────────────────────────────────────────  
