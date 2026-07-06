@@ -1,0 +1,62 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              SUMMARY                                                         ║  
+║               (Tóm Tắt)                                                      ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallett  
+  Chủ đề     : Tóm tắt module Nâng Cao Quyền Người Dùng  
+  Mục tiêu   : Ôn lại toàn bộ kiến thức và chúc mừng hoàn thành khóa học  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Lệnh su  
+      • su : Non-login shell (giữ thư mục hiện tại)  
+      • su - hoặc su -l : Full login shell (reset môi trường)  
+
+  • Lệnh sudo  
+      • Linh hoạt hơn su, không phải all-or-nothing  
+      • Có thể cấu hình quyền cụ thể cho từng user/command  
+      • Yêu cầu password của chính user (không cần root password)  
+
+  • Cấu hình sudo  
+      • Luôn dùng visudo để chỉnh sửa  
+      • File chính: /etc/sudoers  
+      • Thư mục mở rộng: /etc/sudoers.d/  
+      • visudo -f : Chỉnh file cụ thể  
+      • visudo -c : Kiểm tra syntax mà không chỉnh sửa  
+
+  • Biến EDITOR  
+      • Mặc định Ubuntu dùng nano  
+      • Cấu hình: Defaults env_keep += "EDITOR"  
+      • export EDITOR=vim để thay đổi  
+
+  • Polkit và khôi phục sudo  
+      • pkexec : Phương thức nâng quyền thứ ba  
+      • pkttyagent : Agent giám sát process  
+      • Dùng để sửa lỗi khi sudo bị hỏng do syntax error  
+      • Không nên dùng tùy chọn Quit trong visudo  
+
+  • Lời khuyên cuối  
+      • Thực hành thường xuyên để không quên kiến thức  
+      • Tránh chia sẻ root password  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Chúc mừng bạn đã hoàn thành module và toàn bộ khóa học!  
+  Bạn đã nắm được cách nâng cao quyền an toàn với su, sudo và pkexec.  
+  Hãy tiếp tục học tập và thực hành để đạt được chứng chỉ Linux Foundation Certified System Administrator.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hẹn gặp lại ở các khóa học tiếp theo về Ubuntu 20.04 và Linux.  
+Chúc bạn thành công!  
+────────────────────────────────────────────────────────────────  

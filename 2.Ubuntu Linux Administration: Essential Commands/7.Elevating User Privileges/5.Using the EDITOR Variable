@@ -1,0 +1,51 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              USING THE EDITOR VARIABLE                                       ║  
+║               (Sử Dụng Biến Môi Trường EDITOR)                              ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallett  
+  Chủ đề     : Cấu hình biến EDITOR cho sudo  
+  Mục tiêu   : Cho phép thay đổi text editor mặc định khi dùng visudo  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Vấn đề mặc định  
+      • Debian/Ubuntu dùng nano, một số distro dùng vim  
+      • sudo reset environment → Biến EDITOR không được truyền qua  
+
+  • Cấu hình cho phép EDITOR  
+      • Tạo file: sudo visudo -f /etc/sudoers.d/defaults  
+      • Nội dung: Defaults env_keep += "EDITOR"  
+
+  • Thiết lập biến EDITOR  
+      • export EDITOR=vim  
+      • Sau khi cấu hình, sudo visudo sẽ mở bằng vim  
+
+  • Các cách khác  
+      • sudo -i : Mở interactive shell rồi export EDITOR
+      • Sau đó chạy visudo trực tiếp trong shell đó
+
+  • Lợi ích  
+      • Cho phép user dùng editor quen thuộc  
+      • Giảm lỗi khi chỉnh sửa file cấu hình  
+      • Tăng hiệu quả và sự thoải mái khi làm việc  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Biến EDITOR giúp tùy chỉnh editor cho visudo.  
+  Cấu hình Defaults env_keep += "EDITOR" trong sudoers.d  
+  Luôn kiểm tra và test sau khi thay đổi cấu hình sudo.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Tiếp theo chúng ta sẽ xem những gì xảy ra khi sudo bị lỗi.  
+────────────────────────────────────────────────────────────────  

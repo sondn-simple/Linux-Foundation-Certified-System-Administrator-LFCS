@@ -1,0 +1,58 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              USING POLKIT AND RECOVERING SUDO ACCESS                         ║  
+║               (Sử Dụng Polkit Và Khôi Phục Quyền Sudo)                      ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallett  
+  Chủ đề     : Polkit (pkexec) và khôi phục sudo khi bị lỗi  
+  Mục tiêu   : Sử dụng pkexec để nâng quyền và sửa lỗi sudoers  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Giới thiệu Polkit  
+      • Lệnh pkexec để nâng quyền  
+      • pkaction : Liệt kê các action có sẵn  
+      • Group sudo hoặc admin được phép sử dụng  
+
+  • Thiết lập môi trường  
+      • Thêm user vào group sudo: usermod -aG sudo vagrant  
+      • Sử dụng hai cửa sổ terminal  
+      • $$ : Lấy Process ID của shell hiện tại  
+
+  • Sử dụng pkttyagent  
+      • Chạy pkttyagent --process <PID> ở cửa sổ thứ hai  
+      • Giám sát và xác thực yêu cầu pkexec  
+
+  • Khôi phục sudo bị hỏng  
+      • Cố ý sửa sai cú pháp trong sudoers (xóa dấu =)  
+      • Chọn Quit khi visudo báo lỗi → sudo bị vô hiệu hóa  
+      • Dùng pkexec visudo từ cửa sổ chính  
+      • Xác thực qua pkttyagent ở cửa sổ thứ hai  
+      • Sửa lại file và lưu đúng cú pháp  
+
+  • Lưu ý quan trọng  
+      • Không dùng tùy chọn Quit trong visudo  
+      • pkexec rất hữu ích để khôi phục hệ thống  
+      • Hoạt động tốt hơn trong môi trường đồ họa  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Polkit (pkexec) là phương thức thứ ba để nâng quyền.  
+  Kết hợp với pkttyagent giúp khôi phục khi sudo bị hỏng do lỗi syntax.  
+  Luôn cẩn thận khi chỉnh sửa sudoers và dùng visudo.  
+  Đây là kỹ năng cứu cánh quan trọng cho quản trị viên Linux.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Module về nâng cao quyền người dùng đã hoàn thành.  
+Hãy thực hành thường xuyên để thành thạo các lệnh su, sudo và pkexec.  
+────────────────────────────────────────────────────────────────  

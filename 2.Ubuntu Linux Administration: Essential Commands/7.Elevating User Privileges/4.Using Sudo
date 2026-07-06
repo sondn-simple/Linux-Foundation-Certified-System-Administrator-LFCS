@@ -1,0 +1,59 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              USING SUDO                                                      ║  
+║               (Sử Dụng Lệnh Sudo)                                           ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallett  
+  Chủ đề     : Thực hành cấu hình và sử dụng sudo  
+  Mục tiêu   : Tạo user, phân quyền chi tiết và kiểm tra syntax  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Kiểm tra quyền hiện tại  
+      • sudo -l : Liệt kê quyền sudo của user hiện tại  
+      • NOPASSWD: Cho phép chạy sudo không cần password  
+
+  • Tạo user mới  
+      • sudo useradd -m -s /bin/bash bob  
+      • sudo passwd bob : Đặt password cho bob  
+
+  • Cấu hình sudo cho user bob  
+      • visudo -f /etc/sudoers.d/bob  
+      • Cú pháp: bob ALL=(root) /bin/passwd, !/usr/bin/passwd root  
+      • Cho phép đổi password user khác, cấm đổi password root  
+
+  • Kiểm tra syntax  
+      • visudo tự động kiểm tra cú pháp khi lưu  
+      • Lỗi syntax sẽ báo và ngăn lưu file sai  
+      • Không nên dùng tùy chọn "quit" (rất nguy hiểm)  
+
+  • Thực hành với user bob  
+      • su -l bob : Chuyển sang tài khoản bob  
+      • sudo -l : Xem quyền được cấp  
+      • sudo passwd ubuntu : Thành công  
+      • sudo passwd root : Bị từ chối  
+
+  • Quản lý password cache  
+      • Mặc định cache 5 phút  
+      • sudo -k : Xóa cache, buộc nhập password lần sau  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Sudo cho phép phân quyền chi tiết và an toàn hơn su.  
+  Luôn dùng visudo để tránh lỗi cú pháp.  
+  Có thể cho phép hoặc cấm lệnh cụ thể cho từng user.  
+  Password cache giúp tiện lợi nhưng vẫn đảm bảo bảo mật.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Tiếp theo chúng ta sẽ học thêm về các tùy chọn nâng cao của sudo.  
+────────────────────────────────────────────────────────────────  
