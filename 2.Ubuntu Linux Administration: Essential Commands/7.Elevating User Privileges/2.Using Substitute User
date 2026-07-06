@@ -1,0 +1,58 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              USING SUBSTITUTE USER                                           ║  
+║               (Sử Dụng Lệnh Substitute User)                                 ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallett  
+  Chủ đề     : Thực hành lệnh su  
+  Mục tiêu   : Phân biệt login shell và non-login shell, quản lý root password  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Chuẩn bị  
+      • Hệ thống Ubuntu, sử dụng sudo để set root password  
+      • sudo passwd root (đặt password cho root)  
+
+  • su (non-login shell)  
+      • su : Giữ nguyên thư mục hiện tại, không reset đầy đủ môi trường  
+      • Vẫn yêu cầu password root  
+      • Kiểm tra: id (UID 0), pwd (vẫn ở thư mục cũ)  
+      • Thoát bằng exit  
+
+  • su - (full login shell)  
+      • su - hoặc su -l : Reset hoàn toàn môi trường như login thật  
+      • Chuyển đến thư mục home của root (/root)  
+      • Environment variables được thiết lập đầy đủ  
+
+  • Chuyển sang user khác  
+      • su - ubuntu : Yêu cầu password của user ubuntu  
+      • Từ root (hoặc dùng sudo su): Không cần password target user  
+
+  • Bảo mật sau khi test  
+      • sudo passwd -l root : Khóa tài khoản root (không cho dùng password)  
+      • Tăng tính bảo mật hệ thống  
+
+  • Kiểm tra tài liệu  
+      • man su : Xác nhận su nghĩa là substitute user  
+      • Có thể gọi là switch user (vẫn chấp nhận được)  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Lệnh su cho phép thay đổi user và quyền hạn.  
+  Nên dùng su - để có môi trường sạch.  
+  Tránh để root password mở lâu dài, khóa lại sau khi test.  
+  sudo thường an toàn và linh hoạt hơn su trong thực tế.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Tiếp theo chúng ta sẽ học chi tiết về lệnh sudo.  
+────────────────────────────────────────────────────────────────  

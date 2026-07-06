@@ -1,0 +1,50 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              UNDERSTANDING SUDO CONFIGURATION                                ║  
+║               (Hiểu Về Cấu Hình Sudo)                                        ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallett  
+  Chủ đề     : Cấu hình và quản lý sudo  
+  Mục tiêu   : Hiểu cách cấu hình sudo an toàn và đúng cách  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Lý do ưu tiên sudo hơn su  
+      • sudo cho phép phân quyền chi tiết (granularity)  
+      • Không cần tiết lộ password root  
+      • su là all-or-nothing (toàn bộ quyền)  
+
+  • Vị trí file cấu hình  
+      • /etc/sudoers (file chính)  
+      • /etc/sudoers.d/ (thư mục mở rộng)  
+      • Thư mục .d thường dùng để thêm file cấu hình riêng  
+
+  • Công cụ chỉnh sửa an toàn  
+      • visudo : Chỉnh sửa sudoers với kiểm tra cú pháp tự động  
+      • Tránh chỉnh sửa trực tiếp bằng editor thông thường  
+      • visudo -f : Chỉnh sửa file cụ thể trong sudoers.d  
+
+  • Lợi ích của visudo  
+      • Kiểm tra syntax trước khi lưu  
+      • Ngăn chặn lỗi làm hỏng toàn bộ hệ thống sudo  
+      • Đảm bảo file cấu hình luôn hợp lệ  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Sử dụng visudo là best practice khi cấu hình sudo.  
+  sudo mang lại sự linh hoạt và an toàn hơn so với su.  
+  Hiểu rõ sudoers và sudoers.d giúp quản trị quyền người dùng hiệu quả.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Tiếp theo chúng ta sẽ thực hành cấu hình user privileges với visudo.  
+────────────────────────────────────────────────────────────────  

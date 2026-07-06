@@ -1,0 +1,54 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              BECOMING THE BOSS                                               ║  
+║               (Trở Thành Ông Chủ)                                            ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallett  
+  Chủ đề     : Nâng cao quyền người dùng (Privilege Escalation)  
+  Mục tiêu   : Sử dụng su, sudo và pkexec để trở thành root hoặc user khác  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Giới thiệu  
+      • User ID 0 (root) quản lý hệ thống Linux  
+      • Không nên login trực tiếp bằng root  
+      • Các lệnh: su, sudo, pkexec  
+
+  • Lệnh su (substitute user)  
+      • su : Giữ nguyên thư mục hiện tại, không reset hoàn toàn môi trường  
+      • su - hoặc su -l : Full login shell (reset môi trường như login thật)  
+      • su - bob : Chuyển sang user bob (yêu cầu biết password của bob)  
+      • Mặc định là chuyển sang root nếu không chỉ định user  
+
+  • Rủi ro khi dùng su  
+      • Phải set password cho root  
+      • Toàn bộ admin phải biết password root  
+      • Không phải best practice (khó quản lý khi nhân sự thay đổi)  
+
+  • So sánh su và su -  
+      • su : Giữ directory và một phần environment  
+      • su - : Full login, thiết lập environment variables chuẩn  
+
+  • Các công cụ khác  
+      • sudo : Nâng quyền cho lệnh cụ thể  
+      • pkexec : Sử dụng PolicyKit để escalate privileges  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Nâng cao quyền người dùng là kỹ năng quan trọng để quản trị Linux an toàn.  
+  su phù hợp khi cần chuyển hoàn toàn sang user khác.  
+  Tránh chia sẻ password root, ưu tiên sử dụng sudo trong thực tế.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Tiếp theo chúng ta sẽ thực hành chi tiết các lệnh su.  
+────────────────────────────────────────────────────────────────  
