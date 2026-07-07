@@ -1,0 +1,51 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              USING TAGS FOR VERSION RELEASES                                 ║  
+║               (Sử Dụng Tags Cho Phiên Bản Release)                          ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Sử dụng Git Tags cho version release  
+  Mục tiêu   : Tạo tag và clone phiên bản cụ thể  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Tạo Tag  
+      • git tag v1.0 : Tạo tag cho phiên bản  
+      • git push origin v1.0 : Đẩy tag lên server  
+
+  • Xem thông tin tag  
+      • git tag : Liệt kê các tag  
+      • git show v1.0 : Xem chi tiết tag  
+
+  • Clone phiên bản cụ thể  
+      • git clone -b v1.0 git@localhost:~/git/project1.git  
+      • Trạng thái Detached HEAD (không phát triển thêm)  
+      • Dùng để tải phiên bản ổn định, frozen  
+
+  • So sánh  
+      • Master branch: Dùng để phát triển tiếp  
+      • Tag: Phiên bản release cố định, không thay đổi  
+
+  • Lưu ý  
+      • Tag giúp người dùng tải đúng phiên bản mong muốn  
+      • Không nên phát triển code trực tiếp trên tag  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Git Tags rất hữu ích để đánh dấu phiên bản release.  
+  Dễ dàng clone và phân phối phiên bản ổn định cho người dùng.  
+  Tiếp theo chúng ta sẽ học làm việc với Branches.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thực hành tạo tag và clone phiên bản release.  
+────────────────────────────────────────────────────────────────  

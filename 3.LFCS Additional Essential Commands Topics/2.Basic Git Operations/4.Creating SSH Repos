@@ -1,0 +1,54 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              CREATING SSH REPOS                                              ║  
+║               (Tạo SSH Repository)                                           ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Thiết lập Git Server qua SSH  
+  Mục tiêu   : Tạo user Git, SSH key authentication và bare repository  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Tạo user Git  
+      • sudo useradd -m -s /bin/bash git  
+      • Thiết lập password ban đầu: sudo chpasswd  
+
+  • Thiết lập SSH Key-based Authentication  
+      • ssh-keygen -N "" -f ~/.ssh/id_rsa  
+      • ssh-copy-id git@localhost  
+      • Kết nối mà không cần password  
+
+  • Tạo Bare Repository  
+      • mkdir -p ~/git/project1.git  
+      • cd ~/git/project1.git  
+      • git init --bare  
+
+  • Clone và Push từ client  
+      • git clone git@localhost:~/git/project1.git  
+      • Tạo file (ví dụ: hello.sh)  
+      • git add . && git commit -m "First script"  
+      • git push : Đẩy thay đổi lên server  
+
+  • Lợi ích  
+      • Dễ dàng collaborate với nhiều user  
+      • Sử dụng SSH key an toàn và tiện lợi  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Đã thiết lập thành công Git server qua SSH.  
+  Bare repository dùng để lưu trữ và chia sẻ code.  
+  Chuẩn bị cho việc làm việc nhóm với Git.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Tiếp theo chúng ta sẽ học thêm về branch và merge.  
+────────────────────────────────────────────────────────────────  

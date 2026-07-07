@@ -1,0 +1,58 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              BRANCHING AND MERGING IN GIT                                    ║  
+║               (Branching Và Merging Trong Git)                               ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Branching và Merging trong Git  
+  Mục tiêu   : Phát triển code trên branch và merge về master  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Tạo Branch  
+      • git checkout -b dev : Tạo và chuyển sang branch dev  
+      • Chỉnh sửa file (thêm shebang)  
+      • git commit -a -m "Add shebang"  
+
+  • Push branch lên server  
+      • git push origin dev  
+
+  • Merge branch  
+      • git checkout master  
+      • git merge dev  
+      • git push origin master  
+
+  • Tạo tag mới sau merge  
+      • git tag v1.1  
+      • git push origin v1.1  
+
+  • So sánh  
+      • Master: Phiên bản production  
+      • Dev: Branch phát triển (beta)  
+      • Tag: Phiên bản frozen để người dùng tải  
+
+  • Kiểm tra  
+      • git branch -a : Xem tất cả branch  
+      • git status : Kiểm tra trạng thái hiện tại  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Branching giúp phát triển an toàn mà không ảnh hưởng master.  
+  Merging đưa thay đổi từ dev vào production.  
+  Tag dùng để đánh dấu release ổn định.  
+  Đây là quy trình phát triển tiêu chuẩn với Git.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Module Git đã hoàn thành.  
+Tiếp theo chúng ta sẽ học về Systemd Unit Files.  
+────────────────────────────────────────────────────────────────  
