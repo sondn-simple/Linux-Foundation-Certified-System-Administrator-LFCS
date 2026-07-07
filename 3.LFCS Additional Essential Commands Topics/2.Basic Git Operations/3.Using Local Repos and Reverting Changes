@@ -1,0 +1,55 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              USING LOCAL REPOS AND REVERTING CHANGES                         ║  
+║               (Sử Dụng Local Repo Và Khôi Phục Thay Đổi)                    ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Git Local Repository và Revert thay đổi  
+  Mục tiêu   : Sử dụng Git cho version control ngay cả khi làm việc một mình  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Tạo Local Repository  
+      • mkdir myfirstproject && cd myfirstproject  
+      • git init : Khởi tạo repository  
+      • git status : Kiểm tra trạng thái  
+
+  • Commit thay đổi  
+      • echo "My first line" > myfile  
+      • git add .  
+      • git commit -m "My first commit"  
+
+  • Xem lịch sử  
+      • git show : Xem chi tiết commit  
+      • git log : Xem lịch sử commit  
+      • git log --oneline : Xem rút gọn  
+
+  • Revert thay đổi  
+      • git revert --no-commit -m 1 <commit_id>  
+      • Khôi phục file về phiên bản trước  
+      • Sau đó append dữ liệu đúng và commit lại  
+
+  • Lợi ích  
+      • Không cần backup thủ công  
+      • Dễ dàng khôi phục về trạng thái tốt trước đó  
+      • Hữu ích ngay cả khi không collaborate  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Git rất mạnh mẽ ngay cả khi dùng local.  
+  git revert giúp khôi phục thay đổi sai.  
+  Cách tốt nhất vẫn là phát triển trên branch riêng.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Tiếp theo chúng ta sẽ học thiết lập Git server qua SSH.  
+────────────────────────────────────────────────────────────────  

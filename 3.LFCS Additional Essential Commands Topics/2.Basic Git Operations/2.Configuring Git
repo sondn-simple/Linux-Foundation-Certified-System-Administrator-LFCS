@@ -1,0 +1,50 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              CONFIGURING GIT                                                 ║  
+║               (Cấu Hình Git)                                                 ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Cấu hình Git cơ bản  
+  Mục tiêu   : Thiết lập user.name và user.email cho Git  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Cấu hình Git  
+      • Cấu hình repository cục bộ: .git/config  
+      • Cấu hình global: ~/.gitconfig (áp dụng cho toàn user)  
+
+  • Xem cấu hình  
+      • git config --list : Xem tất cả cấu hình  
+      • git config --list --global : Xem cấu hình global  
+
+  • Thiết lập thông tin user  
+      • git config --global user.email "tux@example.com"  
+      • git config --global user.name "Tux Penguin"  
+
+  • Tầm quan trọng  
+      • Phải có email và username để tham gia collaboration  
+      • Thông tin này sẽ được ghi nhận trong commit  
+
+  • Kiểm tra sau khi cấu hình  
+      • git config --list --global  
+      • git config --list (hiển thị cả local và global)  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Cấu hình user.name và user.email là bước đầu tiên quan trọng khi dùng Git.  
+  Global configuration được lưu trong ~/.gitconfig.  
+  Đã sẵn sàng để tạo commit và tham gia làm việc nhóm.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Tiếp theo chúng ta sẽ học thiết lập Git server qua SSH.  
+────────────────────────────────────────────────────────────────  

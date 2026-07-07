@@ -1,0 +1,56 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              UNDERSTANDING GIT REPOSITORIES OR REPOS                         ║  
+║               (Hiểu Về Git Repositories Hoặc Repos)                          ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Git Repositories cơ bản  
+  Mục tiêu   : Làm quen với Git, clone repository và các lệnh cơ bản  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Giới thiệu module  
+      • Tổng quan khóa học LFCS Additional Essential Commands  
+      • Các chủ đề: Git, systemd unit files, SSL certificates  
+
+  • Git là gì?  
+      • Hệ thống version control do Linus Torvalds phát triển  
+      • Tốt nhất với file text  
+      • Hỗ trợ branch cho phát triển và tag cho release  
+
+  • Thao tác cơ bản  
+      • Cài đặt Git: apt update && apt install -y git  
+      • Clone repository: git clone https://github.com/theurbanpenguin/lfcs  
+      • Di chuyển vào thư mục repo  
+      • git status : Kiểm tra trạng thái  
+      • git branch : Xem branch local  
+      • git branch -a : Xem tất cả branch (bao gồm remote)  
+      • git pull : Cập nhật thay đổi mới nhất  
+
+  • Lab environment  
+      • Sử dụng Vagrant + Ubuntu 20.04  
+      • Repository chứa Vagrantfile và Ansible playbook  
+
+  • Lưu ý  
+      • Thường làm việc trên branch main/master  
+      • HEAD chỉ vị trí hiện tại  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Git clone là bước cơ bản để lấy source code.  
+  Hiểu git status, branch và pull giúp bắt đầu với Git.  
+  Tiếp theo chúng ta sẽ học thiết lập Git server qua SSH.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thực hành clone repository để làm quen với Git.  
+────────────────────────────────────────────────────────────────  

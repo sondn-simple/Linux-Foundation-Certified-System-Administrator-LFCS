@@ -1,0 +1,47 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              COURSE OVERVIEW                                                 ║  
+║               (Tổng Quan Khóa Học)                                           ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : LFCS Additional Essential Commands Topics  
+  Mục tiêu   : Học các lệnh Linux thiết yếu bổ sung  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Giới thiệu giảng viên  
+      • Andrew Mallet – Owner của Urban Penguin (UK)  
+      • Chuyên đào tạo và tư vấn Linux nhiều năm  
+      • Kinh nghiệm quản trị viên và lập trình viên (Python)  
+      • Làm việc với các công cụ Configuration Management: Ansible, Puppet, Salt  
+
+  • Chủ đề chính trong khóa học  
+      • Tạo self-signed certificates  
+      • Đọc thông tin certificate cả local và remote  
+      • Cấu hình HTTPS trên NGINX  
+      • Chuyển hướng traffic từ HTTP sang HTTPS  
+
+  • Kết quả sau khóa học  
+      • Hiểu rõ cách quản lý SSL/TLS certificates  
+      • Có khả năng cấu hình các dịch vụ dựa trên SSL  
+      • Nâng cao kỹ năng bảo mật và quản trị Linux  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Khóa học giúp bạn làm quen với các lệnh Linux quan trọng.  
+  Tập trung vào SSL/TLS – cơ chế bảo mật thiết yếu.  
+  Chuẩn bị tốt cho chứng chỉ LFCS và công việc quản trị Linux.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy bắt đầu hành trình học các lệnh bổ sung này.  
+────────────────────────────────────────────────────────────────  
