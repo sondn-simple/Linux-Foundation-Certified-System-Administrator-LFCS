@@ -1,0 +1,54 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              IMPLEMENTING SOCKET UNITS                                       ║  
+║               (Triển Khai Socket Units)                                      ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Thực hành Socket Units  
+  Mục tiêu   : Kích hoạt service khi kết nối qua socket  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Ví dụ với Cockpit  
+      • sudo apt install -y cockpit  
+      • cockpit.socket giữ port 9090  
+      • Kết nối (curl localhost:9090) → Khởi động cockpit service  
+
+  • Tạo Socket Unit đơn giản  
+      • Tạo thư mục web và file index.html  
+      • Tạo web.socket (ListenStream=8080)  
+      • Tạo web.service (Type=simple, python3 -m http.server 8000)  
+
+  • Kích hoạt  
+      • sudo systemctl daemon-reload  
+      • sudo systemctl enable --now web.socket  
+
+  • Kiểm tra  
+      • systemctl list-sockets  
+      • curl localhost:8080 → Trigger service  
+      • Port 8000 được service quản lý sau khi trigger  
+
+  • Lưu ý  
+      • Enable socket, không enable service  
+      • Service chạy trên port khác socket  
+      • Cockpit hỗ trợ socket rất tốt  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Socket Unit giúp khởi động service theo nhu cầu, tiết kiệm tài nguyên.  
+  Systemd quản lý port và trigger service thông minh.  
+  Đây là tính năng mạnh mẽ của systemd.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Tiếp theo chúng ta sẽ học Troubleshooting Unit Files.  
+────────────────────────────────────────────────────────────────  

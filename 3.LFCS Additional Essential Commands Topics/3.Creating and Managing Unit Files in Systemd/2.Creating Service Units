@@ -1,0 +1,53 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              CREATING SERVICE UNITS                                          ║  
+║               (Tạo Service Units)                                            ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Tạo và quản lý Service Unit trong systemd  
+  Mục tiêu   : Sử dụng Loop Device với Service Unit  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Chuẩn bị Loop Device  
+      • fallocate -l 10G /root/disk1  
+      • losetup --show -f /root/disk1  
+      • parted để tạo partition table và partition  
+
+  • Tạo file Service Unit  
+      • /etc/systemd/system/disk1.service  
+      • Phần [Unit]: Description và After=local-fs.target  
+      • Phần [Service]: Type=oneshot, ExecStart với losetup và partprobe  
+      • Phần [Install]: WantedBy=multi-user.target  
+
+  • Kích hoạt Service  
+      • sudo systemctl enable disk1.service  
+      • Reboot để kiểm tra loop device tồn tại sau khởi động  
+
+  • Kiểm tra  
+      • lsblk : Xem loop device và partition  
+      • systemctl cat disk1.service : Xem nội dung unit file  
+
+  • Lợi ích  
+      • Tự động thiết lập loop device khi boot  
+      • Quản lý tài nguyên disk linh hoạt mà không cần script thủ công  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Service Unit giúp tự động hóa việc thiết lập loop device.  
+  Đây là ví dụ thực tế về sức mạnh của systemd.  
+  Tiếp theo chúng ta sẽ học Timer Units và Socket Units.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thực hành tạo service unit cho loop device.  
+────────────────────────────────────────────────────────────────  

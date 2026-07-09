@@ -1,0 +1,55 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              SUMMARY AND WHAT'S NEXT                                         ║  
+║               (Tóm Tắt Và Nội Dung Tiếp Theo)                               ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Tóm tắt module Systemd Unit Files  
+  Mục tiêu   : Ôn lại kiến thức và giới thiệu nội dung tiếp theo  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Phân tích Boot Time  
+      • systemd-analyze : Thời gian boot tổng quát  
+      • systemd-analyze blame : Thời gian từng service  
+      • systemd-analyze dump : Thông tin chi tiết  
+
+  • Service Unit  
+      • Tạo file .service (INI format)  
+      • Ví dụ: Thiết lập Loop Device với losetup và partprobe  
+
+  • Timer Unit  
+      • Thay thế cron, trigger service theo lịch  
+      • Hỗ trợ OnBootSec, OnUnitActiveSec, RandomizedDelaySec  
+
+  • Socket Unit  
+      • Giữ port mở và trigger service khi có kết nối  
+      • Ví dụ: Cockpit và web server đơn giản  
+
+  • Troubleshooting  
+      • journalctl -u <unit> : Xem log unit  
+      • systemctl status : Kiểm tra trạng thái service  
+
+  • Kết quả  
+      • Hiểu cách systemd quản lý service, timer, socket  
+      • Tối ưu và debug hệ thống hiệu quả  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Module Systemd Unit Files đã giúp bạn quản lý hệ thống linh hoạt hơn.  
+  Tiếp theo chúng ta sẽ học OpenSSL và quản lý Certificates.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Chúc mừng bạn đã hoàn thành module này.  
+Hẹn gặp lại ở module tiếp theo.  
+────────────────────────────────────────────────────────────────  

@@ -1,0 +1,52 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              CREATING TIMER UNITS                                            ║  
+║               (Tạo Timer Units)                                              ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Timer Units trong systemd  
+  Mục tiêu   : Thay thế cron bằng Timer Unit  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Ưu điểm của Timer Unit  
+      • Báo cáo chi tiết: last execution, next execution  
+      • Chạy bởi systemd (không cần daemon riêng)  
+      • Hỗ trợ randomization để tránh trùng giờ  
+
+  • Tạo Timer Unit  
+      • systemctl edit --full --force touchfile.timer  
+      • Phần [Unit]: Description  
+      • Phần [Timer]: OnBootSec=60, OnUnitActiveSec=600, RandomizedDelaySec=300  
+      • Phần [Install]: WantedBy=timers.target  
+
+  • Service Unit liên kết  
+      • touchfile.service : Chạy lệnh touch /tmp/touched_file  
+      • Timer sẽ trigger service cùng tên  
+
+  • Kích hoạt  
+      • systemctl enable --now touchfile.timer  
+      • systemctl list-timers : Xem lịch chạy  
+
+  • Lưu ý  
+      • Không enable service unit, chỉ enable timer unit  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Timer Unit mạnh mẽ và linh hoạt hơn cron truyền thống.  
+  Dễ dàng lập lịch và giám sát job.  
+  Randomization giúp phân bổ tải đều hơn.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Tiếp theo chúng ta sẽ học về Socket Units.  
+────────────────────────────────────────────────────────────────  

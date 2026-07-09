@@ -1,0 +1,49 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              TROUBLESHOOTING UNIT FILES                                      ║  
+║               (Khắc Phục Sự Cố Unit Files)                                   ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Khắc phục sự cố Unit Files trong systemd  
+  Mục tiêu   : Sử dụng journalctl và systemctl để debug  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Công cụ chính  
+      • journalctl -u <unit> : Xem log của unit cụ thể  
+      • journalctl -u <unit> -g <pattern> : Lọc theo regex  
+
+  • Ví dụ thực tế  
+      • journalctl -u web.socket  
+      • journalctl -u web.service  
+      • journalctl -u touchfile.timer  
+      • journalctl -u ssh.service -g vagrant  
+
+  • Kiểm tra trạng thái service  
+      • systemctl status <service> : Thời gian chạy, trạng thái  
+      • Kiểm tra service có restart thường xuyên không  
+
+  • Lợi ích  
+      • Dễ dàng tìm lỗi và theo dõi hoạt động  
+      • Kết hợp với uptime để so sánh thời gian boot  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  journalctl và systemctl là công cụ mạnh mẽ để troubleshoot.  
+  Giúp hiểu rõ hành vi của service, timer và socket units.  
+  Hoàn thành module Systemd Unit Files.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Chúc mừng bạn đã hoàn thành module này.  
+Tiếp theo là các chủ đề khác trong khóa học.  
+────────────────────────────────────────────────────────────────  

@@ -1,0 +1,49 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              UNDERSTANDING BOOT TIME AND SLOW SERVICES                       ║  
+║               (Hiểu Về Thời Gian Boot Và Dịch Vụ Chậm)                      ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Systemd Unit Files - Phân tích Boot Time  
+  Mục tiêu   : Sử dụng systemd-analyze để kiểm tra tốc độ khởi động  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Giới thiệu module  
+      • Tạo và quản lý systemd unit files  
+      • Các loại: service, timer, socket, v.v.  
+
+  • Phân tích thời gian boot  
+      • systemd-analyze : Thời gian boot tổng thể  
+      • systemd-analyze blame : Liệt kê thời gian từng service  
+      • systemd-analyze dump : Chi tiết sâu về tất cả unit files  
+
+  • Giải thích kết quả  
+      • Kernel space và User space  
+      • Graphical target (login screen)  
+      • Services khởi động song song (parallel)  
+
+  • Ứng dụng thực tế  
+      • Xác định service chậm ảnh hưởng boot time  
+      • Cải thiện tốc độ khởi động hệ thống  
+      • Hiểu rõ hoạt động của systemd  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  systemd-analyze là công cụ mạnh mẽ để chẩn đoán boot time.  
+  blame giúp tìm service chậm, dump cung cấp thông tin chi tiết.  
+  Đây là nền tảng để quản lý và tối ưu systemd units.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Tiếp theo chúng ta sẽ học về Loop Devices và Service Units.  
+────────────────────────────────────────────────────────────────  

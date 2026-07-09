@@ -1,0 +1,49 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              UNDERSTANDING SOCKET UNITS                                      ║  
+║               (Hiểu Về Socket Units)                                         ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Socket Units trong systemd  
+  Mục tiêu   : Khởi động service khi có kết nối đến port  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Khái niệm Socket Unit  
+      • Systemd giữ port mở và trigger service khi có kết nối  
+      • Lệnh kiểm tra: systemctl list-sockets  
+
+  • Ví dụ thực tế  
+      • Cài cockpit → cockpit.socket tự động kích hoạt  
+      • Port 9090 được giữ bởi systemd  
+      • Kết nối (curl) sẽ khởi động cockpit service  
+
+  • Xây dựng ví dụ đơn giản  
+      • Tạo thư mục web và file index.html  
+      • Chạy Python http.server ở background  
+      • Tạo web.socket lắng nghe port 8080  
+
+  • Lưu ý quan trọng  
+      • Enable socket unit, không enable service unit  
+      • Service được trigger bởi socket  
+      • Một số application (như Cockpit, Apache) hỗ trợ socket tốt hơn  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Socket Unit giúp khởi động service theo nhu cầu (on-demand).  
+  Tiết kiệm tài nguyên và tăng tính linh hoạt.  
+  Đây là một tính năng mạnh mẽ của systemd.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Tiếp theo chúng ta sẽ thực hành tạo Socket Unit.  
+────────────────────────────────────────────────────────────────  
