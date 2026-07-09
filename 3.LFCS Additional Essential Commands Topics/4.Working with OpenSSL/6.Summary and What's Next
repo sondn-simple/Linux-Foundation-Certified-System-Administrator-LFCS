@@ -1,0 +1,47 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              SUMMARY AND WHAT'S NEXT                                         ║  
+║               (Tóm Tắt Và Nội Dung Tiếp Theo)                               ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Tóm tắt module OpenSSL và NGINX SSL  
+  Mục tiêu   : Ôn lại toàn bộ kiến thức và chúc mừng hoàn thành khóa học  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • OpenSSL Commands  
+      • genpkey : Tạo Private Key  
+      • req : Tạo Certificate Signing Request (CSR)  
+      • x509 : Tạo Self-signed Certificate  
+      • s_client : Kết nối và xem certificate remote  
+
+  • Cấu hình NGINX với SSL  
+      • Redirect HTTP sang HTTPS  
+      • Sử dụng ssl_certificate và ssl_certificate_key  
+      • Kiểm tra bằng w3m  
+
+  • Kết quả  
+      • Hiểu cách tạo và quản lý certificate  
+      • Triển khai HTTPS trên NGINX  
+      • Đọc và kiểm tra certificate local/remote  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Chúc mừng bạn đã hoàn thành khóa học LFCS Additional Essential Commands Topics!  
+  Bạn đã nắm vững Git, Systemd Units và OpenSSL/SSL.  
+  Chúc bạn thành công trong kỳ thi và sự nghiệp Linux Administration.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hẹn gặp lại ở các khóa học tiếp theo.  
+Chúc bạn học tốt!  
+────────────────────────────────────────────────────────────────  

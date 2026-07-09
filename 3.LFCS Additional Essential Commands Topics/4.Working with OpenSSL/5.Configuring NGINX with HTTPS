@@ -1,0 +1,51 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              UNDERSTANDING SSL ON THE NGINX WEB SERVER                       ║  
+║               (Hiểu Về SSL Trên Web Server NGINX)                            ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Cấu hình SSL/TLS cho NGINX  
+  Mục tiêu   : Redirect HTTP sang HTTPS và sử dụng certificate  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Cài đặt  
+      • sudo apt install -y nginx w3m  
+
+  • Cấu hình NGINX  
+      • Server block HTTP: Redirect sang HTTPS  
+      • Server block HTTPS (port 443): ssl_certificate và ssl_certificate_key  
+      • Đặt certificate trong /ssl/  
+
+  • Thiết lập  
+      • Copy private.key và certificate.crt vào /ssl/  
+      • Tạo index.html trong /var/www/html  
+      • Thêm entry vào /etc/hosts (127.0.0.1 example.com)  
+
+  • Kích hoạt  
+      • Xóa default site  
+      • Tạo symlink từ sites-available sang sites-enabled  
+      • systemctl restart nginx  
+
+  • Kiểm tra  
+      • w3m https://example.com : Kiểm tra redirect và SSL  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  NGINX hỗ trợ SSL/TLS dễ dàng với certificate.  
+  Redirect HTTP → HTTPS là best practice.  
+  Self-signed phù hợp cho test, production dùng CA.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thực hành cấu hình NGINX với HTTPS.  
+────────────────────────────────────────────────────────────────  

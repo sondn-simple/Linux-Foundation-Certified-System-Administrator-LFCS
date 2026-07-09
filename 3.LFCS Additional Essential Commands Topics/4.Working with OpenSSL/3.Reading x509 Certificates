@@ -1,0 +1,47 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              READING X509 CERTIFICATES                                       ║  
+║               (Đọc X509 Certificates)                                        ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Đọc thông tin Certificate  
+  Mục tiêu   : Sử dụng openssl x509 và s_client  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Đọc Local Certificate  
+      • openssl x509 -in certificate.crt -noout -text  
+      • Xem chi tiết: Subject, Issuer, Validity, SAN  
+
+  • Đọc Remote Certificate  
+      • openssl s_client -connect pluralsight.com:443  
+      • Xem certificate chain và issuing authorities  
+
+  • Tùy chọn nâng cao  
+      • -showcerts : Hiển thị chi tiết certificate chain  
+      • -debug : Xem quá trình negotiation algorithm  
+
+  • Lợi ích  
+      • Kiểm tra thông tin certificate trước khi triển khai  
+      • Xem certificate chain và SAN  
+      • Debug vấn đề HTTPS  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  openssl x509 và s_client là công cụ mạnh mẽ để kiểm tra certificate.  
+  Hiểu rõ certificate chain và SAN rất quan trọng.  
+  Tiếp theo chúng ta sẽ cấu hình NGINX với HTTPS.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thực hành đọc certificate local và remote.  
+────────────────────────────────────────────────────────────────  

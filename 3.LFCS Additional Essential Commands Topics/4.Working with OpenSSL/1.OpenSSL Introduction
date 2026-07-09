@@ -1,0 +1,49 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              OPENSSL INTRODUCTION                                            ║  
+║               (Giới Thiệu OpenSSL)                                           ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Làm việc với OpenSSL và Certificates  
+  Mục tiêu   : Tạo Private Key, CSR và Self-signed Certificate  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Private Key  
+      • openssl genpkey -algorithm RSA -out private.key  
+
+  • Certificate Signing Request (CSR)  
+      • openssl req -new -key private.key -out csr.pem  
+      • Sử dụng file config (openssl.conf) để tự động trả lời và thêm SAN  
+
+  • Subject Alternative Name (SAN)  
+      • Tuân thủ RFC 6125  
+      • Cho phép multiple domains (example.com, www.example.com)  
+
+  • Tạo Self-signed Certificate  
+      • Tạo file v3.ext  
+      • openssl x509 -req -days 3650 -sha256 -extfile v3.ext  
+
+  • Lưu ý  
+      • Self-signed chỉ dùng cho test  
+      • Production nên dùng CA công cộng (Let's Encrypt)  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  OpenSSL giúp tạo và quản lý certificate an toàn.  
+  Hiểu Private Key, CSR và SAN là nền tảng quan trọng.  
+  Tiếp theo chúng ta sẽ thực hành chi tiết.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy chuẩn bị thực hành các lệnh OpenSSL.  
+────────────────────────────────────────────────────────────────  

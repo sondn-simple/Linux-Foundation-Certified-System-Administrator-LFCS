@@ -1,0 +1,48 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              CREATING SELF-SIGNED CERTIFICATES                               ║  
+║               (Tạo Self-signed Certificates)                                 ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Tạo Self-signed Certificate với OpenSSL  
+  Mục tiêu   : Tạo Private Key, CSR và Certificate hỗ trợ SAN  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Tạo Private Key  
+      • openssl genpkey -algorithm RSA -out private.key  
+
+  • Tạo CSR (Certificate Signing Request)  
+      • openssl req -new -key private.key -out csr.pem  
+      • Sử dụng openssl.cnf để tự động trả lời và thêm SAN  
+
+  • File cấu hình  
+      • openssl.cnf : Cung cấp distinguished_name và req_extensions  
+      • v3.ext : Định nghĩa Key Usage và Subject Alternative Names  
+
+  • Tạo Certificate  
+      • openssl x509 -req -in csr.pem -signkey private.key -out certificate.crt -days 3650 -sha256 -extfile v3.ext  
+
+  • Kiểm tra  
+      • ls : Xem private.key và certificate.crt  
+      • Hỗ trợ SAN: example.com và www.example.com  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Đã tạo thành công Self-signed Certificate tuân thủ RFC 6125.  
+  Sẵn sàng sử dụng cho test HTTPS trên NGINX.  
+  Production nên dùng certificate từ CA công cộng.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Tiếp theo chúng ta sẽ học cấu hình NGINX với HTTPS.  
+────────────────────────────────────────────────────────────────  
