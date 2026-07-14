@@ -1,0 +1,50 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              WORKING WITH SHUTDOWN AND THE /ETC/NOLOGIN FILE                 ║  
+║               (Làm Việc Với Shutdown Và File /etc/nologin)                   ║  
+╚══════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Thực hành Shutdown và ngăn login  
+  Mục tiêu   : Sử dụng shutdown, lập lịch và /etc/nologin  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Lệnh Shutdown  
+      • sudo shutdown -r now : Reboot ngay  
+      • sudo shutdown -h +30 : Tắt máy sau 30 phút  
+      • sudo shutdown 17:30 "Message" : Lên lịch cụ thể  
+      • sudo shutdown -c : Hủy shutdown đang chờ  
+
+  • Ngăn login user  
+      • Tạo /etc/nologin : Chỉ root login được  
+      • Tự động xóa sau reboot  
+      • Tự động kích hoạt khi shutdown < 5 phút  
+
+  • Kiểm tra  
+      • man shutdown : Xem tài liệu  
+      • ls /run : Xem nologin khi shutdown sắp xảy ra  
+      • vagrant status : Kiểm tra VM sau shutdown  
+
+  • Thực hành  
+      • Sử dụng sudo !! để lặp lệnh  
+      • Kết nối lại sau reboot qua SSH  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Shutdown cho phép lập lịch và thông báo user.  
+  /etc/nologin giúp bảo vệ hệ thống trong lúc bảo trì.  
+  Thực hành thường xuyên để thành thạo quản lý shutdown.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Tiếp theo chúng ta sẽ học Bootloader GRUB.  
+────────────────────────────────────────────────────────────────  

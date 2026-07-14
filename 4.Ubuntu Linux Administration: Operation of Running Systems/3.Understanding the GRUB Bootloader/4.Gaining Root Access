@@ -1,0 +1,50 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              GAINING ROOT ACCESS                                             ║  
+║               (Đạt Quyền Root)                                               ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Sử dụng Kernel Parameters để lấy quyền root  
+  Mục tiêu   : Khôi phục root password khi sudo bị hỏng  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Chỉnh sửa GRUB Entry  
+      • Nhấn E để edit Linux line  
+      • Thay ro → rw  
+      • Thêm init=/bin/bash  
+      • Xóa quiet splash (tùy chọn)  
+
+  • Boot vào Bash  
+      • Hệ thống boot trực tiếp vào root shell mà không cần password  
+
+  • Khôi phục password  
+      • passwd : Đặt password root mới  
+
+  • Tiếp tục Boot  
+      • exec /sbin/init : Khởi động bình thường  
+      • Login root với password mới  
+
+  • Lưu ý  
+      • Chỉ dùng khi có physical/console access  
+      • Hữu ích khi sudo bị hỏng hoặc mất root password  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Kernel parameter init=/bin/bash giúp khôi phục quyền root.  
+  Đây là kỹ thuật cứu hộ quan trọng cho quản trị viên.  
+  Bảo mật console vật lý là rất cần thiết.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Tiếp theo chúng ta sẽ học Reinstall GRUB.  
+────────────────────────────────────────────────────────────────  

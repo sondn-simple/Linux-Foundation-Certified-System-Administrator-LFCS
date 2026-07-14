@@ -1,0 +1,51 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              BOOTING UBUNTU LINUX                                            ║  
+║               (Khởi Động Ubuntu Linux)                                       ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Hiểu GRUB Bootloader  
+  Mục tiêu   : Boot Linux, chỉnh sửa kernel parameters và GRUB config  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Quy trình Boot Linux  
+      • BIOS → GRUB Bootloader → Kernel + initramfs  
+      • initramfs cung cấp driver cần thiết để truy cập root filesystem  
+
+  • GRUB Menu  
+      • Hiển thị recovery options và các kernel version  
+      • Mặc định ẩn trên Ubuntu (timeout = 0)  
+
+  • Cấu hình GRUB  
+      • File chính: /etc/default/grub  
+      • Thư mục /etc/grub.d/ : Các file cấu hình bổ sung  
+      • Cập nhật: update-grub hoặc grub-mkconfig  
+
+  • Kernel Parameters  
+      • Chỉnh tạm thời tại GRUB menu  
+      • Chỉnh vĩnh viễn qua /etc/default/grub  
+
+  • Khôi phục  
+      • Reinstall GRUB bootloader  
+      • Sử dụng recovery options  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  GRUB là bootloader mạnh mẽ giúp boot và khôi phục Linux.  
+  Hiểu initramfs và kernel parameters rất quan trọng.  
+  Tiếp theo chúng ta sẽ thực hành hiển thị GRUB m1.enu.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy chuẩn bị thực hành trên command line.  
+────────────────────────────────────────────────────────────────  

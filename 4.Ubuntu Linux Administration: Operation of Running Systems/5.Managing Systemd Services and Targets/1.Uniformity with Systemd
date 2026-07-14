@@ -1,0 +1,50 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              UNIFORMITY WITH SYSTEMD                                         ║  
+║               (Tính Đồng Nhất Với Systemd)                                   ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Quản lý Systemd Services và Targets  
+  Mục tiêu   : Sử dụng lệnh systemd thống nhất trên nhiều distro  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Ưu điểm của Systemd  
+      • Uniformity: Lệnh giống nhau trên Ubuntu, Red Hat, v.v.  
+      • Ecosystem: systemctl, hostnamectl, timedatectl, localectl  
+
+  • Các lệnh chính  
+      • systemctl : Quản lý services  
+      • hostnamectl : Cài đặt hostname  
+      • timedatectl : Cài đặt timezone và time sync  
+      • localectl : Cài đặt ngôn ngữ và locale  
+
+  • Targets và Logs  
+      • Targets: Nhóm services  
+      • journalctl : Xem log với filter  
+
+  • Lịch sử  
+      • Systemd từ 2010, phổ biến từ Ubuntu 16.04  
+
+  • Lab  
+      • Sử dụng Ubuntu 20.04  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Systemd mang lại sự đồng nhất và dễ quản lý trên Linux.  
+  Các lệnh ctl giúp thao tác nhanh.  
+  Tiếp theo chúng ta sẽ thực hành quản lý services.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy bắt đầu thực hành các lệnh ctl.  
+────────────────────────────────────────────────────────────────  

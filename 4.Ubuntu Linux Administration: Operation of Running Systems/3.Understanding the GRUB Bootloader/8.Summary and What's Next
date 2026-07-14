@@ -1,0 +1,51 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              SUMMARY AND WHAT'S NEXT                                         ║  
+║               (Tóm Tắt Và Nội Dung Tiếp Theo)                               ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Tóm tắt module GRUB Bootloader  
+  Mục tiêu   : Ôn lại toàn bộ kiến thức Boot và GRUB  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Thư mục /boot  
+      • Chứa kernel (vmlinuz), initramfs (initrd)  
+      • initramfs cung cấp driver ban đầu  
+
+  • Kernel Parameters  
+      • init=/bin/bash : Boot vào root shell  
+      • Dùng để reset root password hoặc khôi phục  
+
+  • Custom GRUB Entries  
+      • Chỉnh /etc/grub.d/40_custom  
+      • Cập nhật với update-grub  
+
+  • Khôi phục GRUB  
+      • Boot từ Live ISO + chroot  
+      • grub-install /dev/sda để reinstall bootloader  
+
+  • Lưu ý  
+      • update-grub sau khi chỉnh sửa cấu hình  
+      • Physical/console access cần thiết cho recovery  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  GRUB Bootloader là công cụ mạnh mẽ để boot và khôi phục Linux.  
+  Hiểu initramfs, kernel parameters và recovery options rất quan trọng.  
+  Tiếp theo chúng ta sẽ học Managing Software trong Ubuntu 20.04.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Chúc mừng bạn đã hoàn thành module GRUB.  
+Hẹn gặp lại ở module tiếp theo.  
+────────────────────────────────────────────────────────────────  

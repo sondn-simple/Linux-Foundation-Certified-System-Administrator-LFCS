@@ -1,0 +1,49 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              USING CORE DPKG COMMANDS                                        ║  
+║               (Sử Dụng Core Dpkg Commands)                                   ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Sử dụng dpkg commands  
+  Mục tiêu   : Liệt kê, kiểm tra và reconfigure packages  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Liệt kê Packages  
+      • dpkg -l : Liệt kê tất cả gói  
+      • dpkg -L postfix : Liệt kê file của gói  
+
+  • Tìm Package Sở Hữu File  
+      • dpkg -S /etc/fuse.conf : Xem gói tạo file  
+
+  • Reconfigure Package  
+      • sudo dpkg-reconfigure postfix : Chạy lại config script  
+      • Hiển thị nhiều câu hỏi cấu hình  
+
+  • Kiểm tra Service  
+      • systemctl status postfix  
+      • ss -ntl : Kiểm tra port listening  
+
+  • Lưu ý  
+      • dpkg-reconfigure hữu ích để thay đổi config mà không reinstall  
+      • Restart service sau reconfigure  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  dpkg cung cấp công cụ cốt lõi để quản lý .deb packages.  
+  Kết hợp với apt để quản lý phần mềm toàn diện.  
+  Tiếp theo chúng ta sẽ học thêm về repositories.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thực hành dpkg -l và reconfigure.  
+────────────────────────────────────────────────────────────────  

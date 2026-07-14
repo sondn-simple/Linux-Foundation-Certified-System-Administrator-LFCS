@@ -1,0 +1,52 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              LISTING PACKAGES                                                ║  
+║               (Liệt Kê Packages)                                             ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Liệt kê và tìm kiếm packages với apt  
+  Mục tiêu   : Quản lý cache và tìm gói phần mềm  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Package Cache  
+      • /var/cache/apt/pkgcache.bin : Metadata từ repository  
+      • Kiểm tra thời gian cập nhật bằng ls -l  
+
+  • Cập nhật Cache  
+      • sudo apt update : Cập nhật metadata mới nhất  
+      • Nên chạy trước khi install/upgrade  
+
+  • Liệt kê Packages  
+      • apt list : Liệt kê tất cả gói  
+      • apt list --installed : Gói đã cài  
+      • apt list --upgradable : Gói có thể nâng cấp  
+
+  • Tìm kiếm và Xem thông tin  
+      • apt search apache : Tìm gói chứa từ "apache"  
+      • apt search ^apache : Tìm gói bắt đầu bằng apache (regex)  
+      • apt show <package> : Xem metadata chi tiết  
+
+  • Lưu ý  
+      • Update cache không cần thiết nếu mới chạy  
+      • Sử dụng regex để tìm chính xác  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  apt list và apt search giúp quản lý gói hiệu quả.  
+  Luôn update cache trước khi install/upgrade.  
+  Tiếp theo chúng ta sẽ học cài đặt và gỡ gói.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thực hành các lệnh liệt kê trên command line.  
+────────────────────────────────────────────────────────────────  

@@ -1,0 +1,53 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              RECOVERING FROM A FAILED BOOTLOADER                             ║  
+║               (Khôi Phục Từ Bootloader Bị Hỏng)                             ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Khôi phục GRUB Bootloader bị hỏng  
+  Mục tiêu   : Sử dụng Live ISO để reinstall GRUB  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Boot từ Live ISO  
+      • Chọn Ubuntu Server ISO  
+      • Nhấn Space → F6 để thêm kernel parameters: rw init=/bin/bash  
+
+  • Mount Root Filesystem  
+      • mount /dev/sda1 /mnt  
+      • mount --rbind /dev /mnt/dev  
+      • mount --rbind /proc /mnt/proc  
+      • mount --rbind /sys /mnt/sys  
+
+  • Chroot và Reinstall GRUB  
+      • chroot /mnt /bin/bash  
+      • grub-install /dev/sda (không phải sda1)  
+      • exit để thoát chroot  
+
+  • Hoàn tất  
+      • Power off ISO, remove DVD  
+      • Boot lại → GRUB hoạt động bình thường  
+
+  • Lưu ý  
+      • grub-install cài bootloader vào Master Boot Record (MBR)  
+      • Chỉ dùng khi GRUB menu không hiển thị  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Live ISO kết hợp chroot giúp khôi phục GRUB bị hỏng.  
+  Kỹ năng cứu hộ quan trọng cho quản trị viên Linux.  
+  Luôn backup trước khi thử nghiệm.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Module GRUB Bootloader đã hoàn thành.  
+────────────────────────────────────────────────────────────────  

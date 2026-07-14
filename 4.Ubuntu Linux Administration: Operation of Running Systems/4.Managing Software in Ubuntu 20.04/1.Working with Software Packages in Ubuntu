@@ -1,0 +1,50 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              WORKING WITH SOFTWARE PACKAGES IN UBUNTU                        ║  
+║               (Làm Việc Với Software Packages Trong Ubuntu)                  ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Quản lý Software Packages với apt và dpkg  
+  Mục tiêu   : Cài đặt, gỡ bỏ gói phần mềm trên Ubuntu 20.04  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Cấu trúc Quản lý Phần mềm  
+      • Repositories → apt → dpkg → .deb files  
+      • sources.list và sources.list.d chứa thông tin repository  
+
+  • Lệnh apt  
+      • apt update : Cập nhật cache  
+      • apt install, apt remove : Cài/gỡ gói  
+      • apt moo : Easter egg (super cow powers)  
+
+  • So sánh apt và apt-get  
+      • apt : Dùng cho interactive command line  
+      • apt-get : Dùng cho script và remote SSH (ổn định hơn)  
+
+  • Lưu ý  
+      • apt-get update an toàn hơn khi chạy script  
+      • apt là giao diện thân thiện cho người dùng  
+
+  • Chuẩn bị demo  
+      • Sử dụng ubuntu1 và ubuntu2  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  apt và dpkg là công cụ cốt lõi quản lý phần mềm Ubuntu.  
+  Hiểu repositories và cách sử dụng apt/apt-get rất quan trọng.  
+  Tiếp theo chúng ta sẽ thực hành cài đặt và gỡ gói.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy chuẩn bị command line để thực hành.  
+────────────────────────────────────────────────────────────────  

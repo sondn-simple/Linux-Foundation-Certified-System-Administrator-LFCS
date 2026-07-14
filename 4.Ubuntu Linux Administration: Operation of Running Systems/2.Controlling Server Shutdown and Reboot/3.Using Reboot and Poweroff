@@ -1,0 +1,51 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              USING REBOOT AND POWEROFF                                       ║  
+║               (Sử Dụng Reboot Và Poweroff)                                   ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Lệnh Reboot và Poweroff  
+  Mục tiêu   : Tắt máy và khởi động lại nhanh chóng  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Lệnh Poweroff và Reboot  
+      • sudo poweroff : Tắt máy ngay  
+      • sudo reboot : Khởi động lại ngay  
+      • Dễ gõ hơn shutdown -h now hoặc shutdown -r now  
+
+  • Liên kết với Systemctl  
+      • poweroff, reboot, halt đều symlink đến /bin/systemctl  
+      • Kiểm tra: which poweroff, ls -l  
+
+  • So sánh  
+      • Shutdown: Có thể lập lịch và gửi thông báo  
+      • Reboot/Poweroff: Thực hiện ngay lập tức, phù hợp khi không có user  
+
+  • Kiểm tra sau reboot  
+      • uptime : Xem thời gian hệ thống đã chạy  
+      • Load average : Theo dõi tải hệ thống  
+
+  • Lưu ý  
+      • Reboot phù hợp cho hệ thống không có user đang kết nối  
+      • Shutdown dùng khi cần thông báo và lập lịch  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Reboot và Poweroff đơn giản và nhanh cho shutdown ngay lập tức.  
+  Systemctl là nền tảng cho các lệnh này.  
+  Chọn lệnh phù hợp tùy theo tình huống quản trị.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Tiếp theo chúng ta sẽ học Bootloader GRUB.  
+────────────────────────────────────────────────────────────────  

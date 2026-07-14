@@ -1,0 +1,49 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              SUMMARY AND WHAT'S NEXT                                         ║  
+║               (Tóm Tắt Và Nội Dung Tiếp Theo)                               ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Tóm tắt module Managing a Running System  
+  Mục tiêu   : Ôn lại shutdown, reboot và ngăn login  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Tóm tắt module  
+      • Shutdown: Lập lịch, gửi thông báo (shutdown +30)  
+      • /etc/nologin: Ngăn user không root login (tự xóa sau reboot)  
+      • Reboot và Poweroff: Tắt/Reboot ngay lập tức  
+
+  • Các lệnh chính  
+      • shutdown -r, shutdown -h, shutdown -c  
+      • reboot, poweroff (symlink đến systemctl)  
+
+  • Toàn khóa học  
+      • GRUB Bootloader  
+      • Quản lý service và phần mềm  
+      • Processes, job scheduling (ps, uptime, cron)  
+      • Bảo mật AppArmor  
+
+  • Lời khuyên  
+      • Sử dụng shutdown khi cần thông báo user  
+      • Reboot/Poweroff khi tắt ngay lập tức  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Module đã giúp bạn quản lý shutdown và reboot hiệu quả.  
+  Tiếp theo chúng ta sẽ học GRUB Bootloader.  
+  Chúc mừng bạn đã hoàn thành module này!  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hẹn gặp lại ở module tiếp theo.  
+────────────────────────────────────────────────────────────────  

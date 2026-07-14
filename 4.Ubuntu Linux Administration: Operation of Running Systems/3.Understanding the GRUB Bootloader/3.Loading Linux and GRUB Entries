@@ -1,0 +1,48 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              LOADING LINUX AND GRUB ENTRIES                                  ║  
+║               (Nạp Linux Và GRUB Entries)                                    ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Quy trình Boot Linux qua GRUB  
+  Mục tiêu   : Hiểu kernel, initramfs và GRUB menu  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Quy trình Boot  
+      • GRUB → Kernel + initramfs  
+      • initramfs cung cấp driver ban đầu để truy cập root filesystem  
+
+  • GRUB Menu  
+      • Nhấn phím mũi tên để dừng timeout  
+      • Phím E: Chỉnh sửa entry (xem kernel và initrd)  
+      • Ctrl+X hoặc F10: Tiếp tục boot  
+
+  • Kiểm tra /boot  
+      • ls -l /boot : Xem vmlinuz (kernel), initrd (initramfs)  
+      • Symbolic links chỉ đến phiên bản hiện tại  
+      • Thư mục /boot/grub : Chứa cấu hình GRUB  
+
+  • Lưu ý  
+      • Trên Vagrant/cloud thường ẩn GRUB menu  
+      • Console vật lý (tty1) khác với SSH (pts)  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Kernel và initramfs là hai thành phần quan trọng trong boot process.  
+  GRUB cho phép chọn entry và chỉnh sửa tạm thời.  
+  Hiểu /boot giúp quản lý kernel và khôi phục hệ thống.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Tiếp theo chúng ta sẽ chỉnh sửa kernel parameters.  
+────────────────────────────────────────────────────────────────  

@@ -1,0 +1,51 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              USING APT LIST                                                  ║  
+║               (Sử Dụng Apt List)                                             ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Sử dụng apt list và quản lý cache  
+  Mục tiêu   : Liệt kê, kiểm tra và nâng cấp packages  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Package Cache  
+      • /var/cache/apt/pkgcache.bin : Metadata packages  
+      • ls -l : Kiểm tra thời gian cập nhật lần cuối  
+
+  • Cập nhật Cache  
+      • sudo apt update (hoặc apt-get update)  
+      • Nên chạy trước khi install/upgrade  
+
+  • Liệt kê Packages  
+      • apt list : Tất cả gói  
+      • apt list --installed : Gói đã cài (khoảng 603 gói)  
+      • apt list --upgradable : Gói có thể nâng cấp  
+
+  • Nâng cấp Gói  
+      • sudo apt upgrade <package> (ví dụ: ansible)  
+      • Kiểm tra trước bằng apt list --upgradable  
+
+  • Lưu ý  
+      • Update cache chỉ cần khi metadata cũ  
+      • Sử dụng wc -l để đếm số gói  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  apt list giúp kiểm soát packages đã cài và có thể nâng cấp.  
+  Luôn update cache để có thông tin mới nhất.  
+  Tiếp theo chúng ta sẽ học tìm kiếm packages.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thực hành liệt kê và upgrade packages.  
+────────────────────────────────────────────────────────────────  

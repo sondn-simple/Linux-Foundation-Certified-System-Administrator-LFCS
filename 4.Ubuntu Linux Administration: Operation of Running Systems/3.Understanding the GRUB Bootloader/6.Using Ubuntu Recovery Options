@@ -1,0 +1,51 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              USING UBUNTU RECOVERY OPTIONS                                   ║  
+║               (Sử Dụng Ubuntu Recovery Options)                              ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Sử dụng Recovery Options trong GRUB  
+  Mục tiêu   : Khôi phục hệ thống khi có sự cố  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Truy cập Recovery Menu  
+      • Advanced options for Ubuntu → Recovery mode  
+      • Boot vào menu recovery  
+
+  • Các công cụ Recovery  
+      • Update GRUB bootloader  
+      • File system check (fsck)  
+      • Repair packagedatabase (dpkg)  
+      • Clean free space  
+      • Enable networking  
+      • Root shell (tương tự init=/bin/bash)  
+      • System summary (CPU, disk, memory, APT database)  
+
+  • Lưu ý khi sử dụng  
+      • Chọn option "resume" để tiếp tục boot bình thường  
+      • Menu có thể rối ban đầu do log, chọn option để làm sạch  
+      • Recovery mode mount filesystem read/write  
+
+  • Giới hạn  
+      • Nếu GRUB bị hỏng hoàn toàn, cần boot từ ISO/DVD để repair  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Recovery Options cung cấp nhiều công cụ khôi phục hữu ích.  
+  Root shell và fsck rất quan trọng khi hệ thống gặp vấn đề.  
+  Kết hợp với custom GRUB entry để quản trị hiệu quả.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Tiếp theo chúng ta sẽ học Reinstall GRUB Bootloader.  
+────────────────────────────────────────────────────────────────  

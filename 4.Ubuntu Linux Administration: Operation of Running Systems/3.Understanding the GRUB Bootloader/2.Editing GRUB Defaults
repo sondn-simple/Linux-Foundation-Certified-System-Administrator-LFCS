@@ -1,0 +1,51 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              EDITING GRUB DEFAULTS                                           ║  
+║               (Chỉnh Sửa GRUB Defaults)                                      ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Chỉnh sửa cấu hình GRUB  
+  Mục tiêu   : Hiển thị GRUB menu và thay đổi timeout  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Mặc định trên Vagrant/Ubuntu  
+      • GRUB menu bị ẩn (TIMEOUT=0, TIMEOUT_STYLE=hidden)  
+      • Boot trực tiếp mà không hiển thị menu  
+
+  • Chỉnh sửa cấu hình  
+      • sudo vim /etc/default/grub  
+      • Đặt GRUB_TIMEOUT=10  
+      • GRUB_TIMEOUT_STYLE=menu  
+
+  • Cập nhật GRUB  
+      • sudo update-grub (cách đơn giản trên Ubuntu)  
+      • sudo grub-mkconfig -o /boot/grub/grub.cfg  
+
+  • Kiểm tra  
+      • Reboot và quan sát menu GRUB  
+      • Sử dụng phím mũi tên để điều hướng  
+
+  • Lưu ý  
+      • Kiểm tra file trong /etc/grub.d/ (ví dụ: 50-cloudimg-settings.conf)  
+      • Cập nhật GRUB sau khi thay đổi  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Chỉnh sửa /etc/default/grub giúp tùy chỉnh GRUB menu.  
+  update-grub làm mới cấu hình boot loader.  
+  Hiển thị menu rất hữu ích để debug và chọn kernel.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Tiếp theo chúng ta sẽ chỉnh sửa kernel parameters.  
+────────────────────────────────────────────────────────────────  

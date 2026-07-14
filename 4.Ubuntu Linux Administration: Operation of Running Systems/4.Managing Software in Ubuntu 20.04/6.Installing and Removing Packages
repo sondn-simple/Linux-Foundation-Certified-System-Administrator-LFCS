@@ -1,0 +1,49 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              INSTALLING AND REMOVING PACKAGES                                ║  
+║               (Cài Đặt Và Gỡ Packages)                                       ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Cài đặt, gỡ và quản lý packages  
+  Mục tiêu   : Sử dụng apt install, remove, purge và autoremove  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Cài đặt Packages  
+      • sudo apt install -y postfix : Cài tự động  
+      • Cài nhiều gói: apt install pkg1 pkg2  
+
+  • Gỡ Packages  
+      • sudo apt remove postfix : Giữ config  
+      • sudo apt purge postfix : Xóa cả config  
+
+  • Dọn dẹp Dependencies  
+      • sudo apt autoremove : Xóa gói phụ không cần  
+
+  • DEBIAN_PRIORITY  
+      • low : Hiển thị nhiều câu hỏi cấu hình  
+      • sudo DEBIAN_PRIORITY=low apt install -y postfix  
+
+  • Lưu ý  
+      • autoremove nên chạy định kỳ  
+      • Priority giúp tùy chỉnh cài đặt  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  apt install/remove/purge giúp quản lý packages linh hoạt.  
+  autoremove giữ hệ thống sạch sẽ.  
+  DEBIAN_PRIORITY cho phép cấu hình chi tiết hơn.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Tiếp theo chúng ta sẽ học về Repositories.  
+────────────────────────────────────────────────────────────────  

@@ -1,0 +1,53 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              MANAGING A RUNNING SYSTEM                                       ║  
+║               (Quản Lý Hệ Thống Đang Chạy)                                   ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Quản lý Shutdown và Reboot Linux  
+  Mục tiêu   : Kiểm soát tắt máy, khởi động lại và ngăn logins  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Giới thiệu module  
+      • Tập trung vào shutdown, reboot và ngăn user login  
+      • Tổng quan toàn khóa học: Bootloader, quản lý service, phần mềm, scripting, AppArmor  
+
+  • Lab Environment  
+      • Sử dụng Vagrant + VirtualBox  
+      • Ubuntu 20.04 (phù hợp LFCS)  
+
+  • Lệnh Shutdown  
+      • shutdown now : Tắt ngay  
+      • shutdown -r : Reboot  
+      • shutdown +30 : Sau 30 phút  
+      • shutdown 17:30 : Lên lịch cụ thể  
+      • shutdown -c : Hủy shutdown  
+
+  • Ngăn user login  
+      • Tạo file /etc/nologin : Chỉ root được login  
+      • Hữu ích khi bảo trì hệ thống  
+      • File tự xóa sau reboot  
+
+  • Tài liệu  
+      • man shutdown : Xem hướng dẫn chi tiết (section 8)  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Shutdown và reboot là kỹ năng quản trị cơ bản.  
+  Sử dụng /etc/nologin giúp bảo vệ hệ thống trong lúc bảo trì.  
+  Thực hành thường xuyên để nắm vững lệnh.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Tiếp theo chúng ta sẽ thực hành các lệnh shutdown.  
+────────────────────────────────────────────────────────────────  

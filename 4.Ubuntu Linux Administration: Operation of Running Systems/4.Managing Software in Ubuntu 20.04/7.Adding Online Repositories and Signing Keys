@@ -1,0 +1,50 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              ADDING ONLINE REPOSITORIES AND SIGNING KEYS                     ║  
+║               (Thêm Online Repositories Và Signing Keys)                     ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Thêm repository và signing key  
+  Mục tiêu   : Quản lý sources.list và apt-key  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Xem Repository  
+      • sudo apt edit-sources : Mở /etc/apt/sources.list  
+      • /etc/apt/sources.list.d/ : Thư mục file .list bổ sung  
+
+  • Signing Key  
+      • apt-key list : Xem các key hiện có  
+      • wget -O - https://... | sudo apt-key add - : Thêm key mới  
+
+  • Thêm Repository  
+      • sudo add-apt-repository "deb https://apt.releases.hashicorp.com focal main"  
+      • Tự động update metadata  
+
+  • Kiểm tra  
+      • apt-key list : Xem key HashiCorp  
+      • sudo apt update : Cập nhật repository mới  
+
+  • Lưu ý  
+      • Key đảm bảo package không bị thay đổi  
+      • Có thể thêm trực tiếp vào sources.list  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Thêm repository và key giúp cài gói từ nguồn bên thứ ba.  
+  HashiCorp là ví dụ cho Terraform, Vault, v.v.  
+  Tiếp theo chúng ta sẽ học quản lý packages chi tiết hơn.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thực hành thêm repository HashiCorp.  
+────────────────────────────────────────────────────────────────  

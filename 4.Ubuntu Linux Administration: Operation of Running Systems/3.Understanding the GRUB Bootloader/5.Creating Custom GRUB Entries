@@ -1,0 +1,56 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              CREATING CUSTOM GRUB ENTRIES                                    ║  
+║               (Tạo Custom GRUB Entries)                                      ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Tạo GRUB Entry tùy chỉnh  
+  Mục tiêu   : Thêm menu entry vĩnh viễn vào GRUB để dễ dàng recovery  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Chuẩn bị  
+      • sudo vim /etc/grub.d/40_custom  
+      • Không thay đổi phần đầu file (chỉ append ở cuối)  
+
+  • Các bước thao tác với Vim  
+      • G : Di chuyển đến cuối file  
+      • Esc : :r /boot/grub/grub.cfg (đọc file grub.cfg vào)  
+      • 130dd : Xóa 130 dòng thừa (hoặc dùng dd nhiều lần)  
+      • dG : Xóa từ dòng hiện tại đến cuối file (xóa submenu thừa)  
+      • i : Vào chế độ Insert để chỉnh sửa (đổi tên menuentry thành "Recovery")  
+      • A : Append ở cuối dòng Linux để thêm rw init=/bin/bash  
+      • Esc : Thoát Insert mode  
+      • :wq : Lưu và thoát Vim  
+
+  • Cập nhật GRUB  
+      • sudo update-grub (hoặc grub-mkconfig -o /boot/grub/grub.cfg)  
+
+  • Kiểm tra  
+      • Reboot → GRUB menu hiển thị entry Recovery  
+      • Boot vào Recovery → Truy cập root shell trực tiếp  
+
+  • Lưu ý quan trọng  
+      • Entry tùy chỉnh giúp khôi phục khi sudo bị hỏng  
+      • Test cẩn thận trước khi áp dụng production  
+      • Có thể dùng nano nếu chưa quen Vim  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Tạo custom GRUB entry với Vim giúp tùy chỉnh boot process vĩnh viễn.  
+  Kỹ năng Vim rất hữu ích cho quản trị Linux.  
+  Kết hợp với recovery options sẵn có của Ubuntu.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Tiếp theo chúng ta sẽ khám phá Recovery Options trong GRUB.  
+────────────────────────────────────────────────────────────────  

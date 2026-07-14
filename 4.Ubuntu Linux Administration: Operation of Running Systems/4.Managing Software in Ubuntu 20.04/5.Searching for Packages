@@ -1,0 +1,46 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              SEARCHING FOR PACKAGES                                          ║  
+║               (Tìm Kiếm Packages)                                            ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Tìm kiếm packages với apt  
+  Mục tiêu   : Tìm và kiểm tra thông tin gói phần mềm  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Tìm kiếm cơ bản  
+      • apt search apache : Tìm gói chứa từ "apache" (name/description)  
+
+  • Tìm kiếm nâng cao  
+      • apt search --names-only apache : Chỉ tìm trong tên  
+      • apt search '^apache' : Tìm gói bắt đầu bằng apache (regex)  
+
+  • Xem chi tiết  
+      • apt show apache2 : Xem metadata (description, version, etc.)  
+
+  • Sử dụng apt-cache  
+      • apt-cache search apache : Dùng trong script/remote  
+
+  • Kết quả ví dụ  
+      • apache2 : Apache HTTP Server (web server)  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  apt search và apt show giúp tìm và xác nhận gói chính xác.  
+  Sử dụng regex và --names-only để thu hẹp kết quả.  
+  Tiếp theo chúng ta sẽ học cài đặt và gỡ packages.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thực hành tìm kiếm apache2 và các gói khác.  
+────────────────────────────────────────────────────────────────  

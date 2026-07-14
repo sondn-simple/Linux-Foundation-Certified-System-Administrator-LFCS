@@ -1,0 +1,50 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              COMPARING APT AND APT-GET                                       ║  
+║               (So Sánh Apt Và Apt-get)                                       ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : So sánh apt và apt-get  
+  Mục tiêu   : Hiểu sự khác biệt và cách sử dụng phù hợp  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Easter Egg  
+      • apt moo : Hiển thị "Have you mooed today?" (Super Cow Powers)  
+
+  • apt update  
+      • Cập nhật cache repository  
+      • Phù hợp dùng interactive trên console  
+
+  • apt-get update  
+      • Dùng trong script và SSH remote  
+      • Ổn định, không cảnh báo  
+
+  • Thực hành  
+      • Trên ubuntu1: sudo apt update / sudo apt-get update  
+      • SSH vào ubuntu2: apt update (có warning) vs apt-get update (không warning)  
+
+  • Lưu ý  
+      • apt: Interactive, console  
+      • apt-get: Script, remote, non-interactive  
+      • Cả hai đều hoạt động, nhưng chọn đúng theo ngữ cảnh  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  apt thân thiện cho người dùng, apt-get phù hợp script và automation.  
+  Hiểu sự khác biệt giúp tránh lỗi khi chạy remote hoặc script.  
+  Tiếp theo chúng ta sẽ học quản lý repository.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thực hành trên cả hai máy ubuntu1 và ubuntu2.  
+────────────────────────────────────────────────────────────────  
