@@ -1,0 +1,47 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              WORKING WITH TARGETS                                            ║  
+║               (Làm Việc Với Targets)                                         ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Quản lý Targets trong systemd  
+  Mục tiêu   : Thay đổi default target và isolate  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Xem Targets  
+      • systemctl list-unit-files --type=target  
+      • runlevel : Xem runlevel hiện tại (5 = graphical)  
+
+  • Thay Đổi Target  
+      • sudo systemctl isolate multi-user.target : Chuyển ngay  
+      • runlevel : Kiểm tra (3 = multi-user)  
+
+  • Default Target  
+      • systemctl get-default : Xem target mặc định  
+      • sudo systemctl set-default multi-user.target : Đặt mặc định  
+
+  • Lưu ý  
+      • Graphical target bao gồm multi-user  
+      • Isolate thay đổi runlevel ngay  
+      • Multi-user phù hợp server, graphical cho desktop  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Targets nhóm services và xác định runlevel boot.  
+  Set-default và isolate giúp tùy chỉnh boot process.  
+  Tiếp theo chúng ta sẽ học thêm về systemd.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thử thay đổi default target.  
+────────────────────────────────────────────────────────────────  

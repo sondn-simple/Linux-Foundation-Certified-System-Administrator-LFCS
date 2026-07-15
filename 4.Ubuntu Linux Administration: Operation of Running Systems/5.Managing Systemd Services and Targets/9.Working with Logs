@@ -1,0 +1,48 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              WORKING WITH LOGS                                               ║  
+║               (Làm Việc Với Logs)                                            ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Quản lý Logs với journalctl  
+  Mục tiêu   : Xem log, filter và persist journal  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Log Truyền Thống  
+      • /var/log/syslog : Log chính  
+      • tail -f /var/log/syslog : Theo dõi real-time  
+
+  • Journalctl  
+      • journalctl : Xem toàn bộ log  
+      • journalctl -u ssh : Log của service  
+      • journalctl --since today : Log từ hôm nay  
+
+  • Persist Journal  
+      • /etc/systemd/journald.conf : Storage=persistent  
+      • sudo sed -i 's/#Storage=auto/Storage=persistent/' journald.conf  
+      • systemctl restart systemd-journald  
+
+  • Lưu ý  
+      • Journalctl mạnh hơn log file truyền thống  
+      • Filter và search dễ dàng  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Journalctl là công cụ hiện đại để quản lý log trong systemd.  
+  Persist giúp lưu log sau reboot.  
+  Tiếp theo chúng ta sẽ học thêm về systemd.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thực hành journalctl -u ssh.  
+────────────────────────────────────────────────────────────────  

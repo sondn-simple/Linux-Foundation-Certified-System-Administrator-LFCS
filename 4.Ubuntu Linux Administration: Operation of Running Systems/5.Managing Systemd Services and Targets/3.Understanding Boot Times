@@ -1,0 +1,47 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              UNDERSTANDING BOOT TIMES                                        ║  
+║               (Hiểu Về Boot Times)                                           ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Phân tích Boot Time với Systemd  
+  Mục tiêu   : Sử dụng systemd-analyze và pstree  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Process ID 1  
+      • pstree : Xem process tree (Systemd ở đỉnh)  
+      • ps -p1 -f : Xem chi tiết PID 1 (/sbin/init symlink đến systemd)  
+
+  • Phân tích Boot  
+      • systemd-analyze : Tổng thời gian boot (kernel + userspace)  
+      • systemd-analyze blame : Liệt kê thời gian từng service  
+
+  • Lợi ích  
+      • Xác định service chậm nhất  
+      • Tối ưu boot time  
+      • Graphical target: Thời gian login screen  
+
+  • Lưu ý  
+      • Services chạy parallel → Giảm 1 service không giảm nhiều thời gian  
+      • Hữu ích cho desktop và server  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Systemd-analyze giúp chẩn đoán và tối ưu boot process.  
+  Hiểu PID 1 và initramfs rất quan trọng.  
+  Tiếp theo chúng ta sẽ học quản lý services.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy chạy systemd-analyze blame trên hệ thống của bạn.  
+────────────────────────────────────────────────────────────────  

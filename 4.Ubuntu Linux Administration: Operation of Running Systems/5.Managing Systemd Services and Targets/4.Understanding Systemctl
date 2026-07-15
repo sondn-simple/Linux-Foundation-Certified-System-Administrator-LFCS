@@ -1,0 +1,50 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              UNDERSTANDING SYSTEMCTL                                         ║  
+║               (Hiểu Về Systemctl)                                            ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Sử dụng systemctl quản lý services  
+  Mục tiêu   : Enable, start, status và edit service  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Xem Trạng Thái  
+      • systemctl status cron : Xem status, PID, log  
+
+  • Enable/Disable  
+      • sudo systemctl enable cron : Bật auto start  
+      • sudo systemctl enable --now cron : Bật và start ngay  
+      • sudo systemctl disable --now cron : Tắt và stop  
+
+  • Xem và Chỉnh Sửa  
+      • systemctl cat cron.service : Xem định nghĩa unit  
+      • systemctl edit --full cron.service : Chỉnh sửa full file  
+
+  • Lưu ý  
+      • --now : Kết hợp start/enable hoặc stop/disable  
+      • Status hiển thị log mới nhất  
+      • Chạy với root để xem đầy đủ log  
+
+  • Thực hành  
+      • Khuyến khích thực hành trên console  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Systemctl là lệnh chính để quản lý services trong systemd.  
+  Hiểu enable, status và edit giúp vận hành hệ thống hiệu quả.  
+  Tiếp theo chúng ta sẽ thực hành chi tiết.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thực hành systemctl status và enable.  
+────────────────────────────────────────────────────────────────  

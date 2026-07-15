@@ -1,0 +1,53 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              MANAGING SERVICES WITH SYSTEMCTL                                ║  
+║               (Quản Lý Services Với Systemctl)                               ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Quản lý services với systemctl  
+  Mục tiêu   : Enable, disable, start, stop và edit service  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Xem Trạng Thái  
+      • systemctl status cron : Xem status, log, PID  
+
+  • Enable/Disable  
+      • sudo systemctl enable cron  
+      • sudo systemctl enable --now cron : Enable + start  
+      • sudo systemctl disable --now cron : Disable + stop  
+
+  • Mask/Unmask  
+      • sudo systemctl mask --now cron : Ngăn start (point to /dev/null)  
+      • sudo systemctl unmask --now cron  
+
+  • Xem và Chỉnh Sửa  
+      • systemctl cat cron.service : Xem file unit  
+      • systemctl edit --full cron.service : Chỉnh sửa full (tạo override)  
+
+  • Reload  
+      • sudo systemctl daemon-reload : Load lại config  
+
+  • Lưu ý  
+      • --now kết hợp start/enable hoặc stop/disable  
+      • Mask dùng để tạm khóa service  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Systemctl là công cụ mạnh mẽ để quản lý services.  
+  Thực hành thường xuyên để thành thạo.  
+  Tiếp theo chúng ta sẽ học Targets.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thực hành systemctl status và enable.  
+────────────────────────────────────────────────────────────────  

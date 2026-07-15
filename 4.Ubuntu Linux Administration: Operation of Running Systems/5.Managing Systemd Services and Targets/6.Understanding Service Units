@@ -1,0 +1,48 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              UNDERSTANDING SERVICE UNITS                                     ║  
+║               (Hiểu Về Service Units)                                        ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Service Unit trong systemd  
+  Mục tiêu   : Tạo service tự động thiết lập loop device  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Chuẩn bị Disk File  
+      • fallocate -l 10G disk1  
+      • losetup -f --show disk1 : Tạo loop device  
+      • parted : Tạo partition table  
+
+  • Tạo Service Unit  
+      • [Unit]: Description, After=local-fs.target  
+      • [Service]: ExecStart=losetup và partprobe  
+      • [Install]: WantedBy=local-fs.target  
+
+  • Kích hoạt  
+      • systemctl enable disk1.service  
+      • Reboot để kiểm tra loop device tồn tại  
+
+  • Lợi ích  
+      • Tự động hóa sau boot  
+      • Loop device và partition được thiết lập liên tục  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Service Unit giúp tự động hóa nhiệm vụ sau boot.  
+  Kết hợp losetup và partprobe để quản lý disk file.  
+  Tiếp theo chúng ta sẽ học Timer Units.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thử tạo service unit cho loop device.  
+────────────────────────────────────────────────────────────────  

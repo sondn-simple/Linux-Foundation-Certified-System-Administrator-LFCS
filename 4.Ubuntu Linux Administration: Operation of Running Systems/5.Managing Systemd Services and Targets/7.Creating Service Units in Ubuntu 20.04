@@ -1,0 +1,52 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              CREATING SERVICE UNITS IN UBUNTU 20.04                          ║  
+║               (Tạo Service Units Trong Ubuntu 20.04)                         ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Tạo Service Unit cho loop device  
+  Mục tiêu   : Tự động hóa losetup và partprobe sau boot  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Chuẩn bị Disk  
+      • fallocate -l 1G disk1  
+      • losetup -f --show disk1 → Tạo loop10  
+      • parted /dev/loop10 : Tạo partition  
+
+  • Tạo Service File  
+      • sudo systemctl edit --full --force losetup.service  
+      • [Unit]: Description, After, Before  
+      • [Service]: Type=oneshot, ExecStart=losetup và partprobe  
+      • [Install]: WantedBy=local-fs.target  
+
+  • Kích hoạt  
+      • sudo systemctl daemon-reload  
+      • sudo systemctl enable --now losetup.service  
+
+  • Kiểm tra  
+      • lsblk : Xem loop device và partition sau reboot  
+
+  • Lưu ý  
+      • Service chạy trước local-fs.target  
+      • Đảm bảo dùng đúng loop device  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Service Unit tự động thiết lập loop device sau boot.  
+  Rất hữu ích cho disk file và partition.  
+  Tiếp theo chúng ta sẽ học Timer Units.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thử tạo service unit cho disk file.  
+────────────────────────────────────────────────────────────────  

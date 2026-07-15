@@ -1,0 +1,51 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              SUMMARY AND WHAT'S NEXT                                         ║  
+║               (Tóm Tắt Và Nội Dung Tiếp Theo)                               ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Tóm tắt module Managing Systemd Services and Targets  
+  Mục tiêu   : Ôn lại systemd ecosystem  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Systemd Ecosystem  
+      • PID 1 = systemd  
+      • hostnamectl, timedatectl, localectl : Uniformity trên các distro  
+
+  • Systemctl  
+      • start, stop, enable, disable, mask  
+      • cat, edit service unit  
+
+  • Service Units  
+      • Tạo file .service để tự động hóa (ví dụ: losetup)  
+
+  • Targets  
+      • Nhóm services, set default target (graphical/multi-user)  
+      • Isolate thay đổi runlevel  
+
+  • Logs  
+      • journalctl : Xem và filter log  
+      • Persist journal trong journald.conf  
+
+  • Kết quả  
+      • Quản lý services, targets và logs hiệu quả  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Module giúp nắm vững systemd và quản lý hệ thống.  
+  Tiếp theo chúng ta sẽ học Shell Scripting.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Chúc mừng bạn đã hoàn thành module Systemd.  
+────────────────────────────────────────────────────────────────  

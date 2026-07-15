@@ -1,0 +1,49 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              THE SYSTEMD ECO-SYSTEM                                          ║  
+║               (Hệ Sinh Thái Systemd)                                         ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Hệ sinh thái Systemd  
+  Mục tiêu   : Sử dụng hostnamectl, timedatectl, localectl  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • hostnamectl  
+      • Xem thông tin hostname, OS, virtualization  
+      • sudo hostnamectl set-hostname main : Đổi hostname  
+
+  • timedatectl  
+      • Xem date, timezone, time sync  
+      • sudo timedatectl set-timezone Europe/London : Đặt múi giờ  
+
+  • localectl  
+      • Xem locale và character set  
+      • sudo localectl set-locale LANG=en_GB.UTF-8  
+
+  • Lợi ích  
+      • Uniformity: Lệnh giống nhau trên nhiều distro  
+      • Dễ cấu hình mà không cần chỉnh file thủ công  
+
+  • Lưu ý  
+      • Systemd ecosystem bắt đầu từ Ubuntu 16.04  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Systemd cung cấp công cụ nhất quán để quản lý hệ thống.  
+  hostnamectl, timedatectl, localectl rất tiện lợi.  
+  Tiếp theo chúng ta sẽ học quản lý services.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thực hành các lệnh ctl trên Ubuntu.  
+────────────────────────────────────────────────────────────────  
