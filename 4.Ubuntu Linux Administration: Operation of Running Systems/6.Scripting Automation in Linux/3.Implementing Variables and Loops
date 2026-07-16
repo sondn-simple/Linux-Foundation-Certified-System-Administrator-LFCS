@@ -1,0 +1,48 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              IMPLEMENTING VARIABLES AND LOOPS                                ║  
+║               (Triển Khai Variables Và Loops)                                ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Sử dụng Variables và Loops trong script  
+  Mục tiêu   : Làm script dễ đọc và tự động hóa  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Khai Báo Variables  
+      • INFO_HOSTNAME=$(hostname)  
+      • INFO_IP=$(hostname -I | cut -d " " -f2)  
+      • INFO_KERNEL=$(uname -r)  
+
+  • Sử Dụng Loop  
+      • for i in {1..25}; do echo -n =; done  
+      • Tạo header/footer tự động  
+
+  • In Thông Tin  
+      • echo "Host: $INFO_HOSTNAME"  
+      • echo "IP: $INFO_IP"  
+      • echo "Kernel: $INFO_KERNEL"  
+
+  • Lưu ý  
+      • Dùng double quotes để expand variable  
+      • Loop giúp tạo chuỗi ký tự lặp lại  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Variables làm script dễ đọc và dễ bảo trì.  
+  Loops tự động hóa tạo header/footer.  
+  Tiếp theo chúng ta sẽ học conditional statements.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thử chỉnh sửa info.sh với variables và loops.  
+────────────────────────────────────────────────────────────────  

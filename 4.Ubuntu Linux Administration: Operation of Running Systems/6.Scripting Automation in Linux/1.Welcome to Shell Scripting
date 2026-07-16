@@ -1,0 +1,51 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              WELCOME TO SHELL SCRIPTING                                      ║  
+║               (Chào Mừng Đến Với Shell Scripting)                            ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Giới thiệu Shell Scripting  
+  Mục tiêu   : Hiểu cơ bản script Bash và shebang  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Shell Script là gì?  
+      • Tập hợp lệnh trong file text  
+      • Thực thi bởi Bash hoặc shell khác  
+
+  • Tạo Script Đầu Tiên  
+      • mkdir shell_scripts  
+      • vim info.sh  
+      • echo, hostname, uname -r  
+
+  • Shebang  
+      • #!/bin/bash : Chỉ định interpreter  
+      • sed -i '1i #!/bin/bash' info.sh : insert vào dòng đầu tiên file info.sh
+
+  • Thực Thi  
+      • bash info.sh  
+      • chmod +x info.sh && ./info.sh  
+
+  • Lưu ý  
+      • Script có thể chạy standalone  
+      • Thêm vào PATH để chạy mà không cần ./  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Shell scripting giúp tự động hóa công việc.  
+  Hiểu shebang và permission rất quan trọng.  
+  Tiếp theo chúng ta sẽ thực hành script.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy bắt đầu viết script đầu tiên.  
+────────────────────────────────────────────────────────────────  

@@ -1,0 +1,47 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              UNDERSTANDING CRON FILES                                        ║  
+║               (Hiểu Về Cron Files)                                           ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Cron Files và Crontab  
+  Mục tiêu   : Lập lịch tasks với cron  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • System Cron  
+      • /etc/crontab : File chính  
+      • /etc/cron.d/ : Thư mục file cron riêng  
+
+  • Cú Pháp Crontab  
+      • Minute Hour DayOfMonth Month DayOfWeek User Command  
+      • Ví dụ: */10 * * * * root date >> /tmp/date  
+
+  • User Crontab  
+      • crontab -l : Xem cron của user  
+      • crontab -e : Chỉnh sửa cron  
+      • crontab -r : Xóa cron  
+
+  • Lưu Ý  
+      • Tránh chỉnh /etc/crontab trực tiếp  
+      • Cron daemon quản lý scheduled tasks  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Cron là cách truyền thống để lập lịch tasks.  
+  Hiểu cú pháp 5 trường và user crontab rất quan trọng.  
+  Tiếp theo chúng ta sẽ thực hành cron.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thử tạo cron entry.  
+────────────────────────────────────────────────────────────────  

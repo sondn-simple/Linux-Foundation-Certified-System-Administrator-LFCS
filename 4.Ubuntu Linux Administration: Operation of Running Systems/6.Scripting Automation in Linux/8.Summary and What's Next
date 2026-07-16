@@ -1,0 +1,48 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              SUMMARY AND WHAT'S NEXT                                         ║  
+║               (Tóm Tắt Và Nội Dung Tiếp Theo)                               ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Tóm tắt module Shell Scripting  
+  Mục tiêu   : Ôn lại scripting Bash và giới thiệu tiếp theo  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Các Lệnh Chính  
+      • echo, read, source /etc/os-release  
+      • for loop với brace expansion {1..25}  
+      • while/until loop  
+
+  • Variables và Special Variables  
+      • $REPLY, $PWD_LEN, $# (argument count)  
+      • $? (exit code)  
+
+  • Script  
+      • Shebang, chmod +x  
+      • Tạo pwgen.sh, tạo user loop  
+
+  • Tài Nguyên  
+      • Git repo lfcs để tải script mẫu  
+
+  • Kết quả  
+      • Tự động hóa công việc với Bash  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Shell scripting là kỹ năng quan trọng cho Linux admin.  
+  Tiếp theo chúng ta sẽ học Scheduling Tasks (cron, systemd timer).  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Chúc mừng bạn đã hoàn thành module Shell Scripting.  
+────────────────────────────────────────────────────────────────  

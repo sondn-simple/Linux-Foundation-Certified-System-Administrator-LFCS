@@ -1,0 +1,56 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              WORKING WITH THE ATD                                            ║  
+║               (Làm Việc Với Atd)                                             ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Lập lịch tasks một lần với at  
+  Mục tiêu   : Tạo, xem, xóa at jobs và ví dụ lệnh cụ thể  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Kiểm Tra Service  
+      • systemctl status atd : Kiểm tra running/enabled  
+
+  • Tạo At Job  
+      • at teatime / at noon / at 16:00  
+      • at 3:31 August 23 2024  
+      • Nhập lệnh (date, ls /etc) và Ctrl + D  
+
+  • Quản Lý Jobs  
+      • atq : Xem danh sách jobs  
+      • at -c 3 : Xem chi tiết job 3 (verbose output, xem command)  
+      • atrm 3 : Xóa job 3 (xóa hoàn toàn job)  
+
+  • Ví Dụ Thực Hành Chi Tiết  
+      • at 16:00  
+      • ls /etc > /tmp/etc_ls  
+      • Ctrl + D  
+      • atq (xem job number)  
+      • at -c <job_number> (xem chi tiết)  
+      • atrm <job_number> (xóa job)  
+
+  • Lưu Ý  
+      • at -c cho thấy full command sẽ chạy  
+      • atrm xóa vĩnh viễn job  
+      • At dùng cho tasks một lần  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  At daemon phù hợp cho tasks một lần.  
+  Kết hợp với cron cho nhu cầu lập lịch linh hoạt.  
+  Tiếp theo chúng ta sẽ tóm tắt module.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thử tạo at job và dùng at -c, atrm.  
+────────────────────────────────────────────────────────────────  

@@ -1,0 +1,60 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              WORKING WITH TIMER UNITS                                        ║  
+║               (Làm Việc Với Timer Units)                                     ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Tạo Timer Unit và Service Unit  
+  Mục tiêu   : Lập lịch backup /etc hàng ngày  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Xem Timers Hiện Có  
+      • systemctl list-timers : Xem next/last execution, unit, service  
+
+  • Tạo Backup Service  
+      • sudo systemctl edit --full backup.service  
+      • [Unit] Description=Backup the /etc directory  
+      • [Service] ExecStart=tar -czf /root/etc.tar.gz /etc  
+      • Không có [Install] vì timer sẽ trigger  
+
+  • Tạo Timer Unit  
+      • sudo systemctl edit --full backup.timer  
+      • [Unit] Description=Backup daily the /etc directory  
+      • [Timer] OnBootSec=5min, OnUnitActiveSec=24h  
+      • Unit=backup.service  
+      • [Install] WantedBy=multi-user.target  
+
+  • Kích Hoạt  
+      • sudo systemctl daemon-reload  
+      • sudo systemctl enable backup.timer  
+      • Reboot và kiểm tra systemctl list-timers  
+
+  • Kiểm Tra  
+      • systemd-analyze verify backup.timer  
+      • Xem log với journalctl  
+
+  • Chi Tiết Thực Hành  
+      • Timer chạy 5 phút sau boot và lặp 24h  
+      • Service backup /etc vào /root/etc.tar.gz  
+      • Enable timer để tự động sau boot  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Timer Unit đơn giản, không cần daemon riêng.  
+  Kết hợp service để lập lịch backup.  
+  Tiếp theo chúng ta sẽ học cron và at.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thực hành tạo backup.timer.  
+────────────────────────────────────────────────────────────────  

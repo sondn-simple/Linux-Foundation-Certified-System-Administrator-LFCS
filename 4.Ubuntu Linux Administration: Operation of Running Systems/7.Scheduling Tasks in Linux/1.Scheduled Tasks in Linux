@@ -1,0 +1,47 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              SCHEDULED TASKS IN LINUX                                        ║  
+║               (Scheduled Tasks Trong Linux)                                  ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Lập lịch Tasks trong Linux  
+  Mục tiêu   : Systemd Timer, cron và at  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Systemd Timer Units  
+      • Tạo .timer và .service  
+      • OnBootSec=5min, OnUnitActiveSec=24h  
+
+  • Cron và At  
+      • Cron: Lập lịch định kỳ  
+      • atd: Lập lịch một lần  
+
+  • Kiểm Tra  
+      • man 5 systemd.timer  
+      • systemctl list-timers  
+      • systemd-analyze verify  
+
+  • Lưu ý  
+      • Timer units không cần daemon riêng  
+      • Enable timer, không enable service  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Systemd timer là cách hiện đại để lập lịch tasks.  
+  Kết hợp cron và at cho nhu cầu đa dạng.  
+  Tiếp theo chúng ta sẽ thực hành timer unit.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy chuẩn bị command line để tạo timer.  
+────────────────────────────────────────────────────────────────  

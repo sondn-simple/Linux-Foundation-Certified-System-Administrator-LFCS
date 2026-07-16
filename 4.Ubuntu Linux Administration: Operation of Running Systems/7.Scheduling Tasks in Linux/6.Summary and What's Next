@@ -1,0 +1,47 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              SUMMARY AND WHAT'S NEXT                                         ║  
+║               (Tóm Tắt Và Nội Dung Tiếp Theo)                               ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Tóm tắt module Scheduled Tasks  
+  Mục tiêu   : Ôn lại systemd timer, cron và at  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Systemd Timer  
+      • Tạo .timer và .service  
+      • Enable timer để trigger service  
+
+  • Cron  
+      • /etc/crontab và /etc/cron.d  
+      • crontab -e, -l, -r cho user cron  
+
+  • At  
+      • at, atq, atrm cho tasks một lần  
+      • at teatime, at 16:00  
+
+  • Kết quả  
+      • Hiểu cách lập lịch tasks linh hoạt  
+
+  • Tài Nguyên  
+      • Git repo lfcs để tải sample timer  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Module giúp nắm vững lập lịch tasks trong Linux.  
+  Tiếp theo chúng ta sẽ học Monitoring Processes.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Chúc mừng bạn đã hoàn thành module Scheduled Tasks.  
+────────────────────────────────────────────────────────────────  

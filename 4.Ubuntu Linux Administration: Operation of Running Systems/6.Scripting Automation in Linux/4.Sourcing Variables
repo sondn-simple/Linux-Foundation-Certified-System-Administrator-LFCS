@@ -1,0 +1,48 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              SOURCING VARIABLES                                              ║  
+║               (Sourcing Variables)                                           ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Sử dụng source để import variables  
+  Mục tiêu   : Sử dụng /etc/os-release trong script  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Xem File os-release  
+      • cat /etc/os-release : Xem các biến NAME, VERSION, PRETTY_NAME  
+
+  • Sử Dụng Source  
+      • source /etc/os-release : Import variables vào shell/script  
+
+  • In Variables  
+      • echo "OS: $PRETTY_NAME"  
+      • echo "NAME: $NAME"  
+
+  • Thêm Vào Script  
+      • Thêm source /etc/os-release sau shebang  
+      • Sử dụng variables trong echo  
+
+  • Lưu ý  
+      • Source import variables từ file khác  
+      • Hữu ích để lấy thông tin OS tự động  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Sourcing /etc/os-release giúp script dễ dàng lấy thông tin hệ thống.  
+  Tăng tính linh hoạt và dễ bảo trì.  
+  Tiếp theo chúng ta sẽ học conditional statements.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thử source /etc/os-release trong script.  
+────────────────────────────────────────────────────────────────  

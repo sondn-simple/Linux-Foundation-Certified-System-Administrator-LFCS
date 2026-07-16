@@ -1,0 +1,46 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              CREATING USERS FROM THE CLI                                     ║  
+║               (Tạo Users Từ CLI)                                             ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Tạo user từ command line với loop  
+  Mục tiêu   : Tạo nhiều user và set password  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • For Loop Tạo User  
+      • for user in jo jill sam; do  
+      • sudo useradd -m -s /bin/bash -p $(./pwgen.sh Password123?) $user  
+
+  • Kiểm Tra  
+      • tail -n3 /etc/passwd : Xem user accounts  
+      • tail -n3 /etc/shadow : Xem encrypted password  
+
+  • Test Login  
+      • su - jo : Login với password  
+      • exit : Thoát  
+
+  • Lưu ý  
+      • pwgen.sh sinh encrypted password  
+      • Loop giúp tạo nhiều user nhanh chóng  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Tạo user từ CLI với loop và script rất tiện lợi.  
+  Encrypted password đảm bảo bảo mật.  
+  Tiếp theo chúng ta sẽ học thêm scripting.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thử tạo user với loop.  
+────────────────────────────────────────────────────────────────  

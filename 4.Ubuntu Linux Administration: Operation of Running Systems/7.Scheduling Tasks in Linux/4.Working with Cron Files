@@ -1,0 +1,49 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              WORKING WITH CRON FILES                                         ║  
+║               (Làm Việc Với Cron Files)                                      ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Quản lý cron jobs  
+  Mục tiêu   : Tạo system cron và user cron  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • System Cron  
+      • /etc/crontab : File chính (không chỉnh trực tiếp)  
+      • /etc/cron.d/test : Tạo file riêng  
+      • Cú pháp: */10 * * * * root date >> /tmp/date  
+
+  • User Cron  
+      • crontab -e : Chỉnh sửa cron  
+      • crontab -l : Xem cron  
+      • crontab -r : Xóa cron  
+      • Ví dụ: * * * * * date >> /tmp/date  
+
+  • Kiểm Tra  
+      • journalctl -f : Theo dõi log cron  
+      • ls /tmp : Xem file date  
+
+  • Lưu Ý  
+      • System cron chạy dưới user chỉ định  
+      • User cron không cần user field  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Cron cho phép lập lịch tasks định kỳ.  
+  System cron và user cron đều dễ quản lý.  
+  Tiếp theo chúng ta sẽ học at.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thử tạo cron job.  
+────────────────────────────────────────────────────────────────  

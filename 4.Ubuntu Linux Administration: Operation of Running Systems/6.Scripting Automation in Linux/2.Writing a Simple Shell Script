@@ -1,0 +1,49 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              WRITING A SIMPLE SHELL SCRIPT                                   ║  
+║               (Viết Simple Shell Script)                                     ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Viết script Bash đầu tiên  
+  Mục tiêu   : Tạo, shebang và thực thi script  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Tạo Thư Mục Và Script  
+      • mkdir shellscripting && cd shellscripting  
+      • nano info.sh  
+      • echo, hostname, uname -r  
+
+  • Thêm Shebang  
+      • sed -i '1i #!/bin/bash' info.sh  
+      • file info.sh : Xác nhận executable  
+
+  • Thực Thi  
+      • chmod -v a+x info.sh  
+      • ./info.sh hoặc bash info.sh  
+      • Thêm vào PATH để chạy trực tiếp  
+
+  • Lưu ý  
+      • Shebang chỉ định interpreter  
+      • chmod +x để chạy standalone  
+      • PATH variable cho phép chạy mà không cần ./  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Script Bash là cách tự động hóa lệnh đơn giản.  
+  Shebang và permission là bước quan trọng.  
+  Tiếp theo chúng ta sẽ học variables và loops.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thử viết script info.sh.  
+────────────────────────────────────────────────────────────────  
