@@ -1,0 +1,55 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              SUMMARY AND WHAT'S NEXT                                         ║  
+║               (Tóm Tắt Và Nội Dung Tiếp Theo)                                ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallett  
+  Chủ đề     : Monitoring and Managing Processes in Linux  
+  Mục tiêu   : Giám sát và quản lý quy trình trên Ubuntu Linux  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Khắc phục vấn đề multipathd  
+      • journalctl -u multipathd -f : Xem log realtime  
+      • Sửa /etc/multipath.conf qua Ansible playbook  
+      • Thêm blacklist cho devnode sd[a|b]  
+      • Handler restart multipathd  
+
+  • Uptime và Load Average  
+      • uptime : Thời gian chạy + load average 1/5/15 phút  
+      • Load average / Số CPU = Tỷ lệ sử dụng  
+      • Load > 1.0 = Queue process  
+
+  • Lệnh ps và pgrep  
+      • ps -f / ps -l / ps -ef / ps -p PID  
+      • pgrep : Tìm process nhanh hơn  
+
+  • Kết thúc process  
+      • pkill : pgrep + kill  
+      • kill -9 : Force terminate  
+      • kill -l : Liệt kê tất cả signal  
+
+  • Các lệnh khác  
+      • top : Theo dõi realtime, sắp xếp CPU/Memory  
+      • nice/renice : Giảm ưu tiên process  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Mastering uptime, ps, pgrep, pkill, top và kill giúp quản lý system hiệu quả.  
+  Ansible giúp fix config persist sau reboot.  
+  Đây là nền tảng giám sát Ubuntu Linux.  
+  Chúc mừng bạn đã hoàn thành module này!  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Tiếp theo chúng ta sẽ học Securing Ubuntu Using AppArmor.  
+────────────────────────────────────────────────────────────────  

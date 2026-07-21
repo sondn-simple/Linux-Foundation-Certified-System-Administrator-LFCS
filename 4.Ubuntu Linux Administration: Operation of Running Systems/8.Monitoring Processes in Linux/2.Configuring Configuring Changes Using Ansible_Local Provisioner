@@ -1,0 +1,57 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              CONFIGURING CONFIGURATION CHANGES USING ANSIBLE_LOCAL PROVISIONER ║  
+║               (Cấu Hình Thay Đổi Cấu Hình Bằng Ansible_Local Provisioner)   ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallett  
+  Chủ đề     : Sử dụng Ansible_Local Provisioner  
+  Mục tiêu   : Fix lỗi multipathd qua Ansible Playbook khi boot VM  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Xác định vấn đề  
+      • journalctl -u multipathd -f : Xem log realtime  
+      • Lỗi: Không tìm thấy path cho sda/sdb  
+
+  • Sửa cấu hình  
+      • Sửa /etc/multipath.conf  
+      • Thêm blacklist cho devnode sd[a|b]  
+
+  • Dùng Ansible_Local Provisioner  
+      • Vagrantfile: ansible_local  
+      • ubuntu.yml: Task copy multipath.conf + handler RestartMP  
+
+  • Cấu trúc YAML  
+      • name: Edit Multipath  
+      • copy: dest=/etc/multipath.conf, content=…  
+      • notify: name=RestartMP  
+
+  • Handler  
+      • service: name=multipathd, state=restarted  
+
+  • Thực hiện  
+      • vagrant destroy && vagrant up  
+      • Ansible chạy: update cache, edit config, restart service  
+
+  • Kiểm tra  
+      • journalctl -u multipathd -f -n0 : Không còn lỗi  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Ansible_Local Provisioner giúp fix config ngay khi VM khởi động.  
+  Dễ dàng quản lý và persist sau mỗi rebuild.  
+  Đây là kỹ năng quan trọng trong Ubuntu Linux Administration.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thực hành chỉnh sửa ubuntu.yml và chạy vagrant up.  
+────────────────────────────────────────────────────────────────  

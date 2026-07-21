@@ -1,0 +1,54 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              MONITORING AND MANAGING PROCESSES IN UBUNTU LINUX             ║  
+║               (Giám Sát Và Quản Lý Quy Trình Trong Ubuntu Linux)            ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallett  
+  Chủ đề     : Monitoring Processes in Linux  
+  Mục tiêu   : Giám sát và quản lý quy trình trên Ubuntu 20.04  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Giới thiệu module  
+      • Phân tích vấn đề multipathd (lỗi không tìm thấy path)  
+      • Các lệnh chính: top, ps, nice, renice, kill  
+
+  • Giám sát CPU và Memory  
+      • top : Xem tổng quát CPU/memory  
+      • ps -ef : Liệt kê tất cả process  
+
+  • Sử dụng nice và renice  
+      • nice -n -10 command : Giảm ưu tiên  
+      • renice 10 -p PID : Thay đổi ưu tiên đang chạy  
+
+  • Tìm và kết thúc process  
+      • kill -9 PID : Dừng process mạnh  
+
+  • Khắc phục vấn đề multipathd  
+      • journalctl -u multipathd -f : Xem log realtime  
+      • man 5 multipath.conf : Hiểu cấu hình  
+      • Sửa file /etc/multipath.conf qua Ansible  
+      • copy module + content YAML để đảm bảo persist  
+
+  • Kết quả  
+      • Giảm lỗi, tối ưu performance, quản lý quy trình hiệu quả  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Mastering top, ps, nice, renice và kill giúp quản lý system mạnh mẽ.  
+  Sử dụng Ansible để fix config persist sau reboot.  
+  Đây là kỹ năng quan trọng trong Ubuntu Linux Administration.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thực hành ngay trên command line để quen với các lệnh này.  
+────────────────────────────────────────────────────────────────  

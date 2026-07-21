@@ -1,0 +1,48 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              DISPLAY AND SORT PROCESSES USING TOP                           ║  
+║               (Hiển Thị Và Sắp Xếp Quy Trình Bằng Top)                       ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallett  
+  Chủ đề     : Monitoring Process Performance  
+  Mục tiêu   : Sử dụng lệnh top để xem và sắp xếp quy trình  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Chạy lệnh top  
+      • top : Mở giao diện theo dõi realtime  
+      • Sắp xếp mặc định theo CPU utilization  
+
+  • Thay đổi sắp xếp  
+      • Nhấn F : Chọn field (CPU, MEM, v.v.)  
+      • Nhấn S : Sắp xếp theo field đã chọn  
+      • Nhấn Q : Thoát khỏi top  
+
+  • Ví dụ thực tế  
+      • Sắp xếp theo CPU: systemd, top…  
+      • Sắp xếp theo Memory: snap daemon, unattended-upgrade…  
+
+  • Lưu ý  
+      • Display thay đổi nhanh với CPU  
+      • Memory utilization ổn định hơn  
+      • Có thể dùng để phát hiện process chiếm nhiều tài nguyên  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Lệnh top là công cụ mạnh mẽ để theo dõi và sắp xếp process realtime.  
+  Hiểu cách sử dụng F và S giúp tối ưu hiệu suất system.  
+  Đây là kỹ năng quan trọng trong quản trị Ubuntu Linux.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Tiếp theo chúng ta sẽ học ps và kill process.  
+────────────────────────────────────────────────────────────────  

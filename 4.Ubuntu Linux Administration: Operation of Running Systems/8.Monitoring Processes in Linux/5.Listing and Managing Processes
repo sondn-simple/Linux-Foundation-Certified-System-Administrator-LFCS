@@ -1,0 +1,55 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              LISTING AND MANAGING PROCESSES                                  ║  
+║               (Liệt Kê Và Quản Lý Quy Trình)                                 ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallett  
+  Chủ đề     : Listing and Managing Processes  
+  Mục tiêu   : Sử dụng ps, pgrep, pkill và kill  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Liệt kê quy trình  
+      • ps : Liệt kê quy trình hiện tại  
+      • ps -f / ps -l / ps -ef : Liệt kê đầy đủ  
+      • ps -p PID : Liệt kê một process cụ thể  
+
+  • Tìm process  
+      • grep : ps -elf | grep bash  
+      • pgrep : Tìm process nhanh hơn (không liệt kê grep)  
+
+  • Kết thúc process  
+      • kill PID : Dừng process  
+      • pkill : Kết hợp pgrep + kill  
+      • kill -9 PID : Force kill (signal 9)  
+
+  • Signal  
+      • kill -l : Liệt kê tất cả signal  
+      • Default: SIGTERM (15)  
+      • SIGKILL (9): Force terminate  
+
+  • Thực hành  
+      • sleep 1000 &  
+      • pgrep sleep  
+      • pkill sleep  
+      • pkill -9 sleep  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  ps + pgrep + pkill là bộ công cụ hoàn chỉnh để quản lý process.  
+  Hiểu signal giúp kill process chính xác và an toàn.  
+  Đây là kỹ năng quan trọng trong Ubuntu Linux Administration.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Tiếp theo chúng ta sẽ học nice và renice.  
+────────────────────────────────────────────────────────────────  

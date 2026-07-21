@@ -1,0 +1,56 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              USING UPTIME AND UNDERSTANDING LOAD AVERAGES                   ║  
+║               (Sử Dụng Uptime Và Hiểu Load Average)                          ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallett  
+  Chủ đề     : Monitoring Process Performance  
+  Mục tiêu   : Hiểu Uptime và Load Average  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Lấy số CPU  
+      • nproc : Lệnh đơn giản nhất  
+      • lscpu : Hiển thị chi tiết  
+
+  • Lệnh uptime  
+      • Thời gian đã chạy hệ thống  
+      • Số user đang kết nối  
+      • Load average 1/5/15 phút  
+
+  • Cách tính Load Average  
+      • Load average / Số CPU = Tỷ lệ sử dụng CPU  
+      • Load > 1.0 : Đang queue process  
+      • Load > Số CPU : CPU quá tải  
+
+  • Thử nghiệm stress CPU  
+      • tar -cJf share.tar.xz /usr/share/doc &  
+      • Uptime sẽ tăng lên 1.19 sau vài lần chạy  
+
+  • Quan sát với watch  
+      • watch -n 2 uptime : Cập nhật mỗi 2 giây  
+      • Load giảm dần khi stress giảm  
+
+  • Kết luận  
+      • Load average phải so sánh với số CPU  
+      • Uptime giúp hiểu thời gian hệ thống đang chạy  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Uptime và Load Average là công cụ quan trọng để theo dõi performance.  
+  Load > số CPU = CPU đang quá tải.  
+  Đây là nền tảng giám sát system Ubuntu.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Tiếp theo chúng ta sẽ học ps, top và nice/renice.  
+────────────────────────────────────────────────────────────────  
