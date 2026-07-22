@@ -1,0 +1,51 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              ADDING EXTRA APPA RMOR UTILITIES                                ║  
+║               (Thêm Công Cụ AppArmor Bổ Sung)                                 ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallett  
+  Chủ đề     : Securing Ubuntu Using AppArmor  
+  Mục tiêu   : Thêm công cụ AppArmor bổ sung  
+  Tên         : Adding Extra AppArmor Utilities  
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Kiểm tra AppArmor service  
+      • sudo systemctl status apparmor  
+      • Active but exited (không chạy lâu)  
+      • aa-status : Xem 28 profile đã enforced  
+
+  • Cài đặt thêm công cụ  
+      • sudo apt update  
+      • sudo apt install -y apparmor-easyprof apparmor-utils apparmor-notify  
+      • apparmor-easyprof : Tạo profile  
+      • apparmor-utils : Phân tích log  
+      • apparmor-notify : Xem lỗi denial (cài GUI)  
+
+  • Kiểm tra sau cài  
+      • aa- (Tab Tab) : Xem đầy đủ aa-* commands  
+      • aa-status | apparmor_status : Xem số profile  
+      • aa-status --enforced / aa-status --complaining : Thay đổi chế độ  
+
+  • Lưu ý  
+      • apparmor-notify cài nhiều gói GUI  
+      • AppArmor đã có sẵn trên Ubuntu 20.04  
+      • Không cần cài kernel module riêng  
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Thêm apparmor-easyprof, apparmor-utils, apparmor-notify giúp tạo profile, phân tích log và xem denial.  
+  Đây là bước chuẩn bị quan trọng cho việc tạo AppArmor profile.  
+  Chuẩn bị hoàn hảo để tiếp tục học tạo profile cho ứng dụng.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thực hành aa-status và aa-enforce ngay trên command line.  
+────────────────────────────────────────────────────────────────  

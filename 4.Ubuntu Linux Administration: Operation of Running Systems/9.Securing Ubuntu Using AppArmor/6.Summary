@@ -1,0 +1,57 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              SUMMARY                                                         ║  
+║               (Tóm Tắt)                                                      ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallett  
+  Chủ đề     : Securing Ubuntu Using AppArmor  
+  Mục tiêu   : Tóm tắt module và chúc mừng hoàn thành khóa học  
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • AppArmor là gì?  
+      • Mandatory Access Control (MAC)  
+      • Tích hợp trực tiếp với kernel Linux  
+      • Hỗ trợ bởi Ubuntu và SUSE (Novell/Canonical)  
+      • Profile là tập quy tắc (text file trong /etc/apparmor.d/)  
+      • Log messages do kernel tự sinh  
+
+  • Các chế độ profile  
+      • Enforcing (mặc định): Block hành vi không cho phép + log  
+      • Complaining: Log lỗi nhưng không block  
+
+  • Công cụ quản lý  
+      • aa-status : Xem số profile enforced/complaining  
+      • aa-easyprof : Tạo profile cho ứng dụng  
+      • apparmor_parser -r : Load profile vào kernel  
+      • aa-logprof : Tự động generate/sửa profile từ log  
+      • apparmor-notify : Xem denial log (since last day)  
+
+  • Ví dụ thực tế  
+      • Tạo profile cho /usr/bin/file_test.py  
+      • Chỉ cho phép read/execute script + write vào /tmp/mytextfile cụ thể  
+      • Block hành vi nguy hiểm (viết vào file khác)  
+
+  • Lợi ích  
+      • Bảo vệ service chạy dưới root  
+      • Không thể bypass bởi root  
+      • Dễ debug và quản lý  
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Chúc mừng bạn đã hoàn thành module AppArmor và toàn bộ khóa học!  
+  Bạn đã nắm vững cách tạo, quản lý và bảo vệ ứng dụng bằng AppArmor.  
+  Đây là kỹ năng quan trọng trong Linux Foundation Certified System Administrator track.  
+  Hãy tiếp tục học tập và thực hành để đạt chứng chỉ!  
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hẹn gặp lại ở các khóa học tiếp theo.  
+Chúc bạn thành công!  
+────────────────────────────────────────────────────────────────  

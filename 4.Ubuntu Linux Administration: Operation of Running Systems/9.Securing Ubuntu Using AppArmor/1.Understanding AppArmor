@@ -1,0 +1,67 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              UNDERSTANDING APPA RMOR                                         ║  
+║               (Hiểu Về AppArmor)                                             ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallett  
+  Chủ đề     : Securing Ubuntu Using AppArmor  
+  Mục tiêu   : Giới thiệu AppArmor – Mandatory Access Control  
+
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • AppArmor là gì?  
+      • Mandatory Access Control (MAC) – Kiểm soát quyền truy cập bắt buộc  
+      • Tích hợp trực tiếp với kernel Linux (không cần module riêng)  
+      • Hỗ trợ bởi Ubuntu và SUSE (Novell/Canonical)  
+      • Log messages do kernel tự sinh  
+      • Bảo vệ service chạy dưới root (không thể bypass bởi root)
+      
+  • So sánh với DAC  
+      • Discretionary Access Control (DAC) có thể bị bypass bởi root  
+      • AppArmor là MAC nên an toàn hơn  
+      • Profile được cài sẵn trong /etc/apparmor.d/
+
+  • Ưu điểm  
+      • Bảo vệ service chạy dưới root  
+      • Không thể bypass bởi root  
+      • Log messages do kernel tự sinh  
+
+  • Kiểm tra cài đặt  
+      • systemctl status apparmor  
+      • aa-status : Xem số profile đã enforced  
+      • aa-status --enforced : Liệt kê profile enforced  
+
+  • File cấu hình  
+      • /etc/apparmor.d/ : Chứa profile  
+      • dpkg -S /etc/apparmor.d/* : Xem package  
+      • apt show apparmor : Chi tiết package  
+
+  • Công cụ bổ sung cần cài  
+      • apparmor-easyprof : Tạo profile  
+      • apparmor-utils : Phân tích log  
+      • apparmor-notify : Xem lỗi denial  
+      • sudo apt install apparmor-easyprof apparmor-utils apparmor-notify  
+
+  • Lưu ý  
+      • AppArmor được cài sẵn trên Ubuntu 20.04  
+      • Profile mặc định: /etc/apparmor.d/  
+
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  AppArmor là bảo mật mạnh mẽ hơn DAC truyền thống.  
+  Được cài sẵn và dễ dàng mở rộng.  
+  Đây là nền tảng bảo mật Ubuntu Linux.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thực hành kiểm tra aa-status và cài thêm công cụ.  
+────────────────────────────────────────────────────────────────  

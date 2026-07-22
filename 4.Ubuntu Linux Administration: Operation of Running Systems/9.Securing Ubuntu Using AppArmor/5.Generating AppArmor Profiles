@@ -1,0 +1,53 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              GENERATING APPA RMOR PROFILES                                   ║  
+║               (Tạo AppArmor Profiles)                                         ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallett  
+  Chủ đề     : Securing Ubuntu Using AppArmor  
+  Mục tiêu   : Tạo và quản lý AppArmor Profile  
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Tạo profile bằng aa-easyprof  
+      • sudo aa-easyprof /usr/bin/file_test.py  
+      • Tạo file /etc/apparmor.d/usr.bin.file_test.py  
+      • Bao gồm abstraction: usr.bin.python3  
+
+  • Load profile vào kernel  
+      • sudo apparmor_parser -r /etc/apparmor.d/usr.bin.file_test.py  
+      • Hoặc -a nếu profile chưa có trong memory  
+
+  • Chuyển chế độ  
+      • aa-complain /usr.bin.file_test.py : Log lỗi nhưng không block  
+      • aa-enforce /usr.bin.file_test.py : Enforcing (mặc định)  
+
+  • Debug profile  
+      • sudo aa-logprof : Tương tác hỏi đáp để tự sửa profile  
+      • Chọn allow cho abstraction và /tmp/mytextfile (không allow toàn bộ /tmp)  
+
+  • Test bảo vệ  
+      • Chạy script bình thường: thành công  
+      • Sửa biến trong script sang /textfile: bị block (dù chạy dưới root)  
+
+  • Lưu ý quan trọng  
+      • Profile phải chính xác với đường dẫn thực thi  
+      • Không cần restart service sau khi parser  
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  AppArmor profile được tạo và debug dễ dàng bằng aa-easyprof + aa-logprof.  
+  Chỉ cho phép script thực thi đúng file đã định nghĩa.  
+  Đây là cách bảo vệ script và ứng dụng hiệu quả.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Tiếp theo chúng ta sẽ thực hành tạo AppArmor profile cho ứng dụng.  
+────────────────────────────────────────────────────────────────  

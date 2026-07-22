@@ -1,0 +1,51 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              CREATING A PYTHON SCRIPT                                        ║  
+║               (Tạo Script Python)                                             ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallett  
+  Chủ đề     : Securing Ubuntu Using AppArmor  
+  Mục tiêu   : Tạo và test script Python trước khi bảo vệ bằng AppArmor  
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Tạo script  
+      • nano /usr/bin/file_test.py  
+      • #!/usr/bin/python3  
+      • Thay đổi /tmp/mytextfile  
+      • Thử mở file append, ghi vào /tmp nếu thành công  
+      • Xử lý exception nếu không thể tạo file  
+
+  • Cài đặt quyền  
+      • sudo chmod 755 /usr/bin/file_test.py  
+
+  • Test script  
+      • file_test.py  
+      • Kiểm tra tạo file /tmp/mytextfile  
+      • Xóa file để chuẩn bị bảo vệ AppArmor  
+
+  • Nếu không muốn tạo script  
+      • git clone https://github.com/theurbanpenguin/lfcs  
+      • cp lfcs/operating/file_test.py /usr/bin/  
+
+  • Lưu ý  
+      • Script chạy dưới Python 3  
+      • Cần quyền đọc + execute cho cả owner và group/others  
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Script Python đơn giản đã được tạo và test thành công.  
+  Sẵn sàng để tạo AppArmor profile bảo vệ nó.  
+  Đây là bước chuẩn bị quan trọng cho việc học tạo profile.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Tiếp theo chúng ta sẽ học tạo AppArmor profile cho ứng dụng.  
+────────────────────────────────────────────────────────────────  

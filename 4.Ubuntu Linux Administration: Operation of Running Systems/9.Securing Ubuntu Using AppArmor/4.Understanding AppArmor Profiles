@@ -1,0 +1,55 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              UNDERSTANDING APPA RMOR PROFILES                                ║  
+║               (Hiểu Về AppArmor Profiles)                                    ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallett  
+  Chủ đề     : Securing Ubuntu Using AppArmor  
+  Mục tiêu   : Hiểu và tạo AppArmor Profile  
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • AppArmor Profile là gì?  
+      • Tập hợp quy tắc (rules) kiểm soát quyền truy cập  
+      • Tệp .py/.conf trong /etc/apparmor.d/  
+      • Định nghĩa: executable có quyền gì với file/thư mục nào  
+
+  • Chế độ Profile  
+      • Enforcing (mặc định): Block hành vi không cho phép + log  
+      • Complaining: Log hành vi không cho phép nhưng không block  
+
+  • Tạo profile đơn giản  
+      • sudo aa-easyprof /usr/bin/file_test.py  
+      • /etc/apparmor.d/usr.bin.file_test.py  
+
+  • Thêm profile vào kernel  
+      • sudo apparmor_parser -r /etc/apparmor.d/usr.bin.file_test.py  
+      • Hoặc -a (thêm nếu chưa có)  
+
+  • Test và debug  
+      • Chạy script bị block  
+      • journalctl -k | grep apparmor="DENIED"  
+      • aa-logprof : Hỏi và tự sửa profile  
+      • Chuyển về enforcing mode  
+
+  • Lưu ý quan trọng  
+      • Profile phải khớp với đường dẫn thực thi  
+      • Không cần reload service sau khi parser  
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  AppArmor Profile là tập quy tắc rõ ràng, dễ tạo bằng aa-easyprof.  
+  Kết hợp complain mode + aa-logprof để debug nhanh.  
+  Đây là bước quan trọng để bảo vệ script Python và ứng dụng.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Tiếp theo chúng ta sẽ thực hành tạo và test AppArmor profile.  
+────────────────────────────────────────────────────────────────  
