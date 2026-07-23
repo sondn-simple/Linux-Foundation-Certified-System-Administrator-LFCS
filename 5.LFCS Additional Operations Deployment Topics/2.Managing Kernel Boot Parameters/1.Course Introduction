@@ -1,0 +1,46 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              COURSE INTRODUCTION                                             ║  
+║               (Giới Thiệu Khóa Học)                                          ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : LFCS Additional Operations Deployment Topic  
+  Mục tiêu   : Kernel options, Red Hat software và SELinux  
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Giới thiệu module  
+      • Tập trung vào kernel options (GRUB menu, root password recovery)  
+      • Các module khác: dnf3 software management, SELinux  
+
+  • Lab systems  
+      • Ubuntu 20.04 + Rocky Linux 9  
+      • Dùng Vagrantfile để deploy nhanh  
+
+  • Cấu hình GRUB  
+      • /etc/default/grub (hoặc grub.d/99-custom.cfg)  
+      • GRUB_TIMEOUT_STYLE=menu  
+      • GRUB_TIMEOUT=20  
+      • sudo update-grub  
+
+  • Thực hành  
+      • Làm việc trên hypervisor thật (VirtualBox) để thấy GRUB menu  
+      • Không chỉ dựa vào Vagrant vì Vagrant ẩn boot phase  
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Module đầu tiên tập trung vào kernel options và GRUB.  
+  Học cách cấu hình, persist và debug kernel boot.  
+  Chuẩn bị tốt cho các module sau.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy bắt đầu module đầu tiên ngay trên command line.  
+────────────────────────────────────────────────────────────────  

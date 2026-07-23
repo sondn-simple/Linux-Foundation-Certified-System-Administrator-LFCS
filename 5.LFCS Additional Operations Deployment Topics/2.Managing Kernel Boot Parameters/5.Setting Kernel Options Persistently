@@ -1,0 +1,46 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              SETTING KERNEL OPTIONS PERSISTENTLY                             ║  
+║               (Đặt Kernel Options Lĩnh Vực)                                  ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Kernel options  
+  Mục tiêu   : Persist kernel options qua GRUB  
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Thêm kernel options persistently  
+      • Tạo file /etc/default/grub.d/99-custom.cfg  
+      • Thêm dòng:  
+        GRUB_CMDLINE_LINUX="quiet splash video=1366x768"  
+
+  • Áp dụng  
+      • sudo update-grub  
+      • sudo poweroff  
+
+  • Kiểm tra  
+      • Khi boot: GRUB menu hiển thị  
+      • Kernel load tùy chọn mới: screen resolution lớn hơn (1366x768)  
+
+  • Lưu ý quan trọng  
+      • Không overwrite quiet và splash  
+      • Chỉ áp dụng cho Ubuntu/Rocky Linux  
+      • Phù hợp với screen host (1920x1080)  
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Kernel options có thể đặt persistent qua GRUB.  
+  Thêm video=1366x768 để có screen resolution lớn hơn.  
+  Đây là cách quản lý boot parameters hiệu quả.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thực hành edit 99-custom.cfg và run update-grub ngay.  
+────────────────────────────────────────────────────────────────  

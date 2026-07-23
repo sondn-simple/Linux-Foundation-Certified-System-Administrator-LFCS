@@ -1,0 +1,46 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              DISPLAY GRUB MENU                                               ║  
+║               (Hiển Thị GRUB Menu)                                           ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Kernel options  
+  Mục tiêu   : Hiển thị và cấu hình GRUB menu  
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Chuẩn bị hệ thống  
+      • sudo poweroff (từ host)  
+      • vagrant up ubuntu1 (khởi động VM)  
+
+  • Cấu hình GRUB  
+      • sudo nano /etc/default/grub (hoặc grub.d/99-custom.cfg)  
+      • Thêm: GRUB_TIMEOUT=20  
+      • Thêm: GRUB_TIMEOUT_STYLE=menu  
+      • sudo update-grub  
+
+  • Boot VirtualBox  
+      • Chọn Start (không Normal Start)  
+      • Xem GRUB menu hiển thị 20 giây  
+
+  • Lưu ý quan trọng  
+      • GRUB menu chỉ hiển thị khi boot từ hypervisor thật (VirtualBox)  
+      • Vagrant ẩn boot process, nên dùng VirtualBox để demo  
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  GRUB menu được cấu hình thành công.  
+  Hiển thị menu trong 20 giây và có thể chọn entry hoặc edit.  
+  Đây là bước đầu tiên để quản lý kernel options.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thực hành cấu hình GRUB ngay trên command line.  
+────────────────────────────────────────────────────────────────  

@@ -1,0 +1,52 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              COURSE OVERVIEW                                                 ║  
+║               (Tổng Quan Khóa Học)                                           ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : LFCS Learning Additional Operations Deployments Task  
+  Mục tiêu   : Quản trị hệ thống Linux nâng cao và SELinux  
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Giới thiệu giảng viên  
+      • Andrew Mallet – Owner The Urban Penguin (UK)  
+      • Chuyên đào tạo và tư vấn Linux nhiều năm  
+      • Kinh nghiệm quản trị viên + lập trình viên (Python)  
+      • Làm việc với Configuration Management: Ansible, Puppet, Salt  
+
+  • Giới thiệu khóa học  
+      • Tập trung vào Ubuntu 20.04 và Red Hat-based Linux  
+      • Phù hợp cho LFCS exam và môi trường thực tế  
+
+  • Các chủ đề chính  
+      • Managing grub và kernel settings  
+      • Using dnf3 software management  
+      • Managing SELinux mandatory access control list  
+
+  • Kết quả sau khóa học  
+      • Hiểu cách cấu hình grub menu  
+      • Áp dụng kernel parameters  
+      • Cài đặt/xóa phần mềm, thêm repository  
+      • Quản lý và debug SELinux  
+
+  • Yêu cầu trước khóa  
+      • Nắm vững command line trên Ubuntu  
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Khóa học giúp bạn nâng cao kỹ năng quản trị Linux.  
+  Tập trung vào GRUB, DNF và SELinux – rất quan trọng cho LFCS.  
+  Hãy bắt đầu hành trình học tập ngay hôm nay!  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Chúc bạn học tốt và thành công.  
+────────────────────────────────────────────────────────────────  

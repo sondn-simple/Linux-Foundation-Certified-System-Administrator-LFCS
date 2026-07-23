@@ -1,0 +1,44 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              SUMMARY AND WHAT'S NEXT                                         ║  
+║               (Tóm Tắt Và Nội Dung Tiếp Theo)                               ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : LFCS Additional Operations Deployment Topic  
+  Mục tiêu   : Tóm tắt module Kernel Options  
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Module 1: Kernel Options  
+      • Cấu hình GRUB để hiển thị menu  
+      • Boot vào Rescue Target để khôi phục root password  
+      • Sử dụng Recovery Mode để dọn dẹp, sửa package, fsck  
+      • Đặt kernel options persistent qua GRUB  
+      • Thêm: GRUB_CMDLINE_LINUX="quiet splash video=1366x768"  
+
+  • Các module khác  
+      • Managing Red Hat software (dnf3)  
+      • Managing SELinux  
+
+  • Lưu ý quan trọng  
+      • GRUB menu chỉ hiển thị khi boot từ hypervisor thật  
+      • Rescue/Recovery Mode rất hữu ích khi mất root password  
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Bạn đã hoàn thành module đầu tiên với thành công.  
+  Hiểu rõ cách quản lý GRUB, kernel options và recovery là nền tảng.  
+  Tiếp theo chúng ta sẽ học Software Management trên Red Hat-based systems.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hẹn gặp lại ở module tiếp theo.  
+Chúc bạn học tốt!  
+────────────────────────────────────────────────────────────────  

@@ -1,0 +1,51 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              UNDERSTAND YOUR LAB SYSTEM                                      ║  
+║               (Hiểu Về Hệ Thống Lab Của Bạn)                                 ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Software management trên Red Hat-based systems  
+  Mục tiêu   : Hiểu Rocky Linux 9 và packaging system Red Hat  
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Phân biệt hệ thống packaging  
+      • Red Hat-based (Rocky Linux, AlmaLinux, CentOS, Fedora): .rpm + dnf/yum  
+      • Debian-based (Ubuntu, Debian): .deb + apt  
+      • Khác: Arch dùng .pkg + pacman  
+
+  • Lab system  
+      • Rocky Linux 9.2  
+      • Khởi động bằng: vagrant up rocky  
+      • Vagrantfile trong repository LFCS  
+
+  • Cấu hình Vagrant  
+      • 2 CPU + 2 GB RAM  
+      • Hostname: Rocky  
+      • IP address (có thể tùy chỉnh)  
+
+  • Kết nối  
+      • vagrant ssh rocky  
+      • Dùng key-based authentication  
+
+  • Kiểm tra hệ thống  
+      • hostnamectl  
+      • Rocky Linux 9.2  
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Rocky Linux 9 là hệ thống Red Hat-based, dùng dnf để quản lý package.  
+  Đây là môi trường lý tưởng để học dnf và SELinux.  
+  Chuẩn bị hoàn hảo cho module tiếp theo.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thực hành vagrant up rocky và vagrant ssh ngay trên command line.  
+────────────────────────────────────────────────────────────────  

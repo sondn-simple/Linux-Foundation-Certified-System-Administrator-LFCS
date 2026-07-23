@@ -1,0 +1,50 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              USING RESCUE MODE                                               ║  
+║               (Sử Dụng Rescue Mode)                                          ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Kernel options  
+  Mục tiêu   : Sử dụng Advanced Options > Recovery Mode  
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Vào Advanced Options  
+      • Tại GRUB menu: Nhấn E edit  
+      • Thêm dòng: linux rescue  
+      • Nhấn Ctrl+X để boot  
+
+  • Chọn mục trong menu  
+      • System‑summary (hoặc Advanced options menu)  
+      • Nhấn Tab để chọn Ok và Enter  
+
+  • Các công cụ trong Recovery Mode  
+      • clean : Dọn dẹp, free space, remount rw  
+      • Repair Debian packages : Xử lý gói lỗi  
+      • Check file systems : fsck  
+      • Drop to root shell : Lấy quyền root ngay  
+
+  • Resume  
+      • Tiếp tục boot bình thường sau khi sửa  
+
+  • Lưu ý  
+      • Recovery Mode chỉ hiển thị khi boot từ hypervisor thật  
+      • Không có networking trong mode này  
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Rescue Mode cung cấp nhiều công cụ sửa chữa hệ thống trực quan.  
+  Drop to root shell rất tiện khi mất root password.  
+  Đây là cách nhanh chóng để repair và bảo trì Ubuntu/Rocky Linux.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thực hành chọn Advanced Options và Recovery Mode ngay trên command line.  
+────────────────────────────────────────────────────────────────  
