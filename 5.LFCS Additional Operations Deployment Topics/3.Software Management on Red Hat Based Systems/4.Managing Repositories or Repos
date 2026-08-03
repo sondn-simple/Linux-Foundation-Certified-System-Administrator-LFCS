@@ -1,0 +1,58 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              MANAGING REPOSITORIES OR REPOS                                  ║  
+║               (Quản Lý Repository Hoặc Repos)                               ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Software management trên Red Hat-based systems  
+  Mục tiêu   : Quản lý repository (repo file)  
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Repository là gì?  
+      • Nơi lưu trữ package online hoặc local  
+      • Giải quyết vấn đề “không biết package ở đâu”  
+      • Hỗ trợ package, dependency và module  
+
+  • Vị trí file repo  
+      • /etc/yum.repos.d/ (file .repo)  
+      • Có thể chứa nhiều repository (baseurl, gpgkey…)  
+
+  • Lệnh xem repository  
+      • yum repolist (xem enabled)  
+      • yum repolist --all (xem enabled + disabled)  
+
+  • Thêm repository từ file .repo  do rpm -ivh puppet7-release-7.x86_64.rpm  
+      • Tự động thêm repo file + gpgkey  
+      • su
+
+  • Cài package từ repo mới  
+      • sudo yum install -y puppet-agent  
+      • Hỏi xác nhận GPG key (nếu public key check)  
+
+  • Chỉnh sửa repo file  
+      • nano /etc/yum.repos.d/rocky-extras.repo  
+      • Đổi enabled=0 thành enabled=1  
+
+  • Lưu ý quan trọng  
+      • Yum và Dnf đều dùng cùng dnf-3 backend  
+      • Không cần chọn Yum hay Dnf  
+      • Repository cho phép cài module (nhiều version cùng lúc)  
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Repository là “kệ hàng” chứa package và dependency.  
+  Dễ thêm bằng file .repo hoặc rpm.  
+  Yum repolist và yum history là công cụ quản lý mạnh mẽ.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thực hành yum repolist, yum install puppet-agent và sửa repo file ngay.  
+────────────────────────────────────────────────────────────────  

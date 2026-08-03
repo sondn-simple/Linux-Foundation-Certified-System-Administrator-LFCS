@@ -1,0 +1,83 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║          SELINUX, THE MANDATORY ACCESS CONTROL LIST                          ║
+║        (SELinux, Danh Sách Kiểm Soát Truy Cập Bắt Buộc)                      ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallett
+  Chủ đề     : Quản lý bảo mật bằng SELinux
+  Mục tiêu   : Hiểu và quản lý trạng thái SELinux, chính sách targeted,
+               context, và ảnh hưởng khi thay đổi các thiết lập này
+
+SELINUX LÀ GÌ?
+────────────────────────────────────────────────────────────────
+
+  • SELinux (Security Enhanced Linux) là một hệ thống Mandatory Access
+    Control (MAC) - kiểm soát truy cập bắt buộc
+  • Ban đầu được phát triển bởi NSA (National Security Agency)
+  • Phần lớn việc phát triển kernel module do NSA và Red Hat thực hiện
+  • Đã có mặt trong Red Hat Enterprise Linux từ phiên bản RHEL 4
+  • Trải qua nhiều năm phát triển và trưởng thành đến RHEL 9
+
+TẠI SAO CẦN SELINUX?
+────────────────────────────────────────────────────────────────
+
+  • Nhiều dịch vụ (service) chạy với quyền root
+  • SELinux kiểm soát ngay cả các process chạy với quyền root
+  • Giúp bảo vệ hệ thống trước các cuộc tấn công vào dịch vụ đang chạy
+  • Cần được cấu hình đúng cách, tương tự như firewall hay phân quyền
+    file system - đây là một phần của việc quản lý bảo mật, không phải
+    là "vấn đề" cần né tránh
+
+BA CHẾ ĐỘ HOẠT ĐỘNG CỦA SELINUX
+────────────────────────────────────────────────────────────────
+
+  • Enforcing  : Áp dụng đầy đủ các rule, vi phạm bị chặn và được ghi log
+  • Permissive : Không chặn vi phạm nào, nhưng vẫn ghi log để biết cần
+                 điều chỉnh gì
+  • Disabled   : SELinux không hoạt động, không kiểm soát, không ghi log
+      - Nhược điểm:
+          1. Không có bảo mật
+          2. Không biết cần cấu hình gì để bật lại SELinux
+          3. Khi reboot và bật lại SELinux, hệ thống phải relabel
+             (kiểm tra) toàn bộ file system, mất nhiều thời gian
+
+CÁC LỆNH THAO TÁC (Rocky Linux 9)
+────────────────────────────────────────────────────────────────
+
+  • Xem trạng thái SELinux
+      • getenforce           : Xem chế độ hiện tại (chạy được với user
+                                thường), ví dụ: Enforcing
+      • sestatus             : Xem thông tin chi tiết hơn
+          - Current mode                : chế độ hiện tại
+          - Mode from config file        : chế độ khi khởi động lại
+          - Loaded policy name: targeted : chính sách mặc định, dựa
+                                            trên SELinux context/type
+
+  • File cấu hình
+      • /etc/selinux/config
+          - SELINUX=enforcing
+          - SELINUXTYPE=targeted
+
+  • Thay đổi chế độ (runtime)
+      • sudo setenforce permissive  : Chuyển sang chế độ permissive
+      • sudo setenforce enforcing   : Chuyển lại chế độ enforcing
+      • Lưu ý: Không thể set "disabled" từ dòng lệnh, chỉ có thể sửa
+        trong file cấu hình và cần reboot lại hệ thống
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  SELinux là một lớp bảo mật mạnh mẽ giúp kiểm soát truy cập ngay cả
+  với quyền root. Việc hiểu rõ 3 chế độ (enforcing, permissive,
+  disabled) và cách kiểm tra/thay đổi trạng thái là bước đầu tiên
+  quan trọng để quản lý bảo mật hệ thống hiệu quả.
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Tìm hiểu về targeted policy, thay đổi context,
+và di chuyển thư mục home của user với SELinux.
+────────────────────────────────────────────────────────────────

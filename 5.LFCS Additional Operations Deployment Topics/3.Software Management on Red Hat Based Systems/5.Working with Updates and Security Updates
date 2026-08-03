@@ -1,0 +1,67 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║              WORKING WITH UPDATES AND SECURITY UPDATES                       ║
+║               (Làm Việc Với Cập Nhật Và Cập Nhật Bảo Mật)                     ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Cập nhật package và bản vá bảo mật trên Red Hat-based systems
+  Hệ thống   : Rocky Linux
+  Mục tiêu   : Lọc, xem chi tiết và chỉ cài đặt các bản cập nhật bảo mật
+               theo mức độ nghiêm trọng cần thiết
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • Cập nhật package cơ bản
+      • sudo yum update        : Cập nhật tất cả package (bỏ -y để xem trước
+                                  khi xác nhận, tránh gõ "y" theo phản xạ)
+      • yum check-update       : Chỉ liệt kê các cập nhật có sẵn, không cài
+      • Có thể thấy gói đã lỗi thời (obsoleted), ví dụ: grub2-tools
+
+  • Lọc cập nhật bảo mật
+      • yum check-update --security   : Chỉ xem các cập nhật liên quan bảo mật
+      • yum updateinfo                : Xem metadata bảo mật chi tiết hơn
+                                         (số lượng security notice / bug fix)
+      • yum updateinfo --security     : Chỉ hiện security notice, ẩn bug fix
+
+  • Lọc theo mức độ nghiêm trọng (severity)
+      • yum updateinfo --sec-severity=<mức độ>
+          - Có hỗ trợ tab completion, không cần nhớ chính xác cú pháp
+          - Ví dụ mức độ: important
+
+  • Xem chi tiết từng bản vá bảo mật
+      • yum updateinfo info
+          - Hiển thị mã Rocky Linux Security Advisory
+          - Liên kết đến báo cáo CVE tương ứng
+          - Mô tả lỗ hổng đang được khắc phục
+
+  • Cài đặt cập nhật bảo mật
+      • sudo yum update    : Bắt buộc dùng sudo (khác với các lệnh xem
+                              thông tin ở trên, chạy được với user thường)
+      • Chỉ cần cập nhật đúng mức độ nghiêm trọng cần thiết (vd: important),
+        không nhất thiết phải cập nhật toàn bộ hệ thống
+
+  • Lưu ý quan trọng
+      • Các lệnh xem/lọc thông tin (check-update, updateinfo) chạy được
+        với user thường, không cần quyền root
+      • Chỉ khi CÀI ĐẶT cập nhật mới cần sudo
+      • Nên kiểm tra CVE và mô tả lỗi trước khi quyết định cập nhật
+      • Tránh cập nhật toàn bộ package nếu chưa kiểm tra tính tương thích
+        với môi trường đang dùng
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  yum updateinfo --security giúp lọc và xem chi tiết các cập nhật bảo mật.
+  Kết hợp thêm --sec-severity=<mức độ> để chỉ tập trung vào các lỗ hổng
+  quan trọng nhất. Đây là cách duy trì bảo mật hệ thống mà không làm
+  ảnh hưởng đến các phần khác của hệ điều hành.
+
+
+────────────────────────────────────────────────────────────────
+Đây là phần tổng kết các lệnh Red Hat package manager (yum).
+Tiếp theo bài học sẽ quay lại slide để tóm tắt toàn bộ nội dung.
+────────────────────────────────────────────────────────────────

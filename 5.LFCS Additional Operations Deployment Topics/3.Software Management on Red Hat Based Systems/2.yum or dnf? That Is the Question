@@ -1,0 +1,58 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              yum or dnf? THAT IS THE QUESTION                                ║  
+║               (Yum hay Dnf? Câu Hỏi Đó Là Cái Này)                           ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Software management trên Red Hat-based systems  
+  Mục tiêu   : Hiểu Yum và Dnf (dnf-3)  
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Yum vs Dnf  
+      • Yum = symbolic link đến dnf-3 (đã cũ từ RHEL 8)  
+      • Dnf = symbolic link đến dnf-3  
+      • Dùng dnf-3 hoặc dnf đều được (cùng backend)  
+
+  • Repolist  
+      • yum repolist / dnf repolist : Xem repository  
+      • Rocky Linux 9: BaseOS, AppStream, Extras  
+
+  • BaseOS  
+      • Core OS và core packages (rpm)  
+
+  • AppStream  
+      • Thêm ứng dụng & service  
+      • Hỗ trợ cả rpm + modules (nhiều version cùng lúc)  
+
+  • Module  
+      • Cho phép cài nhiều version của cùng package  
+      • RPM thì chỉ cài 1 version  
+
+  • Kiểm tra version  
+      • yum --version hoặc dnf --version  
+      • In ra dnf-3 version 4.14.0  
+
+  • So sánh với Ubuntu (Debian-based)  
+      • Yum/Dnf: RPM + repository  
+      • APT: .deb + apt  
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Yum và Dnf đều dẫn đến dnf-3, không có sự khác biệt lớn.  
+  Dùng dnf cho tương lai, yum vẫn hoạt động.  
+  Hiểu repository (BaseOS/AppStream) rất quan trọng.  
+  BaseOS: core OS + package  
+  AppStream: ứng dụng & module (nhiều version)  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thực hành yum repolist và dnf --version ngay.  
+────────────────────────────────────────────────────────────────  

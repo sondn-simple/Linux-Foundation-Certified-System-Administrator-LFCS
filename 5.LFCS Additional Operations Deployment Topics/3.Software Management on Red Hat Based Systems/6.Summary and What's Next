@@ -1,0 +1,54 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                        SUMMARY AND WHAT'S NEXT                               ║
+║                    (Tổng Kết Và Nội Dung Tiếp Theo)                          ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Tổng kết module quản lý phần mềm (Software Management)
+  Hệ thống   : Red Hat-based systems
+  Mục tiêu   : Điểm lại toàn bộ nội dung đã học về YUM/DNF
+
+NỘI DUNG CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • YUM và DNF
+      • YUM thực chất là symbolic link đến DNF-3
+      • Dùng YUM hay DNF đều được, không quan trọng
+      • Có thể tiếp tục dùng YUM nếu quen thuộc, hoặc chuyển sang DNF
+
+  • Các thao tác quản lý package cơ bản
+      • install / erase / remove   : Cài đặt hoặc gỡ bỏ package
+      • list                       : Liệt kê package
+      • provides                   : Tìm package khi chưa biết tên chính xác
+
+  • Quản lý repository
+      • File repository lưu tại: /etc/yum.repos.d/*.repo
+      • repolist            : Liệt kê các repository đang bật (enabled)
+      • repolist --all      : Liệt kê tất cả repository, kể cả bị vô hiệu hóa
+      • enabled=0           : Đánh dấu repository đang bị disable
+
+  • Cập nhật và bảo mật (đã học ở phần trước)
+      • yum update / check-update
+      • yum updateinfo --security --sec-severity=<mức độ>
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Vậy là chúng ta đã hoàn thành module về quản lý phần mềm trên các hệ
+  thống Red Hat-based, từ cài đặt, gỡ bỏ, tìm kiếm package, quản lý
+  repository, cho đến lọc và cài đặt các bản cập nhật bảo mật.
+
+NỘI DUNG TIẾP THEO
+────────────────────────────────────────────────────────────────
+
+  Module kế tiếp sẽ tìm hiểu về SELinux — quản lý bảo mật hệ thống
+  thông qua mandatory access control (kiểm soát truy cập bắt buộc).
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi module Software Management!
+Hẹn gặp lại ở module tiếp theo: SELinux.
+────────────────────────────────────────────────────────────────

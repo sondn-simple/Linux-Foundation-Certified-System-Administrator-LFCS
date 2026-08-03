@@ -1,0 +1,56 @@
+╔══════════════════════════════════════════════════════════════════════════════╗  
+║              WORKING WITH PACKAGING TOOLS                                    ║  
+║               (Làm Việc Với Công Cụ Đóng Gói)                                ║  
+╚══════════════════════════════════════════════════════════════════════════════╝  
+
+  
+TỔNG QUAN BÀI HỌC  
+────────────────────────────────────────────────────────────────  
+
+  Giảng viên : Andrew Mallet  
+  Chủ đề     : Software management trên Red Hat-based systems  
+  Mục tiêu   : Sử dụng Yum/Dnf để cài, xóa, cập nhật package  
+
+NỘI DUNG CHÍNH  
+────────────────────────────────────────────────────────────────  
+
+  • Cài đặt package  
+      • yum install tree*  
+      • sudo yum install -y tree  
+      • Dùng -y để không hỏi (có thể bỏ nếu muốn)  
+
+  • Tìm package  
+      • yum search tree*  
+      • yum provides "*lvscan"  
+      • Cho biết package nào cung cấp lệnh nào  
+
+  • Xóa package  
+      • yum remove httpd  
+      • Dùng -y để không hỏi  
+
+  • Xem lịch sử Yum  
+      • yum history list  
+      • yum history undo 6 : Hủy giao dịch 6  
+      • yum history replay 7 : Lắp lại lệnh trước  
+
+  • Cập nhật package  
+      • yum update (cập nhật tất cả)  
+      • yum update httpd (cập nhật riêng)  
+
+  • Lưu ý quan trọng  
+      • Dnf và yum đều là symlink đến dnf-3  
+      • Không cần chọn giữa Yum hay Dnf  
+      • AppStream hỗ trợ module (nhiều version cùng lúc)  
+
+KẾT LUẬN  
+────────────────────────────────────────────────────────────────  
+
+  Yum/Dnf rất mạnh để cài, xóa và undo package.  
+  History list + undo/replay giúp khôi phục nhanh.  
+  Đây là công cụ cốt lõi để quản lý software trên Rocky Linux.  
+
+
+────────────────────────────────────────────────────────────────  
+Cảm ơn bạn đã theo dõi!  
+Hãy thực hành yum list, yum install, yum history ngay.  
+────────────────────────────────────────────────────────────────  
