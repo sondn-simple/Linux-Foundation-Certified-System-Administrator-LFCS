@@ -1,0 +1,110 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║        CREATING AND SECURING NEW HOME DIRECTORIES                            ║
+║      (Thực Hành: Tạo Và Bảo Mật Thư Mục Home Mới)                            ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Thực hành tạo thư mục home tùy chỉnh với SELinux context
+  Hệ thống   : Rocky Linux 9
+  Mục tiêu   : Áp dụng thực tế semanage fcontext + restorecon để tạo
+               thư mục home mới cho user với context đúng
+
+XEM CONTEXT CỦA THƯ MỤC HOME MẶC ĐỊNH
+────────────────────────────────────────────────────────────────
+
+  • Lệnh: ls -ldZ /home
+      - Thư mục cấp cao nhất /home có type: home_root_t
+
+  • Lệnh: ls -ldZ /home/vagrant (hoặc user cụ thể)
+      - Thư mục home riêng của từng user có type: user_home_dir_t
+
+  • Lưu ý: Cần thiết lập ĐÚNG context cho cả:
+      1. Thư mục cấp cao (top-level, vd: /staff) → home_root_t
+      2. Thư mục con của từng user (vd: /staff/user1) → user_home_dir_t
+
+VỊ TRÍ LƯU TRỮ POLICY CONTEXT
+────────────────────────────────────────────────────────────────
+
+  • Đường dẫn: /etc/selinux/targeted/contexts/files/
+      - Chứa các file/database đại diện cho policy context của thư
+        mục và file chuẩn trong hệ thống
+      - Được restorecon tham chiếu đến khi khôi phục context
+      - Cũng được dùng khi auto-relabel toàn bộ hệ thống (vd: khi
+        disable rồi enable lại SELinux, phải quét toàn bộ file system)
+
+  • KHÔNG chỉnh sửa trực tiếp các file/database này
+      → Phải dùng công cụ semanage fcontext
+
+  • Tham khảo thêm: man semanage-fcontext
+      (có hỗ trợ tab completion, dễ dùng)
+
+CÁC BƯỚC THỰC HÀNH
+────────────────────────────────────────────────────────────────
+
+  1. Tạo thư mục cấp cao mới cho home directory của "staff":
+       sudo mkdir /staff
+
+  2. Kiểm tra context ban đầu:
+       ls -ldZ /staff
+       → Type: default_t (SELinux chưa biết context nào phù hợp)
+
+  3. Thêm bản ghi mới vào policy (dùng /home làm mẫu tham chiếu):
+       sudo semanage fcontext -a -e /home /staff
+
+       - Chỉ cập nhật POLICY (database), CHƯA thay đổi context thực
+         tế trên thư mục /staff
+       - Kiểm tra lại: ls -ldZ /staff → vẫn còn default_t
+
+  4. Áp dụng context từ policy vào thư mục thực tế:
+       sudo restorecon -v /staff
+
+       - Với -v (verbose), thấy rõ quá trình chuyển đổi:
+         default_t → home_root_t
+       - Lúc này /staff đã có context đúng như /home
+
+  5. Tạo user mới với home directory nằm trong /staff:
+       sudo useradd -d /staff/user1 -m user1
+
+       (tạo user1 với home directory tại /staff/user1)
+
+  6. Kiểm tra context của thư mục home vừa tạo:
+       ls -ldZ /staff/user1
+
+       → Kết quả: user_home_dir_t
+       → Chính xác, được kế thừa (inherit) đúng theo policy đã thiết
+         lập ở bước 3-4
+
+ỨNG DỤNG MỞ RỘNG
+────────────────────────────────────────────────────────────────
+
+  • Kỹ thuật này không chỉ dùng cho home directory, mà còn áp dụng
+    tương tự cho:
+      - Thư mục dữ liệu của web server
+      - Thư mục dữ liệu của MySQL Server hoặc các dịch vụ khác
+
+  • Lợi ích của việc lưu vào POLICY thay vì chỉ dùng chcon tạm thời:
+      - Nếu có auto-relabel (reboot, disable/enable lại SELinux)
+      - Hoặc chạy restorecon thủ công sau này
+      → Context vẫn được thiết lập ĐÚNG và ỔN ĐỊNH, không bị mất
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Quy trình chuẩn để tạo thư mục tùy chỉnh (non-default) với SELinux:
+    1. Tạo thư mục (mkdir)
+    2. Thêm context vào policy (semanage fcontext -a -e <mẫu> <đích>)
+    3. Áp dụng context thực tế (restorecon -v <đích>)
+    4. Tạo user/dữ liệu bên trong, context sẽ tự động kế thừa đúng
+
+  Việc lập kế hoạch trước và lưu context vào policy giúp tiết kiệm
+  công sức xử lý sự cố về sau, đảm bảo hệ thống luôn nhất quán dù có
+  auto-relabel hay chạy restorecon thủ công.
+
+
+────────────────────────────────────────────────────────────────
+Đây là phần thực hành kết thúc chủ đề tùy chỉnh thư mục home với
+SELinux context.
+────────────────────────────────────────────────────────────────

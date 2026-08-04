@@ -1,0 +1,81 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                              SUMMARY                                         ║
+║                           (Tổng Kết Module)                                  ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Tổng kết toàn bộ module SELinux
+  Mục tiêu   : Điểm lại các khái niệm và công cụ cốt lõi đã học
+
+KHÁI NIỆM CƠ BẢN
+────────────────────────────────────────────────────────────────
+
+  • SELinux là Mandatory Access Control (MAC)
+      - Khác với phân quyền file thông thường (Discretionary Access
+        Control - DAC)
+      - "Mandatory" nghĩa là áp dụng cho TẤT CẢ mọi đối tượng, kể cả
+        user root
+
+BA CHẾ ĐỘ HOẠT ĐỘNG
+────────────────────────────────────────────────────────────────
+
+  • Enforcing (chế độ mong muốn)
+      - Tuân thủ đầy đủ các rule
+      - Ghi log mọi vi phạm
+      - Xem log bằng: ausearch
+
+  • Permissive (hữu ích khi troubleshoot)
+      - Cho phép hành động xảy ra dù vi phạm rule
+      - Vẫn ghi log vi phạm
+      - Giúp phát hiện lỗi mà không ảnh hưởng đến người dùng
+
+  • Disabled (nên tránh)
+      - Không ghi log gì cả, SELinux không được nạp (load)
+      - Nhược điểm:
+          1. Không biết cần khắc phục gì (vì không có log)
+          2. Khi bật lại enforcing/permissive, hệ thống phải kiểm
+             tra (relabel) TOÀN BỘ file system → tốn nhiều thời gian
+             tùy kích thước hệ thống
+      - Permissive luôn tốt hơn Disabled nếu chưa sẵn sàng áp dụng
+        đầy đủ SELinux
+
+CÔNG CỤ QUẢN LÝ
+────────────────────────────────────────────────────────────────
+
+  • Cài thêm các package bổ sung để có được semanage
+
+  • semanage
+      - Liệt kê Boolean (semanage boolean --list)
+      - Thiết lập file context (semanage fcontext) - đã dùng khi di
+        chuyển thư mục home
+
+  • Xem SELinux context
+      - Dùng -Z (chữ Z hoa) với hầu hết các lệnh, vd: ls -Z, ps -Z
+
+  • Thay đổi context
+      - chcon         : Thay đổi context trực tiếp (tạm thời)
+      - restorecon    : Khôi phục context từ database policy (nếu đã
+                         được tham chiếu/lưu trong đó)
+
+  • Quản lý database context
+      - Dùng semanage fcontext
+      - Lưu ý: trang man có dấu gạch nối → man semanage-fcontext
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Module này là phần giới thiệu cơ bản về SELinux, giúp hiểu:
+    - Sự khác biệt giữa MAC và DAC
+    - Ba chế độ hoạt động và khi nào nên dùng chế độ nào
+    - Cách xem, thay đổi, và quản lý SELinux context
+    - Các công cụ chính: getenforce, sestatus, setenforce, chcon,
+      restorecon, semanage, ausearch, sealert
+
+
+────────────────────────────────────────────────────────────────
+Cảm ơn bạn đã theo dõi toàn bộ khóa học!
+Chúc bạn thành công trong quá trình học tập và các chứng chỉ tiếp theo.
+────────────────────────────────────────────────────────────────
