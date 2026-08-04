@@ -1,0 +1,124 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                     WELCOME TO MANAGING USERS                                ║
+║                  (Chào Mừng Đến Với Quản Lý User)                            ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallett (Twitter: @theurbanpenguin,
+               Website: www.theurbanpenguin.com)
+  Khóa học   : Ubuntu Linux Administration: User and Group Management
+  Chủ đề     : Giới thiệu module - Tìm hiểu về user account trong Linux
+
+NỘI DUNG TOÀN BỘ KHÓA HỌC
+────────────────────────────────────────────────────────────────
+
+  • Quản lý user và group
+  • Privilege escalation (leo thang đặc quyền)
+  • Tạo tài khoản user
+  • Quản lý mật khẩu
+  • Quản lý login script toàn hệ thống (system-wide)
+  • Pluggable Authentication Modules (PAM)
+
+NỘI DUNG RIÊNG CỦA MODULE NÀY
+────────────────────────────────────────────────────────────────
+
+  • Hiểu về các loại user account trong Linux
+  • Cơ chế leo thang đặc quyền (privilege escalation):
+      • sudo
+      • su
+      • pkexec
+
+LƯU Ý VỀ THỰC HÀNH
+────────────────────────────────────────────────────────────────
+
+  • Kỳ thi LFCS (Linux Foundation Certified System Administrator):
+      - Dựa trên hệ thống Linux thực tế
+      - KHÔNG phải trắc nghiệm (multiple choice)
+      - Yêu cầu đăng nhập và quản lý trực tiếp trên hệ thống Ubuntu
+
+  • Nên thực hành trong môi trường lab của riêng bạn, không chỉ xem
+    slide và demo
+
+  • Thiết lập môi trường lab:
+      - Tham khảo khóa "Ubuntu Linux Administration: Essential
+        Commands" để biết cách setup
+      - Công cụ sử dụng xuyên suốt các khóa học:
+          • VirtualBox (trình quản lý máy ảo)
+          • Vagrant
+
+TÌM HIỂU VỀ LINUX USER
+────────────────────────────────────────────────────────────────
+
+  • Không phải hệ thống Linux nào cũng cần tạo nhiều user
+      - Hệ thống dạng "appliance" (vd: web server, database server)
+        thường không cần tạo nhiều tài khoản Linux
+      - Nhưng nếu có user cần đăng nhập vào hệ thống, cần hiểu rõ
+        về quản lý user
+
+  • Database lưu trữ tài khoản local:
+      /etc/passwd
+
+      - Dù tên file có chữ "passwd", trên hệ thống Linux hiện đại,
+        file này KHÔNG chứa mật khẩu, chỉ chứa thông tin chi tiết
+        tài khoản
+
+  • Các lệnh đọc thông tin user:
+      • cat /etc/passwd
+            - Công cụ xử lý văn bản đơn giản để đọc trực tiếp file
+
+      • getent passwd
+            - Lấy TOÀN BỘ database password
+            - Bao gồm cả tài khoản không chỉ từ file local, mà còn
+              từ các nguồn khác như LDAP hoặc Active Directory
+
+      • getent passwd <username>
+            - Tra cứu thông tin của một user cụ thể
+            - Thay vì phải grep thủ công trong file /etc/passwd
+
+  • Xem hướng dẫn (man page):
+      man 5 passwd
+
+      - Số 5 chỉ đến phần cấu hình (configuration file) trong man page
+      - Nếu chỉ gõ "man passwd" (không có số 5), có thể sẽ hiện man
+        page của LỆNH passwd, không phải file cấu hình
+
+  • File cấu hình liên quan:
+      /etc/nsswitch.conf
+
+      - Xác định nguồn dữ liệu user database đến từ đâu
+      - Có thể chỉ là database local
+      - Hoặc trỏ đến LDAP / Active Directory
+
+BA LOẠI USER TRONG LINUX
+────────────────────────────────────────────────────────────────
+
+  • Standard user      : User thông thường
+  • System user        : Thường dùng cho các service/dịch vụ
+  • Root user (UID 0)  : Không nhất thiết phải tên là "root"
+                         - Điều quan trọng là USER ID = 0
+                         - Chính UID 0 mới cho phép user đó có quyền
+                           quản lý toàn bộ hệ thống
+
+LƯU Ý VỀ USERNAME VÀ PASSWORD
+────────────────────────────────────────────────────────────────
+
+  • Password: phân biệt chữ hoa/thường (case-sensitive)
+  • Username: CŨNG phân biệt chữ hoa/thường (case-sensitive)
+      - Thông thường dùng chữ thường (lowercase)
+      - Nhưng có thể dùng chữ hoa/thường kết hợp nếu muốn
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Module này giới thiệu tổng quan khóa học và mở đầu về khái niệm
+  user account trong Linux: nơi lưu trữ, cách đọc thông tin, các loại
+  user, và những lưu ý quan trọng về username/password.
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Thực hành trực tiếp trên dòng lệnh để làm quen với các
+lệnh quản lý user vừa được giới thiệu.
+────────────────────────────────────────────────────────────────

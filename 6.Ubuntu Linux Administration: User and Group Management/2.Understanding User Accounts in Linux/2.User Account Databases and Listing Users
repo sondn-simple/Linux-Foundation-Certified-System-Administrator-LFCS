@@ -1,0 +1,127 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║          USER ACCOUNT DATABASES AND LISTING USERS                            ║
+║        (Cơ Sở Dữ Liệu Tài Khoản User Và Cách Liệt Kê User)                   ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Thực hành khảo sát database user account
+  Hệ thống   : Ubuntu 20.04
+  Mục tiêu   : Hiểu cấu trúc file /etc/passwd, cách dùng getent,
+               nsswitch.conf, và lọc dữ liệu bằng AWK
+
+FILE DATABASE TÀI KHOẢN USER
+────────────────────────────────────────────────────────────────
+
+  • File: /etc/passwd
+      - Lưu ý: chỉ là "passwd", không phải "password"
+
+  • Xem nội dung file:
+      cat /etc/passwd
+
+  • Tìm một user cụ thể:
+      grep vagrant /etc/passwd
+
+      (Có thể dùng "Esc + ." để lấy lại tham số cuối cùng đã gõ)
+
+CẤU TRÚC 7 TRƯỜNG CỦA /ETC/PASSWD
+────────────────────────────────────────────────────────────────
+
+  • Xem chi tiết qua man page:
+      man 5 passwd
+
+      - Số "5" chỉ đến phần cấu hình (configuration file section)
+
+  • 7 trường (field), phân cách bằng dấu hai chấm (:)
+      1. Login name              : Tên đăng nhập
+      2. Encrypted password      : Mật khẩu mã hóa (tùy chọn, thường
+                                    không còn lưu trực tiếp ở đây)
+      3. User ID (UID)           : Định danh user
+      4. Group ID (GID)          : Định danh group
+      5. Comment field           : Thường là tên đầy đủ của user
+      6. Home directory          : Thư mục home
+      7. Default shell           : Shell mặc định khi đăng nhập
+
+LỆNH GETENT - TRUY VẤN DATABASE USER
+────────────────────────────────────────────────────────────────
+
+  • getent passwd
+      - "getent" = "get entire" (lấy toàn bộ)
+      - Không chỉ đơn thuần đọc file /etc/passwd
+      - Trên hệ thống enterprise, có thể lấy dữ liệu từ:
+          • OpenLDAP
+          • Active Directory
+      - Đây là lý do nên dùng getent thay vì chỉ đọc trực tiếp file
+
+  • getent passwd vagrant
+      - Tra cứu 1 user cụ thể
+      - Tương đương với việc grep user đó trong /etc/passwd
+
+FILE CẤU HÌNH NSSWITCH.CONF
+────────────────────────────────────────────────────────────────
+
+  • Lệnh kiểm tra:
+      grep "^passwd" /etc/nsswitch.conf
+
+      - Regex: các dòng BẮT ĐẦU bằng "passwd"
+      - Cho biết getent đang lấy dữ liệu từ nguồn nào
+      - Mặc định: files (tức /etc/passwd) và các tài khoản systemd
+      - Có thể mở rộng để trỏ đến LDAP hoặc Active Directory
+
+PHÂN LOẠI USER THEO UID
+────────────────────────────────────────────────────────────────
+
+  • UID >= 1000   : User thông thường (standard user)
+  • UID < 1000    : Tài khoản hệ thống (system account)
+  • UID = 0       : Tài khoản root
+
+LỌC DỮ LIỆU VỚI AWK
+────────────────────────────────────────────────────────────────
+
+  • AWK là công cụ mạnh hơn grep, dùng để xử lý dữ liệu có cấu trúc
+    theo trường (field)
+
+  • Cú pháp cơ bản:
+      awk -F':' '{ print }' /etc/passwd
+
+      - -F ':'    : Đặt ký tự phân cách trường là dấu hai chấm
+      - { print } : In toàn bộ dòng (tương đương cat)
+
+  • In riêng trường thứ 3 (UID):
+      awk -F':' '{ print $3 }' /etc/passwd
+
+      - Tương đương với dùng lệnh cut
+
+  • Lọc theo điều kiện - chỉ hiện standard user (UID > 999):
+      awk -F':' '$3 > 999 { print }' /etc/passwd
+
+  • Lọc chỉ hiện system account (UID < 1000):
+      awk -F':' '$3 < 1000 { print }' /etc/passwd
+
+      - Lưu ý: kết quả này sẽ BAO GỒM cả root (UID = 0)
+
+  • Lọc chính xác chỉ system account, LOẠI TRỪ root:
+      awk -F':' '$3 < 1000 && $3 > 0 { print }' /etc/passwd
+
+      - && : toán tử AND (hai dấu &)
+      - Kết hợp điều kiện: UID < 1000 VÀ UID > 0
+      - Kết quả: chỉ còn lại các tài khoản hệ thống thật sự, không
+        có root
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Qua bài thực hành, ta đã:
+    - Hiểu cấu trúc và ý nghĩa 7 trường trong /etc/passwd
+    - Biết cách dùng getent để truy vấn database user (kể cả LDAP/AD)
+    - Biết cách kiểm tra nguồn dữ liệu qua nsswitch.conf
+    - Làm quen với AWK - công cụ xử lý văn bản mạnh mẽ, hỗ trợ lọc
+      dữ liệu theo điều kiện logic (>, <, &&)
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Tìm hiểu sâu hơn về việc tạo và quản lý tài khoản user
+trên hệ thống Ubuntu.
+────────────────────────────────────────────────────────────────

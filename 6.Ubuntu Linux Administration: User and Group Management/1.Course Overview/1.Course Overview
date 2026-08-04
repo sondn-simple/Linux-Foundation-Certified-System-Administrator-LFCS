@@ -1,0 +1,61 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                          COURSE OVERVIEW                                     ║
+║                       (Tổng Quan Khóa Học)                                   ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallett
+  Đơn vị     : Chủ sở hữu The Urban Penguin (Vương quốc Anh)
+  Khóa học   : Ubuntu Linux Administration: User and Group Management
+               (Quản Trị Ubuntu Linux: Quản Lý User Và Group)
+
+GIỚI THIỆU GIẢNG VIÊN
+────────────────────────────────────────────────────────────────
+
+  • Là Urban Penguin, chuyên đào tạo và tư vấn về Linux trong nhiều năm
+  • Kinh nghiệm thực tế:
+      - System Administrator
+      - Developer (chủ yếu làm việc với Python hiện nay)
+      - Làm việc với các hệ thống quản lý cấu hình:
+          • Ansible
+          • Puppet
+          • Salt
+
+VỀ UBUNTU LINUX
+────────────────────────────────────────────────────────────────
+
+  • Là một distro Linux rất phổ biến
+  • Ứng dụng thực tế:
+      - Sử dụng trong kỳ thi thực hành LFCS (Linux Foundation
+        Certified System Administrator)
+      - Sử dụng rộng rãi trong môi trường công việc
+      - Sử dụng cả cho mục đích cá nhân tại nhà
+
+NỘI DUNG CHÍNH CỦA KHÓA HỌC
+────────────────────────────────────────────────────────────────
+
+  • Tạo user và group cục bộ (local)
+  • Quản lý mật khẩu và xác thực (authentication)
+  • Quản lý login script
+  • Pluggable Authentication Modules (PAM)
+
+MỤC TIÊU KHÓA HỌC
+────────────────────────────────────────────────────────────────
+
+  Sau khi hoàn thành khóa học, bạn sẽ có khả năng quản lý user và
+  group trong hệ thống Ubuntu Linux.
+
+YÊU CẦU ĐẦU VÀO
+────────────────────────────────────────────────────────────────
+
+  • Nên có kinh nghiệm sử dụng dòng lệnh (command line) Linux từ
+    trước để có thể tận dụng tối đa khóa học này.
+
+
+────────────────────────────────────────────────────────────────
+Chào mừng bạn đến với hành trình học quản lý User và Group
+trên Ubuntu Linux!
+────────────────────────────────────────────────────────────────

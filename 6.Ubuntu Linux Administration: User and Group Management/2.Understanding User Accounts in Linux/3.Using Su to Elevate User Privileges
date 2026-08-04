@@ -1,0 +1,128 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║               USING SU TO ELEVATE USER PRIVILEGES                            ║
+║             (Dùng Lệnh Su Để Nâng Cao Đặc Quyền User)                        ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Sử dụng lệnh su để chuyển đổi/nâng quyền user
+  Hệ thống   : Ubuntu (Debian-based)
+  Mục tiêu   : Hiểu cách dùng su, sự khác biệt giữa login shell và
+               non-login shell, cách chuyển đổi giữa các tài khoản
+
+TỔNG QUAN VỀ QUYỀN ROOT
+────────────────────────────────────────────────────────────────
+
+  • User ID 0 (thường đặt tên là "root") quản lý toàn bộ hệ thống
+  • Trên các hệ thống Debian-based như Ubuntu, mặc định tài khoản
+    root KHÔNG có mật khẩu (không thể đăng nhập trực tiếp)
+  • Có 3 cách để nâng đặc quyền (privilege escalation):
+      • su
+      • sudo
+      • pkexec
+
+LỆNH SU - SUBSTITUTE USER
+────────────────────────────────────────────────────────────────
+
+  • "su" viết tắt của "substitute user" (KHÔNG phải "switch user"
+    dù nhiều người hiểu nhầm như vậy)
+
+  • su (không tham số)
+      - Chuyển sang tài khoản root (UID 0)
+      - Yêu cầu nhập mật khẩu của root
+
+  • su - hoặc su -l
+      - Thực hiện FULL LOGIN SHELL
+      - Reset toàn bộ biến môi trường (environment variables)
+      - Cần thiết khi truy cập các thứ phụ thuộc vào biến môi trường,
+        ví dụ: mail file cá nhân (dùng biến $USER)
+
+  • su - <username> (vd: su - bob)
+      - Chuyển sang tài khoản khác (không chỉ riêng root)
+      - Vẫn cần biết mật khẩu của user đó (trừ khi đang là root)
+
+  • Đặc biệt: khi đang đăng nhập với quyền ROOT
+      - Không cần nhập mật khẩu khi su sang user khác
+      - Root quản lý hệ thống nên được miễn xác thực này
+
+RỦI RO KHI DÙNG SU VỚI MẬT KHẨU ROOT DÙNG CHUNG
+────────────────────────────────────────────────────────────────
+
+  • Nếu tất cả admin đều biết mật khẩu root:
+      - Không có sự phân quyền (delegation) - ai cũng có toàn quyền
+        hoặc không có quyền gì
+      - Khi một admin rời tổ chức: xóa tài khoản họ không đủ, vì họ
+        vẫn còn biết mật khẩu root
+      - Có thể phải đổi lại mật khẩu root trên TẤT CẢ hệ thống
+      - → Đây không phải là cách làm tốt nhất, nhưng vẫn là cách hợp lệ
+
+THỰC HÀNH TRÊN DÒNG LỆNH
+────────────────────────────────────────────────────────────────
+
+  1. Kiểm tra thông tin user hiện tại:
+       id
+         - Hiển thị UID, GID, và các group mà user thuộc về
+
+       echo $USER
+         - Hiển thị tên user hiện tại (vd: vagrant)
+
+  2. Đặt mật khẩu cho tài khoản root (vì Ubuntu mặc định không có):
+       sudo passwd
+         - Yêu cầu nhập mật khẩu mới 2 lần để xác nhận
+         - Lưu ý: việc này làm giảm tính bảo mật hệ thống
+
+  3. Chuyển sang root với su (không phải login shell):
+       su
+         - Nhập mật khẩu root vừa đặt
+         - pwd vẫn giữ nguyên thư mục làm việc trước đó (không đổi
+           sang home của root)
+         - id → xác nhận đang là root
+         - echo $USER → VẪN hiển thị "vagrant" (biến môi trường chưa
+           được reset)
+         - exit → thoát khỏi shell su (quan trọng: tránh việc lồng
+           nhiều shell chồng lên nhau)
+
+  4. Chuyển sang root với full login shell:
+       su - hoặc su -l
+         - pwd → chuyển thẳng đến /root (home directory của root)
+         - echo $USER → hiển thị đúng "root" (toàn bộ môi trường đã
+           được reset)
+
+  5. Khi đang ở quyền root, tạo user mới để test:
+       useradd -m bob
+         - -m : tạo home directory cho user
+         - Chưa đặt mật khẩu cho bob ở bước này
+
+  6. Chuyển sang user bob (khi đang là root, không cần mật khẩu):
+       su - bob
+         - pwd → /home/bob
+         - Xác nhận chuyển đổi thành công
+
+  7. Kiểm tra process với ps
+       - Trong shell của bob: ps cho thấy đang chạy trong shell đó
+       - exit ra ngoài: ps cho thấy đang chạy trong bash bên trong
+         shell su (minh chứng cho việc các shell được lồng nhau)
+
+  8. Thoát hoàn toàn về lại user ban đầu (vagrant):
+       exit (nhiều lần) hoặc Ctrl+D
+         - Luôn nhớ đóng shell sau khi dùng xong
+         - Ctrl+D ("D" như "Delta") cũng là cách thoát shell nhanh
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  su là công cụ cơ bản để chuyển đổi user (substitute user), với 2
+  chế độ chính:
+    - su (đơn giản)     : Không reset môi trường, giữ nguyên vị trí
+    - su - / su -l       : Full login shell, reset toàn bộ biến môi
+                            trường, chuyển đến home directory đích
+  Việc chia sẻ mật khẩu root cho nhiều admin tuy khả thi nhưng tiềm
+  ẩn rủi ro bảo mật và khó quản lý khi có thay đổi nhân sự.
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Tìm hiểu về sudo - phương pháp nâng đặc quyền phổ biến
+và an toàn hơn trong quản trị hệ thống Ubuntu.
+────────────────────────────────────────────────────────────────
