@@ -1,0 +1,179 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                  USING SUDO IN UBUNTU 20.04                                  ║
+║              (Thực Hành Sử Dụng Sudo Trên Ubuntu 20.04)                      ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Thực hành cấu hình và sử dụng sudo
+  Hệ thống   : Ubuntu 20.04
+  Mục tiêu   : Xem file sudoers, tạo file cấu hình mới, thêm safety
+               net bằng admin group, và test cấu hình sudo cho user Bob
+
+XEM FILE SUDOERS CHÍNH
+────────────────────────────────────────────────────────────────
+
+  • Thử đọc file mà không dùng sudo:
+      cat /etc/sudoers
+      → Permission denied (file riêng tư, cần quyền root)
+
+  • Đọc lại với sudo (dùng !! để lặp lại lệnh cuối):
+      sudo !!
+
+  • Nội dung chính trong /etc/sudoers:
+      - root ALL=(ALL:ALL) ALL
+          → root có thể sudo sang mọi user/group, chạy mọi lệnh
+      - %admin ALL=(ALL) ALL
+          → group admin có thể sudo sang mọi user
+      - %sudo ALL=(ALL:ALL) ALL
+          → group sudo có thể sudo sang mọi user/group
+      - Có dòng #includedir /etc/sudoers.d
+          → tự động nạp thêm các file trong thư mục sudoers.d
+
+XEM THƯ MỤC /ETC/SUDOERS.D
+────────────────────────────────────────────────────────────────
+
+  • Lệnh liệt kê (vẫn cần sudo):
+      sudo ls /etc/sudoers.d
+
+      - Có thể dùng Esc + . để lấy lại tham số cuối, rồi thêm ".d"
+
+  • Các file có sẵn (tùy image):
+      - cloud-init  : do nhà xây dựng image tạo sẵn
+      - vagrant     : tương ứng với user vagrant (tên file không
+                       bắt buộc phải trùng tên user)
+
+  • Xem nội dung file vagrant:
+      sudo cat /etc/sudoers.d/vagrant
+
+      → Nội dung: user vagrant có thể sudo sang mọi user, KHÔNG cần
+        mật khẩu, chạy được mọi lệnh (NOPASSWD: ALL)
+
+  • Kiểm tra quyền hạn hiện tại của mình:
+      sudo -l
+
+      → Liệt kê các đặc quyền, ví dụ: (ALL) NOPASSWD: ALL
+      → Đây chỉ là quyền đến từ 1 entry riêng (file vagrant), KHÔNG
+        đến từ group nào (kiểm tra bằng lệnh id → chỉ thuộc group
+        riêng của chính mình)
+
+THÊM SAFETY NET: ADMIN GROUP + POLICYKIT
+────────────────────────────────────────────────────────────────
+
+  • Lý do cần thiết:
+      - Nếu chỉnh sửa sai file sudoers, có thể tự khóa quyền sudo
+        của chính mình, khiến hệ thống không quản lý được
+      - PolicyKit (dùng cho pkexec) mặc định cấp quyền cho group
+        admin, đây là lớp bảo vệ dự phòng
+
+  • Thêm user vào group admin:
+      sudo usermod -aG admin vagrant
+
+      - -a  : append (thêm vào, không ghi đè các group hiện có)
+      - -G  : chỉ định group bổ sung
+
+  • Lưu ý quan trọng:
+      - Thay đổi group KHÔNG có hiệu lực ngay
+      - Cần logout và login lại (dùng exit rồi đăng nhập lại)
+      - Sau đó chạy lại lệnh id để xác nhận đã thuộc group admin
+
+CHỈNH SỬA SUDOERS BẰNG VISUDO
+────────────────────────────────────────────────────────────────
+
+  • Mở file chính (chỉ để xem, KHÔNG sửa trực tiếp):
+      sudo visudo
+
+      - Sẽ có cảnh báo/khuyến nghị nên sửa trong /etc/sudoers.d thay
+        vì sửa trực tiếp file này
+      - Dùng Ctrl+X để thoát ra không lưu
+
+  • Tạo file cấu hình riêng cho user Bob:
+      sudo visudo -f /etc/sudoers.d/bob
+
+      - Mở trình soạn thảo nano (mặc định trên hệ Debian-based)
+      - File mới, trống hoàn toàn
+
+  • Nội dung cấu hình cho Bob:
+      bob ALL = (root) NOPASSWD: /usr/bin/passwd, !/usr/bin/passwd root
+
+      - bob             : tên user
+      - ALL             : áp dụng trên mọi host
+      - = (root)        : chỉ được sudo sang tài khoản root
+      - NOPASSWD        : không cần nhập mật khẩu cho các lệnh liệt kê
+      - /usr/bin/passwd : cho phép chạy lệnh đổi mật khẩu
+      - !/usr/bin/passwd root : PHỦ ĐỊNH — không được đổi mật khẩu root
+
+  • Lưu file: Ctrl+X
+      - visudo TỰ ĐỘNG kiểm tra cú pháp (syntax check) khi lưu
+
+XỬ LÝ LỖI CÚ PHÁP TRONG VISUDO
+────────────────────────────────────────────────────────────────
+
+  • Ví dụ lỗi: xóa dấu "=" trong dòng cấu hình rồi lưu
+      → Xuất hiện thông báo "What now?"
+      → Có 3 lựa chọn, nhưng chỉ nên dùng 2:
+          • e (Edit)  : Sửa lại file cho đúng
+          • x (Exit)  : Thoát không lưu thay đổi lỗi
+          • (Bỏ qua lựa chọn được đánh dấu "dangerous")
+
+  • Sau khi sửa đúng cú pháp (thêm lại dấu "="), lưu lại
+      → Không còn cảnh báo "What now?" nữa, syntax hợp lệ
+
+KIỂM TRA CẤU HÌNH CỦA BOB
+────────────────────────────────────────────────────────────────
+
+  • Chuyển sang tài khoản Bob:
+      sudo su - bob
+
+      (Lưu ý: một số phím tắt Bash không hoạt động trong shell đơn
+       giản này, dùng lệnh clear thay vì Ctrl+L)
+
+  • Kiểm tra quyền hạn:
+      sudo -l
+
+      → Chỉ thấy được phép chạy lệnh passwd, KHÔNG được đổi mật khẩu
+        root
+
+  • Test 1: Chạy lệnh KHÔNG có trong danh sách cho phép
+      sudo cat /etc/shadow
+
+      → Bị yêu cầu nhập mật khẩu xác thực (thử tối đa 3 lần)
+      → Cuối cùng vẫn bị từ chối vì lệnh cat không nằm trong danh
+        sách được phép
+
+  • Test 2: Chạy lệnh ĐƯỢC PHÉP và không cần mật khẩu
+      sudo passwd ubuntu
+
+      → Không bị hỏi mật khẩu xác thực của Bob
+      → Chỉ được hỏi nhập MẬT KHẨU MỚI cho user ubuntu
+      → Thành công
+
+  • Test 3: Thử đổi mật khẩu ROOT (bị cấm)
+      sudo passwd root
+
+      → Không cần xác thực (vì lệnh passwd nằm trong NOPASSWD)
+      → Nhưng bị TỪ CHỐI vì đã bị phủ định (!/usr/bin/passwd root)
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Qua bài thực hành, ta đã:
+    - Xem được cấu trúc file /etc/sudoers và thư mục sudoers.d
+    - Thêm safety net bằng cách vào group admin (phòng khi lỡ tay
+      làm hỏng cấu hình sudo)
+    - Dùng visudo -f để tạo file cấu hình riêng cho từng user, an
+      toàn hơn vì có kiểm tra cú pháp tự động
+    - Xác nhận rằng cấu hình negation (dùng dấu !) hoạt động đúng
+      như mong đợi, ngăn Bob đổi mật khẩu root dù được phép chạy
+      lệnh passwd cho các user khác
+
+  Nếu chẳng may làm hỏng cấu hình sudo hoàn toàn, có thể khôi phục
+  thông qua PolicyKit và pkexec (sẽ tìm hiểu ở phần lab tiếp theo).
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Tìm hiểu về PolicyKit và pkexec - phương án dự phòng
+khi cấu hình sudo gặp sự cố.
+────────────────────────────────────────────────────────────────

@@ -1,0 +1,112 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║              UNDERSTANDING SUDO CONFIGURATION                                ║
+║              (Hiểu Về Cấu Hình Sudo)                                         ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Cấu hình sudo để ủy quyền (delegate) đặc quyền quản trị
+  Mục tiêu   : Hiểu cách sudo hoạt động, cách chỉnh sửa an toàn bằng
+               visudo, và cách viết các entry trong sudoers
+
+SUDO SO VỚI SU
+────────────────────────────────────────────────────────────────
+
+  • Ưu điểm của sudo so với su:
+      - Có thể ỦY QUYỀN (delegate) các lệnh quản trị cho user khác
+        mà KHÔNG cần tiết lộ mật khẩu root
+      - Có thể CHỌN LỌC lệnh nào được ủy quyền, không nhất thiết
+        phải cho toàn quyền như su
+
+VỊ TRÍ LƯU CẤU HÌNH
+────────────────────────────────────────────────────────────────
+
+  • File chính: /etc/sudoers
+      - Có thể bị ghi đè (overwritten) khi hệ thống update
+      - Vì vậy KHÔNG NÊN chỉnh sửa trực tiếp file này để thêm entry
+        riêng
+
+  • Thư mục khuyến nghị: /etc/sudoers.d/
+      - Nên thêm các entry tùy chỉnh vào đây thay vì sửa trực tiếp
+        /etc/sudoers
+      - Tránh bị mất cấu hình khi update hệ thống
+
+CÔNG CỤ CHỈNH SỬA: VISUDO
+────────────────────────────────────────────────────────────────
+
+  • Luôn dùng visudo để chỉnh sửa file sudoers, KHÔNG dùng trình
+    soạn thảo thông thường (vd: nano, vim trực tiếp)
+
+  • Lý do quan trọng:
+      - visudo có KIỂM TRA CÚ PHÁP (syntax check) khi lưu file
+      - Nếu không dùng visudo và cấu hình sai cú pháp, có thể làm
+        HỎNG HOÀN TOÀN hệ thống sudoers
+
+  • Cách sử dụng:
+      • visudo (không tham số)
+            - Mặc định chỉnh sửa file /etc/sudoers
+            - Thường KHÔNG phải điều ta muốn làm
+
+      • visudo -f <đường_dẫn_file>
+            - Chỉnh sửa file được chỉ định (có thể là file mới
+              hoặc file đã tồn tại)
+            - Đây là cách nên dùng, ví dụ:
+                  visudo -f /etc/sudoers.d/bob
+
+CÁC VÍ DỤ VỀ ENTRY TRONG SUDOERS
+────────────────────────────────────────────────────────────────
+
+  • Ví dụ 1 - Cho user bob toàn quyền trên 1 host cụ thể:
+      bob ubuntu1 = (root) NOPASSWD: ALL
+
+      - Chỉ áp dụng khi bob đăng nhập vào máy "ubuntu1"
+      - Không cần nhập mật khẩu (NOPASSWD)
+      - Được chạy TẤT CẢ lệnh với quyền root
+      - Chỉ dùng được cho file cấu hình đặt riêng trên ubuntu1
+
+  • Ví dụ 2 - Cho group sudo toàn quyền trên MỌI host:
+      %sudo ALL = (root) ALL
+
+      - Dấu % ở đầu: chỉ định đây là GROUP, không phải user riêng lẻ
+      - "sudo" ở đây là tên GROUP (nhóm sudo)
+      - "ALL" thay vì "ubuntu1": áp dụng cho TẤT CẢ các host
+      - Thành viên group sudo VẪN PHẢI nhập mật khẩu của chính họ
+        (không có NOPASSWD)
+      - File này có thể dùng chung cho nhiều server, không chỉ 1 máy
+
+  • Ví dụ 3 - Cho group helpdesk quyền hạn chế (chỉ đổi mật khẩu):
+      %helpdesk ALL = (root) /usr/bin/passwd, !/usr/bin/passwd root
+
+      - Các entry lệnh cách nhau bằng dấu phẩy
+      - /usr/bin/passwd  : Cho phép chạy lệnh đổi mật khẩu (reset
+                            mật khẩu user khác)
+      - !/usr/bin/passwd root : Dấu ! (chấm than) ở đầu = PHỦ ĐỊNH
+                                 → KHÔNG được đổi mật khẩu của ROOT
+      - Kết quả: helpdesk có thể reset mật khẩu user thường, nhưng
+        TUYỆT ĐỐI không được đổi mật khẩu root
+
+SO SÁNH ALL vs TÊN HOST CỤ THỂ
+────────────────────────────────────────────────────────────────
+
+  • Nếu file cấu hình chỉ dùng cho 1 server cụ thể
+      → Dùng tên host cụ thể (vd: ubuntu1) là hợp lý
+
+  • Nếu muốn dùng CHUNG 1 file cấu hình cho NHIỀU server
+      → Nên dùng ALL để áp dụng được trên mọi host
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Sudo cho phép ủy quyền linh hoạt và an toàn hơn su vì:
+    - Không cần chia sẻ mật khẩu root
+    - Có thể giới hạn chính xác lệnh nào được phép chạy
+    - Có thể áp dụng cho user, group, hoặc theo từng host cụ thể
+  Luôn dùng visudo (hoặc visudo -f) để chỉnh sửa, tránh làm hỏng
+  cấu hình sudoers do lỗi cú pháp.
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Thực hành trực tiếp cấu hình sudo trên dòng lệnh.
+────────────────────────────────────────────────────────────────
