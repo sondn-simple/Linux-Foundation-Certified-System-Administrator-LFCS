@@ -1,0 +1,96 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║        UNDERSTANDING PREPARATION OF NEW HOME DIRECTORIES                     ║
+║       (Chuẩn Bị Thư Mục Home Mới Và Thiết Lập SELinux Context)               ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Tùy chỉnh SELinux context cho thư mục không mặc định
+  Mục tiêu   : Học cách gán context đúng cho thư mục tùy chỉnh (vd:
+               thư mục home riêng, web server, database) và lưu vào
+               policy để không bị mất khi restorecon/reboot
+
+VÌ SAO CẦN TÙY CHỈNH CONTEXT
+────────────────────────────────────────────────────────────────
+
+  • Ở bài trước, ta thấy đặt sai context có thể gây lỗi hệ thống
+  • Nhưng ta cũng có thể CHỦ ĐỘNG tùy chỉnh context cho mục đích riêng
+  • Ví dụ:
+      - Thư mục dùng cho web server
+      - Thư mục dùng làm home directory riêng cho user (vd: /staff)
+
+TÌM HIỂU CÔNG CỤ
+────────────────────────────────────────────────────────────────
+
+  • man semanage-fcontext
+      - Xem các tùy chọn của semanage fcontext
+      - Nên tham khảo man page để hiểu rõ công cụ
+
+  • Vị trí lưu policy context cho thư mục:
+      /etc/selinux/targeted/contexts/files/
+
+      - restorecon sẽ đọc từ đây để biết context chuẩn cần set
+      - Đây chính là nơi restorecon tham chiếu khi khôi phục context
+        cho /etc/shadow ở bài trước
+
+QUY TRÌNH TẠO THƯ MỤC HOME TÙY CHỈNH
+────────────────────────────────────────────────────────────────
+
+  1. Tạo thư mục mới:
+       mkdir /staff
+
+  2. Thêm context vào POLICY (chưa áp dụng ngay lên thư mục):
+       semanage fcontext -a -e /home /staff
+
+       - -a  : thêm (add) context mới
+       - -e  : dùng thư mục khác làm ví dụ (equivalence)
+               → sao chép context của /home sang cho /staff
+       - Lưu ý: lệnh này CHỈ lưu vào policy, chưa thực sự set context
+         lên thư mục /staff (đây là thiết lập được PERSIST - lưu bền
+         vững, khác với chcon chỉ áp dụng tạm thời)
+
+  3. Áp dụng context từ policy vào thư mục thực tế:
+       restorecon -v /staff
+
+       - Đọc context đã lưu trong policy ở bước 2
+       - Gán context đúng cho thư mục /staff (giống context của /home)
+
+  4. Kiểm tra lại:
+       ls -Zd /staff
+
+       - Xác nhận /staff đã có context giống thư mục home tiêu chuẩn
+
+  5. Tạo user mới với home directory nằm trong /staff:
+       - Khi tạo user và chỉ định đường dẫn home nằm dưới /staff
+       - Thư mục home của user đó sẽ tự động kế thừa (inherit) đúng
+         SELinux context cần thiết
+
+ỨNG DỤNG THỰC TẾ KHÁC
+────────────────────────────────────────────────────────────────
+
+  • Không chỉ áp dụng cho home directory, kỹ thuật này còn dùng cho:
+      - Thư mục chứa dữ liệu database
+      - Thư mục chứa nội dung web server
+      - Bất kỳ thư mục tùy chỉnh nào ngoài vị trí mặc định
+
+  • Nguyên tắc chung:
+      - Cần set context cả trên THƯ MỤC THỰC TẾ (qua restorecon)
+      - VÀ trong POLICY (qua semanage fcontext) để đảm bảo persist
+        qua các lần restorecon hoặc reboot sau này
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Để dùng thư mục không mặc định cho mục đích riêng (home directory,
+  web, database...), ta cần:
+    1. Dùng semanage fcontext -a -e để lưu context vào policy (persist)
+    2. Dùng restorecon để áp dụng context đó lên thư mục thực tế
+  Cách này đảm bảo context luôn đúng và ổn định qua các lần reboot.
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Thực hành trực tiếp trên dòng lệnh với hệ thống Rocky
+Linux 9 để thấy toàn bộ quy trình này diễn ra trong thực tế.
+────────────────────────────────────────────────────────────────

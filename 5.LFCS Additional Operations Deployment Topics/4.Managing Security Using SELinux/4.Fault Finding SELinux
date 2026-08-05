@@ -1,0 +1,139 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                       FAULT FINDING SELINUX                                  ║
+║                  (Xử Lý Sự Cố SELinux Thực Hành)                             ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Thực hành phá vỡ và khắc phục lỗi context SELinux
+  Hệ thống   : Rocky Linux 9
+  Mục tiêu   : Hiểu type enforcement qua thực nghiệm, biết cách chẩn
+               đoán và sửa lỗi khi context bị đặt sai
+
+CHUẨN BỊ
+────────────────────────────────────────────────────────────────
+
+  • Cần quyền root cho hầu hết các lệnh trong bài này
+  • Dùng full root shell để thao tác
+
+XEM CONTEXT CỦA FILE
+────────────────────────────────────────────────────────────────
+
+  • ls -Z /etc/shadow
+      - Context gồm 4 thành phần: user, role, type, MCS level
+      - Với targeted policy, ta chủ yếu quan tâm đến TYPE
+      - /etc/shadow có type: shadow_t
+
+  • Type kiểm soát ai/cái gì được phép truy cập file
+      - Ngoài permission thông thường, root vẫn bị SELinux giới hạn
+        theo type
+
+XEM CONTEXT CỦA PROCESS
+────────────────────────────────────────────────────────────────
+
+  • ps -Z
+      - Process user thông thường (sudo, bash, ps): type unconfined_t
+      - Các service/daemon chạy với file bảo mật thường có type riêng
+
+  • Ví dụ với SSHD:
+      ps -Z $(pgrep sshd)
+      → Process sshd chạy với type: sshd_t
+      → Type này giới hạn những gì sshd được phép truy cập, kể cả
+        khi chạy với quyền root
+
+THỬ NGHIỆM: PHÁ VỠ CONTEXT CỦA FILE SHADOW
+────────────────────────────────────────────────────────────────
+
+  • Lệnh:
+      chcon -t admin_home_t /etc/shadow
+
+    → Đổi type của /etc/shadow từ shadow_t sang admin_home_t (sai)
+    → Phá vỡ gần như mọi thứ liên quan đến authentication
+
+  • Kiểm tra bằng lệnh:
+      chage -l vagrant
+
+    → Báo lỗi: không thể mở file /etc/shadow
+    → Dù đang chạy với quyền root vẫn bị chặn
+
+XÁC NHẬN LỖI DO SELINUX
+────────────────────────────────────────────────────────────────
+
+  • Kiểm tra mode hiện tại: getenforce → Enforcing
+      - Enforcing: vừa log vừa chặn vi phạm
+
+  • Chuyển tạm sang permissive để kiểm chứng:
+      sudo setenforce Permissive
+
+    → Lúc này chage chạy được, đọc được thông tin, nhưng vẫn được
+      ghi log lại (không bị chặn)
+
+XEM LOG BẰNG AUSEARCH
+────────────────────────────────────────────────────────────────
+
+  • Lệnh:
+      ausearch -m avc --start recent
+
+  • Kết quả: 2 lần bị AVC denial (từ chối truy cập)
+      - permissive=0  → lúc đang ở chế độ enforcing
+      - permissive=1  → lúc đang ở chế độ permissive
+      - Cả 2 đều cho thấy denial giữa:
+          - Source context: password_t
+          - Target context: admin_home_t (context sai đã set)
+
+XEM LOG DỄ ĐỌC HƠN VỚI SEALERT
+────────────────────────────────────────────────────────────────
+
+  • File /var/log/messages
+      - Bình thường không có audit message
+      - Nhờ có package setroubleshoot đã cài trước đó, các thông báo
+        AVC được chuyển đổi thành sealert message dễ đọc hơn
+
+  • Cách dùng:
+      - Lấy lệnh sealert kèm alert ID từ /var/log/messages
+      - Dán và chạy trực tiếp trên dòng lệnh
+      - Cả 2 sealert (permissive & enforcing) đều nói về cùng 1 sự
+        kiện, dùng cái nào cũng được
+
+  • Kết quả trả về:
+      - Độ tin cậy (confidence): 99.5% → gợi ý sửa label (context)
+      - Cho biết type đúng cần đặt lại
+      - Cung cấp sẵn câu lệnh khắc phục:
+            restorecon -v /etc/shadow
+      - Có gợi ý khác nhưng confidence chỉ 1.49% → không nên chọn
+
+KHẮC PHỤC LỖI
+────────────────────────────────────────────────────────────────
+
+  • Chạy lệnh được gợi ý:
+      restorecon -v /etc/shadow
+
+    - Đọc context chuẩn từ SELinux policy database
+    - Khôi phục lại type đúng: từ admin_home_t về lại shadow_t
+    - Tùy chọn -v (verbose) chỉ để hiển thị thông tin, không bắt buộc
+
+  • Đặt lại chế độ mặc định:
+      sudo setenforce Enforcing
+
+  • Kiểm tra lại:
+      chage -l vagrant  → Hoạt động bình thường trở lại
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Qua bài thực hành, ta thấy rõ:
+    - Type enforcement kiểm soát chặt chẽ việc truy cập file, kể cả
+      với quyền root
+    - Khi context bị đặt sai, hệ thống có thể bị phá vỡ nghiêm trọng
+    - ausearch giúp xem log thô, còn sealert (nhờ setroubleshoot) giúp
+      chẩn đoán nhanh và đưa ra lệnh khắc phục cụ thể
+    - restorecon là công cụ chính để khôi phục context đúng theo
+      policy đã định sẵn
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Tìm hiểu về việc di chuyển thư mục home của user và
+những điều cần lưu ý với SELinux context.
+────────────────────────────────────────────────────────────────

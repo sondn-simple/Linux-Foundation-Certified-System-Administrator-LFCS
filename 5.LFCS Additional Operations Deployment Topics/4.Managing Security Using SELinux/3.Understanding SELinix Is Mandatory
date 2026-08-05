@@ -1,0 +1,111 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║              UNDERSTANDING SELINUX IS MANDATORY                              ║
+║           (Hiểu Tại Sao SELinux Là Bắt Buộc - Mandatory)                     ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : SELinux context, type, và cách kiểm tra/khắc phục lỗi
+  Mục tiêu   : Hiểu source type, target type, cách xem context, cách
+               thay đổi context (chcon), và cách khắc phục sự cố với
+               au search, sealert, restorecon
+
+SELINUX CONTEXT VÀ TYPE
+────────────────────────────────────────────────────────────────
+
+  • Với targeted policy (chính sách mặc định), thành phần quan trọng
+    nhất trong SELinux context là TYPE
+
+  • Có hai loại type cần quan tâm:
+      • Source type  : Type của process đang cố truy cập
+      • Target type  : Type của đối tượng bị truy cập (vd: thư mục, file)
+
+  • Source type và target type phải được policy cho phép truy cập
+    lẫn nhau thì hành động mới được thực hiện
+
+XEM SELINUX CONTEXT
+────────────────────────────────────────────────────────────────
+
+  • Dùng tùy chọn -Z (chữ Z in hoa) với các lệnh quen thuộc:
+      • ls -Z    : Xem context của file
+      • ps -Z    : Xem context của process
+
+  • Ví dụ:
+      • File /etc/shadow          → context type: shadow_t
+      • Process bash, ps          → context type: unconfined_t
+        (unconfined nghĩa là không bị giới hạn nhiều bởi policy)
+
+THỬ NGHIỆM: THAY ĐỔI CONTEXT CỦA FILE SHADOW
+────────────────────────────────────────────────────────────────
+
+  • File /etc/shadow chứa mật khẩu hệ thống → cực kỳ quan trọng về
+    bảo mật
+
+  • Dùng lệnh (chạy với quyền root):
+      chcon -t admin_home_t /etc/shadow
+
+    → Đổi type của file shadow từ shadow_t thành admin_home_t
+
+  • Hậu quả: PHÁ VỠ hoạt động bình thường của hệ thống
+      - Bất kỳ tiến trình nào cần truy cập file shadow (vd: lệnh
+        chage khi user vagrant đổi mật khẩu) sẽ bị SELinux từ chối
+        vì type không khớp với type được policy cho phép
+
+KIỂM TRA LỖI VỚI AU SEARCH
+────────────────────────────────────────────────────────────────
+
+  • Sử dụng Linux Audit System để xem chi tiết lỗi
+
+  • Lệnh: ausearch -m avc --start recent
+      - -m avc          : Tìm theo module AVC (Access Vector Control)
+      - --start recent   : Xem log trong khoảng thời gian gần đây
+                            (khoảng 10 phút gần nhất)
+
+  • Mọi vi phạm đều được ghi log dù đang ở chế độ enforcing hay
+    permissive - không quan trọng, log vẫn được ghi lại
+
+KIỂM TRA LỖI QUA VAR/LOG/MESSAGES VÀ SEALERT
+────────────────────────────────────────────────────────────────
+
+  • Thông thường các thông báo AVC không xuất hiện trực tiếp trong
+    /var/log/messages
+
+  • Daemon setroubleshoot (đã cài ở phần trước) sẽ:
+      - Lấy thông báo từ audit system
+      - Chuyển đổi sang định dạng dễ đọc hơn trong /var/log/messages
+
+  • Trong /var/log/messages, ta sẽ thấy một Alert ID
+      → Dùng lệnh: sealert -l <alert_id>
+      → Cho biết chi tiết lỗi gì đang xảy ra và gợi ý cách khắc phục
+
+CÁCH KHẮC PHỤC
+────────────────────────────────────────────────────────────────
+
+  • Cách 1: chcon
+      - Đặt lại context đúng bằng tay (vd: chcon -t shadow_t /etc/shadow)
+      - Yêu cầu biết chính xác type cần đặt lại
+
+  • Cách 2: restorecon (khuyến nghị hơn)
+      - Với nhiều file hệ thống, context đúng đã được ghi sẵn trong
+        policy
+      - restorecon sẽ đọc context chuẩn từ policy và tự động khôi phục
+        lại cho file
+      - Thêm -v (verbose) để xem chi tiết quá trình khôi phục
+      - Ví dụ: restorecon -v /etc/shadow
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  SELinux dùng context (đặc biệt là type) để kiểm soát source và
+  target có được phép tương tác hay không. Việc thay đổi context sai
+  (như dùng chcon không đúng cách) có thể phá vỡ hoạt động hệ thống.
+  Công cụ ausearch và sealert giúp chẩn đoán lỗi, còn restorecon giúp
+  khôi phục context chuẩn theo policy một cách an toàn.
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Thực hành trực tiếp trên dòng lệnh để thấy rõ quá trình
+phá vỡ và khắc phục context của file shadow.
+────────────────────────────────────────────────────────────────

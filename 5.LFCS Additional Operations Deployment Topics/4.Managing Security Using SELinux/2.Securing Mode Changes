@@ -1,0 +1,106 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                       SECURING MODE CHANGES                                  ║
+║                  (Bảo Vệ Việc Thay Đổi Chế Độ SELinux)                       ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Ngăn chặn việc chuyển đổi chế độ SELinux tùy tiện
+  Mục tiêu   : Sử dụng Boolean secure_mode_policyload để ngăn admin
+               chuyển từ enforcing sang permissive khi hệ thống đang chạy
+
+VẤN ĐỀ CẦN GIẢI QUYẾT
+────────────────────────────────────────────────────────────────
+
+  • Có thể dễ dàng chuyển đổi giữa enforcing <-> permissive khi hệ
+    thống đang chạy (runtime)
+  • Một số quản trị viên có thể lợi dụng điều này: khi gặp lỗi bị
+    SELinux chặn, họ chuyển sang permissive để "cho xong việc" thay
+    vì khắc phục đúng cách
+  • Cần công cụ để ngăn chặn hành vi tắt an toàn tùy tiện này
+
+CÀI ĐẶT CÔNG CỤ BỔ SUNG
+────────────────────────────────────────────────────────────────
+
+  • Các package cần cài thêm:
+      • policycoreutils
+      • setools
+      • setools-console
+      • setroubleshoot   (dùng cho troubleshooting SELinux ở phần sau)
+
+  • Sau khi cài, ta có thêm công cụ semanage rất hữu ích
+
+SELINUX BOOLEANS
+────────────────────────────────────────────────────────────────
+
+  • Boolean : Công tắc on/off đơn giản để tùy chỉnh hoạt động của
+    SELinux policy
+
+  • getsebool -a
+      - Liệt kê tất cả boolean và giá trị hiện tại
+      - Chạy được với user thường
+
+  • semanage boolean --list
+      - Cần chạy với sudo (quyền root)
+      - Hiển thị: giá trị hiện tại (current), giá trị trong policy
+        (default), và mô tả boolean đó
+      - Ví dụ lọc: semanage boolean --list | grep secure_mode
+
+  • Boolean quan trọng: secure_mode_policyload
+      - Khi bật, ngăn không cho chuyển từ enforcing sang permissive
+        lúc hệ thống đang chạy
+      - Muốn đổi mode lúc này chỉ có thể qua reboot
+
+THAY ĐỔI GIÁ TRỊ BOOLEAN
+────────────────────────────────────────────────────────────────
+
+  • sudo setsebool <tên_boolean> on
+      - Chỉ thay đổi trong bộ nhớ runtime (không lưu vĩnh viễn)
+      - Có hỗ trợ tab completion cho tên boolean
+
+  • sudo setsebool -P <tên_boolean> on
+      - Thay đổi cả runtime lẫn giá trị mặc định trong policy
+      - Thay đổi được lưu (persist) qua các lần reboot
+
+MINH HỌA THỰC TẾ TỪ DÒNG LỆNH
+────────────────────────────────────────────────────────────────
+
+  1. Ban đầu secure_mode_policyload đang tắt (off)
+       → có thể setenforce Permissive bình thường
+
+  2. Bật boolean bằng: sudo setsebool secure_mode_policyload on
+       (không dùng -P nên không persist)
+
+  3. Kiểm tra lại bằng getsebool -a → thấy đã bật (on)
+
+  4. Thử setenforce Enforcing → permissive → enforcing: ĐƯỢC PHÉP
+       (vì tăng cường bảo mật, không phải rủi ro)
+
+  5. Thử setenforce Permissive (từ enforcing) → BỊ CHẶN
+       - Dù đang chạy với quyền root, Boolean vẫn ngăn hành động này
+       - Đây chính là bản chất Mandatory Access Control (MAC)
+
+  6. Muốn hạ mode xuống Permissive lúc này:
+       - Phải sửa qua file cấu hình /etc/selinux/config
+       - Và reboot lại hệ thống
+
+  7. Sau khi reboot:
+       - Boolean quay về giá trị mặc định (off) vì thay đổi trước đó
+         không được persist (-P)
+       - Lúc này có thể setenforce Permissive trở lại bình thường
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Boolean secure_mode_policyload là công cụ hữu hiệu để ngăn quản trị
+  viên tùy tiện hạ cấp độ bảo mật từ enforcing xuống permissive khi hệ
+  thống đang chạy. Muốn thay đổi vĩnh viễn phải dùng cờ -P, còn nếu
+  không, thay đổi chỉ tồn tại đến lần reboot tiếp theo.
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Tìm hiểu về SELinux context và cách quản lý context
+khi thay đổi vị trí file/thư mục trong hệ thống.
+────────────────────────────────────────────────────────────────
