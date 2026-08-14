@@ -1,0 +1,146 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║       MANAGING POLKIT AND RECOVERING FROM A SUDO FAILURE                     ║
+║     (Quản Lý PolKit Và Khôi Phục Khi Sudo Bị Lỗi)                            ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Sử dụng Polkit (PolicyKit) và pkexec để nâng đặc quyền
+  Hệ thống   : Ubuntu 20.04
+  Mục tiêu   : Hiểu cách dùng pkexec để khôi phục hệ thống khi cấu
+               hình sudo bị lỗi hoàn toàn
+
+GIỚI THIỆU POLKIT
+────────────────────────────────────────────────────────────────
+
+  • Polkit (trước đây gọi là PolicyKit) là cách thứ 3 để nâng đặc
+    quyền, bên cạnh su và sudo
+
+  • Chủ yếu hướng đến môi trường desktop/đồ họa, nhưng CỰC KỲ HỮU ÍCH
+    để khôi phục khi:
+      - Cấu hình sudo bị lỗi (misconfigured)
+      - Không thể dùng sudo hoặc su để lấy quyền root
+
+FILE CẤU HÌNH POLKIT
+────────────────────────────────────────────────────────────────
+
+  • Đường dẫn:
+      /etc/polkit-1/localauthority.conf.d/51-ubuntu-admin.conf
+
+  • Nội dung quan trọng:
+      - Quyền admin (admin identities) được gán cho:
+          • UNIX group: sudo
+          • UNIX group: admin
+      - User phải thuộc MỘT trong 2 group này để dùng được pkexec
+        với đầy đủ quyền quản trị
+      - Nếu không thuộc group nào, vẫn có thể dùng mật khẩu của user
+        khác đang thuộc các group này để xác thực
+
+CHUẨN BỊ: CẦN 2 CỬA SỔ TERMINAL
+────────────────────────────────────────────────────────────────
+
+  • Đặt biến prompt để dễ phân biệt 2 cửa sổ:
+      • Cửa sổ 1: PS1="window1$ "
+      • Cửa sổ 2: PS1="window2$ "
+
+  • Kiểm tra thuộc group admin/sudo trước khi thực hành:
+      sudo cat /etc/polkit-1/localauthority.conf.d/51-ubuntu-admin.conf
+
+QUY TRÌNH DEMO CƠ BẢN (KHÔNG CẦN PHÁ SUDO)
+────────────────────────────────────────────────────────────────
+
+  1. Lấy Process ID của shell hiện tại (cửa sổ 1):
+       echo $$
+       (vd: kết quả trả về 18699)
+
+  2. Sang cửa sổ 2, giám sát process đó:
+       pkttyagent --process 18699
+
+       - Lệnh này sẽ chạy ở FOREGROUND, không trả lại prompt ngay
+       - Đây chính là "pkttyagent" đóng vai trò giám sát và xử lý
+         yêu cầu xác thực từ pkexec
+
+  3. Quay lại cửa sổ 1, chạy lệnh cần nâng quyền:
+       pkexec cat /etc/shadow
+
+  4. Quay lại cửa sổ 2 để xác thực (nhập mật khẩu)
+       → Sau khi xác thực thành công, lệnh ở cửa sổ 1 sẽ thực thi
+         với quyền cao hơn
+
+TÌNH HUỐNG THỰC TẾ: KHÔI PHỤC SAU KHI PHÁ SUDO
+────────────────────────────────────────────────────────────────
+
+  • Cố ý (hoặc vô tình) phá cấu hình sudoers:
+      sudo vi /etc/sudoers
+      (hoặc chỉnh trong /etc/sudoers.d/)
+
+      - Ví dụ: xóa dấu "=" ảnh hưởng đến group sudo (không nhất
+        thiết phải là group của chính mình - miễn có sai sót cú
+        pháp là ảnh hưởng đến TOÀN BỘ hệ thống)
+
+  • Khi gặp "What now?" - chọn SAI lựa chọn:
+      Q (Quit)
+
+      - Đây là lựa chọn RẤT KHÔNG NÊN dùng
+      - Hệ thống cảnh báo "dangerous" vì lý do chính đáng
+      - Kết quả: cấu hình sudo bị hỏng cho MỌI user, kể cả sau khi
+        logout/login lại hoặc reboot hệ thống
+
+  • Hậu quả nghiêm trọng:
+      - Không thể dùng sudo nữa
+      - Không thể dùng su để đăng nhập root (vì root không có mật
+        khẩu mặc định trên Debian-based systems)
+      - Hệ thống gần như "khóa cứng" quyền quản trị
+
+QUY TRÌNH KHÔI PHỤC BẰNG PKEXEC
+────────────────────────────────────────────────────────────────
+
+  1. Lấy Process ID của shell hiện tại (cửa sổ 1):
+       echo $$
+
+  2. Sang cửa sổ 2, giám sát process đó:
+       pkttyagent --process <PID>
+
+  3. Quay lại cửa sổ 1, chạy lệnh khôi phục:
+       pkexec visudo
+
+       - Không có phản hồi ngay trong cửa sổ 1
+
+  4. Quay lại cửa sổ 2:
+       - Được yêu cầu CHỌN TÀI KHOẢN để xác thực (vd: ubuntu hoặc
+         vagrant - miễn thuộc group sudo/admin)
+       - Chọn tài khoản vagrant, nhập mật khẩu tương ứng
+       - Xác thực thành công
+
+  5. Quay lại cửa sổ 1:
+       - Trình soạn thảo nano (từ visudo) đã được NÂNG QUYỀN thành công
+       - Chỉnh sửa lại lỗi (vd: thêm lại dấu "=" bị thiếu)
+       - Lưu file
+
+  6. Kiểm tra lại sudo đã hoạt động bình thường:
+       sudo visudo
+
+       → Không còn lỗi, sudo đã được khôi phục hoàn toàn
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Polkit và pkexec là công cụ khôi phục CỰC KỲ QUAN TRỌNG khi:
+    - Cấu hình sudo bị lỗi nghiêm trọng
+    - Không thể đăng nhập root (vì không có mật khẩu)
+
+  Điều kiện tiên quyết để dùng được: user phải thuộc group admin
+  hoặc sudo (theo cấu hình mặc định của Polkit trên Ubuntu), hoặc
+  biết mật khẩu của một user thuộc các group này.
+
+  Dù không phải là nội dung được kiểm tra trực tiếp trong kỳ thi,
+  việc biết cách dùng pkexec để khôi phục hệ thống khi sudo gặp sự
+  cố là kỹ năng thực tế RẤT HỮU ÍCH cho quản trị viên hệ thống.
+
+
+────────────────────────────────────────────────────────────────
+Đây là phần kết thúc nội dung về các phương pháp nâng đặc quyền
+(su, sudo, pkexec). Tiếp theo sẽ quay lại slide để tổng kết module.
+────────────────────────────────────────────────────────────────

@@ -1,0 +1,94 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                     SUMMARY AND WHAT'S NEXT                                  ║
+║                 (Tổng Kết Và Nội Dung Tiếp Theo)                             ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Tổng kết module về User Account và Privilege Escalation
+  Mục tiêu   : Điểm lại toàn bộ kiến thức đã học trong module
+
+PHẦN 1: TÌM HIỂU VỀ USER
+────────────────────────────────────────────────────────────────
+
+  • Database tài khoản user
+      • cat /etc/passwd            : Xem trực tiếp file
+      • getent passwd               : Truy vấn toàn bộ database
+                                       (bao gồm cả nguồn khác ngoài
+                                       file local)
+
+  • File /etc/nsswitch.conf
+      - Xác định nguồn dữ liệu password database
+      - Có thể chỉ là file local
+      - Có thể mở rộng để bao gồm tài khoản từ:
+          • Active Directory
+          • LDAP servers
+
+  • Công cụ AWK
+      - Được ví như "đàn anh" của grep
+      - Cho phép kiểm soát chi tiết hơn khi liệt kê nội dung file
+        passwd
+      - Có thể lọc user theo UID:
+          • UID >= 1000  → Standard user (user thông thường)
+          • UID < 1000   → System user (tài khoản hệ thống)
+
+PHẦN 2: NÂNG ĐẶC QUYỀN (PRIVILEGE ESCALATION)
+────────────────────────────────────────────────────────────────
+
+  • Lệnh su (Substitute User)
+      - Cần biết MẬT KHẨU của tài khoản muốn chuyển đến
+      - su          : Chuyển user nhưng KHÔNG reset biến môi trường
+      - su - / su -l : Full login shell, RESET toàn bộ biến môi
+                        trường (hai cú pháp này hoàn toàn tương đương)
+
+  • Lệnh sudo
+      - Tốt hơn su vì:
+          • KHÔNG cần biết mật khẩu của tài khoản đích
+          • Chỉ cần xác thực bằng MẬT KHẨU CỦA CHÍNH MÌNH
+          • Có thể ỦY QUYỀN (delegate) chính xác quyền hạn cần thiết
+            cho từng user/group
+      - Ví dụ: user Bob chỉ được reset mật khẩu user khác, KHÔNG
+        được đổi mật khẩu root
+
+  • Công cụ chỉnh sửa: visudo
+      - Thực hiện KIỂM TRA CÚ PHÁP (syntax check) khi lưu file
+      - Nếu gặp lỗi cú pháp và chọn "Quit" thay vì "Edit"
+        → Để lại cấu hình bị lỗi, LÀM HỎNG hoàn toàn hệ thống sudo
+      - Dùng visudo -f <file> để chỉnh sửa file khác ngoài
+        /etc/sudoers (vẫn có syntax check như bình thường)
+
+  • Lệnh pkexec (thuộc Polkit/PolicyKit)
+      - Phương án thứ 3 để nâng đặc quyền
+      - Cách hoạt động:
+          • pkttyagent giám sát shell và xử lý xác thực
+          • Cần cung cấp Process ID (PID) của shell đang chạy pkexec
+      - CỰC KỲ HỮU ÍCH để khôi phục hệ thống khi cấu hình sudo bị
+        lỗi hoàn toàn (đã minh họa cụ thể trong bài thực hành trước)
+
+LỜI KHUYÊN
+────────────────────────────────────────────────────────────────
+
+  • Nên luyện tập thành thạo các cơ chế khôi phục này, áp dụng cho:
+      - Tình huống khẩn cấp tại nhà
+      - Môi trường công việc
+      - Cả trong kỳ thi chứng chỉ (nếu có)
+  • Càng thành thạo, càng ít căng thẳng khi sự cố thực sự xảy ra
+  • "Practice, practice, and practice" - luyện tập liên tục là chìa
+    khóa để thành thạo
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Module này đã trang bị kiến thức toàn diện về:
+    - Cách tra cứu và lọc thông tin user account
+    - Ba phương pháp nâng đặc quyền: su, sudo, pkexec
+    - Cách sử dụng đúng visudo để tránh làm hỏng cấu hình
+    - Cách khôi phục hệ thống bằng pkexec khi sudo gặp sự cố
+
+
+────────────────────────────────────────────────────────────────
+Module tiếp theo: Tạo và quản lý tài khoản user trong Linux
+(Creating and Managing User Accounts).
+────────────────────────────────────────────────────────────────

@@ -1,0 +1,126 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                        WELCOMING YOUR USERS                                  ║
+║                    (Chào Đón Người Dùng Mới)                                 ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallett
+  Chủ đề     : Tạo và quản lý user trong Linux
+  Mục tiêu   : Giới thiệu tổng quan các nội dung sẽ học trong module
+
+NỘI DUNG SẼ HỌC TRONG MODULE
+────────────────────────────────────────────────────────────────
+
+  • Lệnh useradd
+      - Công cụ phổ biến nhất để tạo user
+      - User local được lưu trong /etc/passwd
+
+  • Lệnh getent
+      - Truy vấn user cả từ local lẫn từ directory-based accounts
+        (vd: Active Directory, LDAP)
+
+  • Các giá trị mặc định (defaults)
+      - Nếu không chỉ định tùy chọn, useradd sẽ dùng giá trị mặc định
+      - Giá trị mặc định được lưu tại 2 file:
+          • /etc/default/useradd
+          • /etc/login.defs
+
+  • Skeleton directory (thư mục khung mẫu)
+      - Thư mục home mới được tạo sẽ được "populate" (điền sẵn nội
+        dung) từ thư mục skeleton
+      - Có thể thêm file vào skeleton để mọi user MỚI được tạo sau
+        này đều có sẵn các file đó
+      - CHỈ ảnh hưởng đến user mới, KHÔNG ảnh hưởng user đã tồn tại
+
+  • Lệnh usermod và userdel
+      - usermod : chỉnh sửa thông tin user
+      - userdel : xóa user
+      - Khi xóa user, có thể còn sót lại file thuộc sở hữu của họ
+        (home directory, mail file, hoặc file trong thư mục dùng chung)
+      - Dùng lệnh find để tìm các file thuộc về user đã bị xóa
+
+  • Trường comment (GECOS field)
+      - Tên kỹ thuật: GECOS field
+      - Viết tắt của: General Electric Corporation Operating System
+        (nguồn gốc lịch sử của tên gọi)
+      - Có thể lưu thêm thông tin bổ sung trong trường này
+
+  • Script adduser
+      - Là một Perl script, có thể dùng thay thế cho useradd
+      - Đôi khi tiện lợi hơn useradd trong một số trường hợp
+
+  • Quản lý group
+      - Nhóm user lại để dễ dàng gán quyền (permission)
+      - Giúp việc quản lý trở nên đơn giản hơn nhiều
+
+TẠO USER VỚI USERADD
+────────────────────────────────────────────────────────────────
+
+  • Cú pháp cơ bản (chỉ cần username):
+      sudo useradd user1
+
+      - Mọi thuộc tính khác của user sẽ dùng giá trị mặc định
+
+  • Xem thêm tùy chọn:
+      man useradd
+      useradd --help
+
+  • Kiểm tra user vừa tạo:
+      • cat /etc/passwd
+            - Xem database user local
+
+      • getent passwd user1
+            - Nên dùng khi hệ thống thuộc về một domain
+            - Tìm kiếm cả trong local files lẫn Active Directory/LDAP
+
+  • Xem cấu trúc file passwd:
+      man 5 passwd
+
+  • Kiểm tra thông tin UID/GID:
+      id user1
+
+      - Vì chưa chỉ định group nào, user1 sẽ chỉ thuộc về group
+        riêng (private group) của chính nó, cùng tên user1
+
+LƯU Ý VỀ HOME DIRECTORY TRÊN UBUNTU
+────────────────────────────────────────────────────────────────
+
+  • Mặc định trên Ubuntu, useradd KHÔNG tự động tạo home directory
+      - Dù trong /etc/passwd đã có đường dẫn home directory, thư mục
+        thực tế vẫn CHƯA được tạo
+
+  • Muốn tạo home directory ngay khi tạo user:
+      sudo useradd -m user2
+
+      - -m  : Tạo home directory (make home)
+
+CÁC TÙY CHỌN BỔ SUNG KHÁC
+────────────────────────────────────────────────────────────────
+
+  • -s   : Chỉ định shell mặc định (thay vì Bourne shell mặc định,
+           có thể dùng shell đầy đủ tính năng hơn)
+
+  • -G   : Chỉ định thêm các group bổ sung mà user thuộc về
+           (có thể liệt kê nhiều group, phân cách bằng dấu phẩy)
+
+  • Ví dụ:
+      sudo useradd -m -s /bin/bash -G sudo user2
+
+      → Tạo user2, có home directory, dùng bash shell, và thuộc
+        thêm group sudo
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Đây là phần giới thiệu tổng quan cho module về quản lý user, bao
+  gồm: useradd, getent, các file giá trị mặc định, skeleton directory,
+  usermod/userdel, trường GECOS, script adduser, và quản lý group.
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Thực hành trực tiếp trên dòng lệnh để tạo user với các
+tùy chọn khác nhau.
+────────────────────────────────────────────────────────────────

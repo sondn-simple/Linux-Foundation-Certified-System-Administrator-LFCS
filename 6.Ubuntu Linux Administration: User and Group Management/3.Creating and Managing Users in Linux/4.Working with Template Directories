@@ -1,0 +1,115 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                  WORKING WITH TEMPLATE DIRECTORIES                           ║
+║             (Thực Hành: Làm Việc Với Thư Mục Mẫu - Skeleton)                 ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Sử dụng thư mục /etc/skel làm mẫu cho home directory
+               của user mới
+  Mục tiêu   : Hiểu cách thêm nội dung mặc định vào home directory
+               của TẤT CẢ user mới được tạo sau này
+
+GIỚI THIỆU VỀ /ETC/SKEL
+────────────────────────────────────────────────────────────────
+
+  • Đường dẫn: /etc/skel (skeleton = khung xương/mẫu)
+      - Là thư mục TEMPLATE (mẫu) cho nội dung home directory của
+        user mới
+      - CHỈ ảnh hưởng đến user MỚI được tạo SAU khi thay đổi, KHÔNG
+        ảnh hưởng đến user đã tồn tại từ trước
+
+  • Nội dung mặc định thường bị ẨN (hidden files), cần dùng tùy
+    chọn -a để xem
+
+XEM NỘI DUNG THƯ MỤC SKELETON
+────────────────────────────────────────────────────────────────
+
+  • Xem thông thường (không thấy gì):
+      ls -l /etc/skel
+
+  • Xem đầy đủ bao gồm file ẩn:
+      ls -la /etc/skel
+
+      → Thấy: . (thư mục hiện tại), .. (thư mục cha), .bash_logout,
+        .bashrc, .profile
+      → Đây là các login script sẽ được sao chép vào home directory
+        của user mới
+
+  • Các alias hữu ích khi liệt kê file (ôn lại kiến thức nền tảng):
+      • la    : Tương đương ls -A (Almost All - gần như tất cả,
+                bỏ qua . và ..)
+      • ll    : Tương đương ls -alF (hiển thị đầy đủ + ký hiệu loại
+                file, vd: dấu / cuối tên thư mục)
+
+      - Kiểm tra ý nghĩa của 1 alias cụ thể:
+          type ll
+          type la
+
+      - Xem toàn bộ danh sách alias:
+          alias
+
+THÊM NỘI DUNG VÀO SKELETON DIRECTORY
+────────────────────────────────────────────────────────────────
+
+  • Ví dụ: tạo symbolic link trỏ đến tài liệu hệ thống
+
+  • Lệnh (cần quyền root):
+      sudo ln -s /usr/share/doc /etc/skel/doc
+
+      - ln -s   : Tạo symbolic link (liên kết mềm)
+      - Nguồn   : /usr/share/doc
+      - Đích    : /etc/skel/doc
+
+  • Kiểm tra lại:
+      ls -l /etc/skel
+      (có thể dùng Esc + . để lấy lại tham số cuối)
+
+      → Xác nhận symbolic link "doc" đã xuất hiện trong /etc/skel
+
+TẠO USER MỚI ĐỂ KIỂM TRA
+────────────────────────────────────────────────────────────────
+
+  • Tạo user mới (không cần -m vì đã cấu hình CREATE_HOME=yes từ
+    trước):
+      sudo useradd user5
+
+  • Kiểm tra nội dung home directory của user5:
+      ls -la ~user5
+
+      → Có thư mục con "doc" (symbolic link đã được kế thừa từ
+        skeleton directory)
+
+  • So sánh với user đã tồn tại trước đó (vd: user3):
+      ls -la ~user3
+
+      → KHÔNG có thư mục "doc"
+      → Xác nhận: skeleton directory CHỈ ảnh hưởng user được tạo
+        SAU khi thay đổi, không hồi tố (retroactive) cho user cũ
+
+ỨNG DỤNG THỰC TẾ
+────────────────────────────────────────────────────────────────
+
+  • Có thể dùng skeleton directory để:
+      - Thêm chính sách sử dụng chấp nhận được (Acceptable Usage
+        Policy) vào home directory mọi user mới
+      - Cung cấp sẵn liên kết đến tài liệu hướng dẫn (documentation)
+      - Chuẩn hóa nội dung mặc định cho toàn bộ user mới trong tổ
+        chức
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  /etc/skel là công cụ hữu ích để chuẩn hóa nội dung home directory
+  cho user mới. Bất kỳ file, thư mục, hay symbolic link nào được
+  thêm vào /etc/skel sẽ tự động được sao chép vào home directory của
+  MỌI user được tạo SAU thời điểm đó, giúp tiết kiệm công sức thiết
+  lập thủ công cho từng user.
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Tìm hiểu về usermod và userdel - cách chỉnh sửa và xóa
+tài khoản user trong Linux.
+────────────────────────────────────────────────────────────────

@@ -1,0 +1,165 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    CREATING USERS WITH USERADD                               ║
+║                (Thực Hành: Tạo User Bằng Lệnh Useradd)                       ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Thực hành tạo user bằng useradd với và không có tùy chọn
+  Hệ thống   : Ubuntu (dùng Vagrant virtual machine)
+  Mục tiêu   : Hiểu cấu trúc file passwd, cách dùng getent, và các
+               tùy chọn thường dùng khi tạo user (-m, -s, -G)
+
+CHUẨN BỊ
+────────────────────────────────────────────────────────────────
+
+  • Nếu chưa thiết lập môi trường lab, nên tham khảo khóa "Ubuntu:
+    Essential Commands" để setup máy ảo Vagrant
+
+XEM TRỢ GIÚP CỦA USERADD
+────────────────────────────────────────────────────────────────
+
+  • Chạy được với user thường (không cần sudo):
+      useradd --help
+
+  • Cũng có thể tham khảo man page để biết chi tiết hơn
+
+TẠO USER ĐƠN GIẢN (KHÔNG TÙY CHỌN)
+────────────────────────────────────────────────────────────────
+
+  • Lệnh tạo user:
+      sudo useradd user1
+
+      - Cần sudo để có quyền truy cập vào database user
+      - Lưu ý: tên user PHÂN BIỆT chữ hoa/thường (case-sensitive)
+      - Thông thường nên dùng chữ thường (lowercase)
+
+  • Kiểm tra kết quả (chạy được với user thường):
+      tail -n1 /etc/passwd
+
+      - Dùng tail -n1 để chỉ xem dòng cuối cùng (entry mới nhất)
+
+PHÂN TÍCH KẾT QUẢ TRONG /ETC/PASSWD
+────────────────────────────────────────────────────────────────
+
+  • Trường thứ 2 (password field): chỉ có ký tự "x"
+      - Mật khẩu KHÔNG còn được lưu ở đây nữa (lưu ở nơi khác)
+      - Chưa đặt mật khẩu cho user1 ở bước này
+
+  • UID: 1002, GID: 1002
+      - Số UID và GID KHÔNG bắt buộc phải trùng nhau, nhưng TÊN thì
+        sẽ trùng (group tên "user1" trùng tên user "user1")
+      - Đây là PRIVATE GROUP (group riêng) - hành vi mặc định
+
+  • Trường comment (dấu hai chấm trống "::")
+      - Còn gọi là GECOS field
+      - GECOS: viết tắt của General Electric Corporation Operating
+        System (nguồn gốc lịch sử)
+      - Sẽ tìm hiểu chi tiết hơn ở phần sau
+
+  • Home directory: có đường dẫn nhưng CHƯA thực sự tồn tại (sẽ
+    kiểm tra ở phần dưới)
+
+  • Shell mặc định: /bin/sh
+      - Đây là Bourne shell đơn giản
+      - Có thể không phù hợp nếu user cần dùng console nhiều
+
+TRUY VẤN VỚI GETENT
+────────────────────────────────────────────────────────────────
+
+  • Xem toàn bộ database password:
+      getent passwd
+
+      - Bao gồm cả /etc/passwd
+      - Có thể bao gồm cả Active Directory hoặc LDAP nếu được cấu
+        hình (ở đây chưa cấu hình nên chỉ thấy user local)
+
+  • Tra cứu 1 user cụ thể:
+      getent passwd user1
+
+  • Kiểm tra cấu hình nguồn dữ liệu:
+      grep "^passwd:" /etc/nsswitch.conf
+
+      - Dấu ^ (dấu mũ, phím Shift+6 trên bàn phím US/UK): tìm dòng
+        BẮT ĐẦU bằng "passwd:"
+      - Hiện tại: chỉ tìm trong local files và tài khoản dựa trên
+        systemd (quản lý qua userdbctl, hiện chưa được kích hoạt)
+      - Có thể mở rộng thêm LDAP hoặc Active Directory
+
+XEM CẤU TRÚC FILE PASSWD
+────────────────────────────────────────────────────────────────
+
+  • man 5 passwd
+      - Dùng "man 5" (không phải "man passwd") để xem FILE FORMAT,
+        không phải xem lệnh
+      - Nhấn "q" để thoát khỏi man page
+
+KIỂM TRA THÔNG TIN VÀ HOME DIRECTORY CỦA USER1
+────────────────────────────────────────────────────────────────
+
+  • id user1
+      - UID: 1002, GID: 1002, group: user1
+      - Chỉ thuộc PRIVATE GROUP, không có group bổ sung nào (vì
+        chưa chỉ định lúc tạo)
+
+  • Kiểm tra thư mục home:
+      ls /home
+
+      - Thấy có: ubuntu, vagrant
+      - KHÔNG thấy /home/user1
+      - → Home directory của user1 CHƯA được tạo, dù đã có đường
+        dẫn trong /etc/passwd
+
+TẠO USER VỚI CÁC TÙY CHỌN BỔ SUNG
+────────────────────────────────────────────────────────────────
+
+  • Lệnh đầy đủ:
+      sudo useradd -m -s /bin/bash -G sudo,admin user2
+
+      - -m               : Tạo home directory ngay khi tạo user
+      - -s /bin/bash      : Đặt shell mặc định là bash (có thể viết
+                             tắt thay vì /usr/bin/bash)
+      - -G sudo,admin     : Thêm user vào các group bổ sung (danh
+                             sách, phân cách bằng dấu phẩy nếu có
+                             nhiều group)
+
+  • Kiểm tra kết quả:
+      ls /home
+        → Đã thấy thư mục con user2
+
+      id user2
+        → Ngoài group riêng user2, còn thuộc thêm 2 group: sudo
+          và admin
+
+  • Xem lại entry vừa tạo trong /etc/passwd bằng shortcut lịch sử
+    lệnh:
+      !ta
+
+      - Lặp lại lệnh gần nhất bắt đầu bằng "ta" (thường là
+        "tail -n1 ...")
+      - Rất hữu ích cả trong thực tế lẫn khi làm bài thi
+      - Kết quả cho thấy entry của user2, với shell là
+        /usr/bin/bash rõ ràng hơn
+      - Lưu ý: file passwd chỉ hiển thị PRIVATE GROUP (GID riêng),
+        các group bổ sung (sudo, admin) được quản lý ở nơi khác
+        (không hiển thị trực tiếp trong /etc/passwd)
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Qua bài thực hành, ta đã:
+    - Tạo user đơn giản và hiểu ý nghĩa từng trường trong /etc/passwd
+    - Biết cách tra cứu user bằng getent và kiểm tra nguồn dữ liệu
+      qua nsswitch.conf
+    - Học cách dùng các tùy chọn quan trọng của useradd:
+        -m (tạo home directory), -s (đặt shell), -G (thêm group)
+    - Nhận ra rằng mặc định trên Ubuntu, home directory KHÔNG tự
+      động được tạo nếu không dùng tùy chọn -m
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Tìm hiểu về các file giá trị mặc định (default values)
+khi tạo user, bao gồm /etc/default/useradd và /etc/login.defs.
+────────────────────────────────────────────────────────────────

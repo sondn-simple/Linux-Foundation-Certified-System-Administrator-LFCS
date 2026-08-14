@@ -1,0 +1,138 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                       WORKING WITH DEFAULTS                                  ║
+║                (Thực Hành: Làm Việc Với Giá Trị Mặc Định)                    ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Chỉnh sửa file default để tối ưu hóa việc tạo user
+  Mục tiêu   : Hiểu và cấu hình /etc/default/useradd và
+               /etc/login.defs để useradd hoạt động hiệu quả hơn
+               mà không cần chỉ định nhiều tùy chọn
+
+XEM GIÁ TRỊ MẶC ĐỊNH HIỆN TẠI
+────────────────────────────────────────────────────────────────
+
+  • Lệnh xem defaults:
+      useradd -D
+
+      - In ra các giá trị mặc định mà useradd sẽ dùng nếu không
+        chỉ định tùy chọn cụ thể
+      - Có thể chỉnh sửa trực tiếp qua chính lệnh useradd -D, hoặc
+        chỉnh sửa file backend bên dưới
+
+FILE 1: /ETC/DEFAULT/USERADD
+────────────────────────────────────────────────────────────────
+
+  • Đường dẫn: /etc/default/useradd
+
+  • Đây là file mà useradd -D đọc dữ liệu từ đó
+
+  • Chỉnh sửa với editor bất kỳ (vd: nano):
+      sudo nano /etc/default/useradd
+
+  • Ví dụ thay đổi shell mặc định:
+      SHELL=/bin/sh  →  SHELL=/bin/bash
+
+      - Giúp user mới có shell tương tác đầy đủ tính năng hơn thay
+        vì Bourne shell đơn giản
+
+  • Lưu file:
+      Ctrl+X → Y → Enter
+
+  • Kiểm tra lại sau khi sửa:
+      useradd -D
+
+      → Xác nhận SHELL đã đổi thành /bin/bash
+
+  • Lưu ý: các dòng khác trong file có thể đang bị comment (tắt),
+    nhưng vẫn hoạt động ở mức mặc định của hệ thống nếu không sửa
+
+FILE 2: /ETC/LOGIN.DEFS
+────────────────────────────────────────────────────────────────
+
+  • Đường dẫn: /etc/login.defs
+
+  • Đặc điểm:
+      - File dài và phức tạp hơn nhiều so với /etc/default/useradd
+      - KHÔNG chỉ dùng cho useradd, mà còn được nhiều tiện ích khác
+        sử dụng để lấy giá trị mặc định
+      - Có chú thích (comment) rất đầy đủ, dễ tham khảo
+
+  • Một số thiết lập có trong file:
+      • MAIL_DIR              : Vị trí mặc định lưu mail file
+      • FAILLOG                : Ghi log đăng nhập thất bại
+      • LOG_OK
+      • SYSLOG_SU_ENAB
+      • Thông tin về password aging (liên quan shadow)
+      • Thông tin về phạm vi User ID
+      • Thông tin timeout
+
+  • Tìm thiết lập CREATE_HOME:
+      grep CREATE_HOME /etc/login.defs
+
+      - Có thể dùng Esc + . để lấy lại tham số cuối cùng đã gõ
+      - Kết quả: mặc định KHÔNG có dòng CREATE_HOME trong file (cần
+        tự thêm vào nếu muốn dùng)
+
+  • Tra cứu ý nghĩa qua man page:
+      man 5 login.defs
+
+      - Tìm kiếm trong man page bằng: /CREATE (chữ hoa)
+      - Kết quả: CREATE_HOME nhận giá trị kiểu Boolean (yes/no)
+      - Nhấn "q" để thoát man page
+
+  • Thêm thiết lập CREATE_HOME vào file:
+      sudo nano /etc/login.defs
+
+      - Vị trí gợi ý: gần dòng DEFAULT_HOME (cho phép user đăng nhập
+        dù home directory không tồn tại)
+      - Thêm dòng:
+            CREATE_HOME yes
+
+      - Lưu file: Ctrl+X → Y → Enter
+
+TẠO USER MỚI ĐỂ KIỂM TRA
+────────────────────────────────────────────────────────────────
+
+  • Tạo user mà không cần chỉ định tùy chọn nào:
+      sudo useradd user3
+
+  • Kiểm tra entry vừa tạo:
+      tail -n1 /etc/passwd
+
+      (có thể dùng lại lịch sử lệnh tail trước đó)
+
+      → Thấy đường dẫn home directory và shell mặc định (bash) đã
+        được áp dụng, nhưng chưa chắc chắn home directory đã tồn tại
+        thực sự hay chưa
+
+  • Kiểm tra thực tế home directory đã được tạo:
+      ls /home
+
+      → Xác nhận /home/user3 đã tồn tại
+
+      → Chứng minh CREATE_HOME=yes trong login.defs đã hoạt động
+        đúng, tự động tạo home directory mà không cần dùng tùy chọn
+        -m khi chạy useradd
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Bằng cách cấu hình đúng 2 file:
+    1. /etc/default/useradd    → đặt shell mặc định (vd: bash)
+    2. /etc/login.defs         → bật CREATE_HOME=yes để tự động tạo
+                                  home directory
+
+  Ta có thể sử dụng lệnh useradd ở dạng ĐƠN GIẢN NHẤT (chỉ cần tên
+  user) mà vẫn đảm bảo user được tạo với đầy đủ shell phù hợp và có
+  sẵn home directory, giúp tiết kiệm thời gian và giảm sai sót khi
+  quản trị hệ thống ở quy mô lớn.
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Tìm hiểu về skeleton directory - cách tùy chỉnh nội dung
+mặc định có sẵn trong home directory của user mới.
+────────────────────────────────────────────────────────────────
