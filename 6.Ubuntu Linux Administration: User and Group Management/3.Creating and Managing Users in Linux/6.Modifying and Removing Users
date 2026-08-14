@@ -1,0 +1,130 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                   MODIFYING AND REMOVING USERS                               ║
+║              (Thực Hành: Chỉnh Sửa Và Xóa Tài Khoản User)                    ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Thực hành usermod, userdel, và find để dọn dẹp file
+               mồ côi
+  Mục tiêu   : Rèn kỹ năng chỉnh sửa/xóa user thực tế, hiểu rõ sự
+               khác biệt giữa primary group và secondary group
+
+PHÂN BIỆT PRIMARY GROUP VÀ SECONDARY GROUP
+────────────────────────────────────────────────────────────────
+
+  • Kiểm tra thông tin user2 (đã tạo với group sudo, admin trước đó):
+      id user2
+
+      → Secondary group: sudo, admin
+      → Primary group: user2
+
+  • Kiểm tra user hiện tại (vagrant):
+      id
+
+      → Primary group: vagrant
+
+  • Ý nghĩa khác nhau giữa 2 loại group:
+      • Primary group  : Dùng để xác định QUYỀN SỞ HỮU khi tạo file
+                          hoặc thư mục mới (file sẽ thuộc group này)
+      • Secondary group : Dùng để cấp QUYỀN TRUY CẬP tài nguyên
+                           thông qua các group mà user đó thuộc về
+
+THỰC HÀNH USERMOD - VÀ BÀI HỌC VỀ LỖI GHI ĐÈ
+────────────────────────────────────────────────────────────────
+
+  • Thử thêm group "staff" cho user2 (SAI CÁCH):
+      sudo usermod -G staff user2
+
+  • Kiểm tra kết quả:
+      id user2
+
+      → CHỈ còn: staff và user2 (primary group)
+      → MẤT hoàn toàn sudo và admin đã có trước đó!
+      → Nguyên nhân: -G mà KHÔNG có -a sẽ GHI ĐÈ toàn bộ danh sách
+        secondary group cũ
+
+  • Khắc phục bằng cách thêm lại các group đã mất, dùng -a để APPEND:
+      sudo usermod -aG admin,sudo user2
+
+  • Kiểm tra lại:
+      id user2
+
+      → Đã khôi phục đầy đủ: sudo, staff, admin, và private group
+        user2
+      → Bài học: LUÔN dùng -a khi thêm group cho user đã tồn tại,
+        trừ khi cố ý muốn thay thế hoàn toàn danh sách cũ
+
+THỰC HÀNH USERDEL - XÓA USER
+────────────────────────────────────────────────────────────────
+
+  • Xóa user KHÔNG dùng tùy chọn nào:
+      sudo userdel user2
+
+      - Home directory và mail spool file (nếu có) VẪN CÒN, không
+        bị xóa
+      - Không sai, chỉ là cách làm khác, cho phép kiểm tra lại nội
+        dung trước khi xóa hẳn
+
+  • Kiểm tra thư mục home sau khi xóa user (không -r):
+      ls -l /home
+
+      → Thư mục user2 vẫn còn tồn tại
+      → Nhưng owner hiển thị dạng SỐ (UID), không phải tên, vì hệ
+        thống không còn phân giải được UID/GID sang tên user/group
+        nữa (do user đã bị xóa)
+
+  • Xóa user KÈM home directory và mail spool file:
+      sudo userdel -r user3
+
+      - Có thể nhận thông báo: không tìm thấy mail spool file (vì
+        chưa cấu hình tạo mail spool mặc định)
+      - Home directory bị xóa NGAY LẬP TỨC
+      - Kiểm tra lại bằng ls /home → không còn thư mục user3
+
+DỌN DẸP FILE MỒ CÔI CỦA USER2 (SAU KHI ĐÃ KIỂM TRA XONG)
+────────────────────────────────────────────────────────────────
+
+  • Giả định: đã kiểm tra kỹ, không còn gì cần giữ lại từ user2
+
+  • Tìm file không có chủ sở hữu trong /home và /var:
+      sudo find /home /var -nouser
+
+      - /var thường chứa mail spool file, crontab
+      - Kết quả: chỉ thấy thư mục home của user2 (vì không có nhiều
+        nội dung khác)
+
+  • Xóa các file tìm được, dùng shortcut lặp lại lệnh:
+      !! -delete
+
+      - !!            : lặp lại toàn bộ lệnh find vừa chạy (kèm mọi
+                         tham số)
+      - -delete       : thêm vào cuối để thực hiện xóa
+      - Lệnh sẽ được mở rộng thành:
+            sudo find /home /var -nouser -delete
+
+  • Kiểm tra kết quả cuối cùng:
+      ls /home
+
+      → Chỉ còn lại thư mục user5
+      → user2 và user3 đã được dọn dẹp hoàn toàn
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Qua bài thực hành, ta đã:
+    - Phân biệt rõ primary group (dùng cho sở hữu file) và secondary
+      group (dùng cho quyền truy cập tài nguyên)
+    - Rút ra bài học quan trọng: LUÔN dùng usermod -aG thay vì chỉ
+      -G để tránh ghi đè group hiện có
+    - Thực hành userdel với và không có tùy chọn -r, hiểu sự khác
+      biệt trong việc xóa home directory
+    - Dùng find kết hợp -nouser và -delete (với shortcut !!) để dọn
+      dẹp file mồ côi sau khi xóa user
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Tìm hiểu thêm các cách khác để tạo user trong Linux.
+────────────────────────────────────────────────────────────────

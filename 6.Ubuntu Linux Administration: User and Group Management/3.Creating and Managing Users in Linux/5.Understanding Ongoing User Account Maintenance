@@ -1,0 +1,121 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║        UNDERSTANDING ONGOING USER ACCOUNT MAINTENANCE                        ║
+║      (Hiểu Về Việc Bảo Trì Tài Khoản User Liên Tục)                          ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Chỉnh sửa (usermod) và xóa (userdel) tài khoản user
+  Mục tiêu   : Hiểu cách dùng usermod đúng cách (tránh ghi đè nhầm
+               group), và cách xóa user an toàn với userdel
+
+LỆNH USERMOD
+────────────────────────────────────────────────────────────────
+
+  • Nhìn chung, usermod có các tùy chọn TƯƠNG TỰ như useradd
+      - Có một vài khác biệt nhỏ, nhưng phần lớn giống nhau
+
+  • -G (uppercase G): Chỉ định danh sách secondary group (group phụ)
+
+CẢNH BÁO QUAN TRỌNG: LỖI THƯỜNG GẶP VỚI -G
+────────────────────────────────────────────────────────────────
+
+  • Ví dụ lỗi:
+      sudo usermod -G staff user2
+
+      - user2 trước đó đã thuộc group sudo và admin
+      - Lệnh trên sẽ GHI ĐÈ (overwrite) toàn bộ danh sách secondary
+        group hiện có
+
+  • Kiểm tra hậu quả:
+      id user2
+
+      → Chỉ còn lại: primary group + group "staff"
+      → Đã MẤT hoàn toàn 2 group sudo và admin trước đó
+
+  • CÁCH KHẮC PHỤC: dùng -a (append - thêm vào) kèm với -G
+      sudo usermod -aG admin,sudo user2
+
+      - -a  : APPEND (thêm vào danh sách hiện có, không ghi đè)
+      - -G  : chỉ định các group cần thêm
+
+  • Nguyên tắc quan trọng cần nhớ:
+      - Với useradd: không cần -a vì user MỚI chưa có danh sách
+        group nào để mà ghi đè
+      - Với usermod: hầu như LUÔN LUÔN nên dùng -a khi thêm group,
+        TRỪ KHI bạn thực sự muốn THAY THẾ HOÀN TOÀN danh sách group
+        cũ bằng danh sách mới
+
+  • Kiểm tra lại sau khi sửa đúng:
+      id user2
+
+      → Kỳ vọng: thuộc về admin, sudo, staff, VÀ private group của
+        chính user2
+
+LỆNH USERDEL - XÓA USER
+────────────────────────────────────────────────────────────────
+
+  • Lệnh cơ bản:
+      sudo userdel -r user2
+
+      - -r : Xóa luôn home directory VÀ các file do hệ thống tạo ra
+             liên quan đến user, ví dụ:
+                 • Mail spool file
+                 • Crontab file (lịch chạy job)
+
+  • LƯU Ý QUAN TRỌNG:
+      - -r KHÔNG xóa tất cả file mà user từng sở hữu
+      - Nếu user có file trong các THƯ MỤC DÙNG CHUNG (shared
+        directories), những file đó sẽ KHÔNG bị xóa
+
+  • Cân nhắc: có nên xóa home directory ngay hay không?
+      - KHÔNG có đúng/sai tuyệt đối, tùy tình huống
+      - Có thể cần:
+          1. Xóa user trước để ngăn họ truy cập hệ thống
+          2. Giao cho người khác kiểm tra lại home directory
+          3. Kiểm tra email công việc còn sót lại cần bàn giao
+          4. Sau khi xác nhận ổn, mới xóa home directory sau
+
+TÌM FILE MỒ CÔI (KHÔNG CÒN CHỦ SỞ HỮU)
+────────────────────────────────────────────────────────────────
+
+  • Sau khi xóa user (không dùng -r), home directory vẫn còn nhưng
+    KHÔNG còn user sở hữu
+
+  • Dùng lệnh find để tìm các file "mồ côi" (không thuộc về user nào):
+      sudo find /home -nouser
+
+      - /home       : nơi thường chứa home directory
+      - Cũng nên kiểm tra thêm trong /var (nơi lưu mail spool,
+        crontab...)
+      - -nouser     : tìm file không có UID tương ứng với user nào
+                       đang tồn tại trong hệ thống
+
+      - find mặc định sẽ IN RA màn hình các kết quả tìm được
+
+  • Xóa các file mồ côi tìm được:
+      sudo find /home -nouser -delete
+
+      - Có thể dùng shortcut !! (lặp lại lệnh find trước đó) rồi
+        thêm -delete vào cuối
+      - Ví dụ: chạy lại find, sau đó gõ: !! -delete
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Khi bảo trì tài khoản user:
+    - Luôn dùng -aG (chứ không chỉ -G) với usermod để TRÁNH GHI ĐÈ
+      nhầm danh sách group hiện có
+    - userdel -r xóa home directory và file hệ thống liên quan,
+      nhưng KHÔNG xóa file trong thư mục dùng chung
+    - Dùng find với -nouser để tìm và dọn dẹp các file còn sót lại
+      sau khi xóa user, đảm bảo hệ thống sạch sẽ và không có file
+      "vô chủ"
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Thực hành trực tiếp trên dòng lệnh với usermod và
+userdel để rèn luyện kỹ năng bảo trì tài khoản user.
+────────────────────────────────────────────────────────────────

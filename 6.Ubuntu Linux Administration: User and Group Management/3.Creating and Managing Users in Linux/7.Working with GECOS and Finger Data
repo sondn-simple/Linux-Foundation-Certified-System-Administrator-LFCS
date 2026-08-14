@@ -1,0 +1,158 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║              WORKING WITH GECOS AND FINGER DATA                              ║
+║          (Thực Hành: Làm Việc Với Trường GECOS Và Finger)                    ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Trường comment/GECOS, lệnh chfn, script adduser,
+               và lệnh finger
+  Mục tiêu   : Hiểu ý nghĩa lịch sử của GECOS, cách thiết lập và
+               đọc thông tin cá nhân của user
+
+GIỚI THIỆU VỀ TRƯỜNG GECOS
+────────────────────────────────────────────────────────────────
+
+  • Tên đầy đủ: GECOS field
+      - Trong Linux hiện đại thường gọi đơn giản là "comment field"
+
+  • Nguồn gốc lịch sử:
+      - Ban đầu: General Electric Comprehensive Operating System
+      - Sau đổi thành: General Comprehensive Operating System (GCOS)
+      - Trường này ban đầu dùng để lưu các thông tin bổ sung như số
+        điện thoại của user
+
+  • Thông tin có thể lưu trong trường này (finger information):
+      - Tên đầy đủ (full name)
+      - Số phòng (room number)
+      - Số điện thoại nơi làm việc (work phone)
+      - Số điện thoại nhà (home phone)
+
+  • Thường thì trường này KHÔNG được điền, hoặc chỉ điền tên đầy đủ
+    của user
+
+CÔNG CỤ LIÊN QUAN
+────────────────────────────────────────────────────────────────
+
+  • chfn (change finger)
+      - Dùng để thiết lập thông tin finger cho chính mình hoặc
+        (nếu là root) cho user khác
+
+  • adduser (Perl script)
+      - Trên Ubuntu: là một script Perl thực sự, có hỏi đầy đủ
+        thông tin finger khi tạo user
+      - Trên nhiều distro khác: chỉ là symbolic link trỏ về useradd
+        (không hỏi thông tin finger)
+
+  • finger (cần cài thêm)
+      - Hiển thị thông tin finger một cách DỄ ĐỌC hơn so với việc
+        đọc trực tiếp từ /etc/passwd
+
+THỰC HÀNH KIỂM TRA TRƯỜNG COMMENT BAN ĐẦU
+────────────────────────────────────────────────────────────────
+
+  • Kiểm tra trường comment của user hiện tại (vagrant):
+      getent passwd vagrant
+
+      → Trường comment đang TRỐNG (nằm giữa GID và home directory)
+
+THIẾT LẬP THÔNG TIN VỚI CHFN (VỚI QUYỀN USER THƯỜNG)
+────────────────────────────────────────────────────────────────
+
+  • Lệnh:
+      chfn
+
+      - Yêu cầu xác thực bằng mật khẩu của chính mình
+      - Với quyền user thường: KHÔNG thể đặt Full Name (bị bỏ qua/
+        tự động skip)
+      - CÓ THỂ đặt các trường khác:
+          • Room number       : vd: u29a
+          • Work phone        : vd: 4 chữ số → hiển thị dạng "x1234"
+                                 (extension) khi dùng finger
+          • Home phone        : vd: 202-123-9876
+
+  • Kiểm tra lại:
+      !g   (lặp lại lệnh gần nhất bắt đầu bằng "g", tức getent)
+
+      → Thấy dữ liệu đã được lưu, nhưng khó đọc trực tiếp từ passwd
+
+THIẾT LẬP FULL NAME - CẦN QUYỀN ROOT
+────────────────────────────────────────────────────────────────
+
+  • Thử đặt Full Name với quyền user thường (SẼ THẤT BẠI):
+      chfn -f "vagrant user"
+
+      → Permission denied (không được phép tự đặt full name)
+
+  • Đặt lại với quyền root:
+      sudo chfn -f "vagrant user" vagrant
+
+      - Khi dùng sudo, PHẢI chỉ định rõ tên tài khoản cần chỉnh sửa
+
+  • Kiểm tra lại:
+      !g
+
+      → Xác nhận đã có "vagrant user" trong trường comment
+      → Kết luận: CHỈ ADMIN (root) mới có quyền đặt Full Name cho user
+
+TẠO USER BẰNG SCRIPT ADDUSER
+────────────────────────────────────────────────────────────────
+
+  • Kiểm tra loại file của adduser:
+      file $(which adduser)
+
+      - which adduser  : tìm đường dẫn đầy đủ của lệnh adduser
+      - file            : xác định loại file
+      → Kết quả: đây là một Perl script (trên Ubuntu)
+
+  • Tạo user mới bằng adduser (tương tác nhiều bước hơn useradd):
+      sudo adduser user6
+
+      - Yêu cầu đặt MẬT KHẨU ngay trong quá trình tạo (2 lần xác nhận)
+      - Sau đó lần lượt hỏi các thông tin GECOS:
+          • Full Name        → vd: user6
+          • Room Number      → vd: 123
+          • Work Phone       → vd: 1234
+          • Home Phone       → vd: 3125
+          • Thông tin khác (Other) → có thể để trống
+      - Xác nhận lưu thông tin khi được hỏi
+
+ĐỌC THÔNG TIN VỚI LỆNH FINGER
+────────────────────────────────────────────────────────────────
+
+  • Cài đặt finger:
+      sudo apt install finger
+
+  • Xem thông tin của 1 user cụ thể:
+      finger vagrant
+
+      → Hiển thị dễ đọc:
+          - Full Name (tên đầy đủ)
+          - Office (số phòng): u29a
+          - Extension (số máy lẻ): 1234 (từ work phone 4 chữ số)
+          - Home Phone: số đã nhập trước đó
+
+  • Kiểm tra tương tự với user mới tạo:
+      finger user6
+
+      → Hiển thị đầy đủ office, extension, home phone đã nhập lúc
+        chạy adduser
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Trường GECOS (comment field) trong /etc/passwd có thể lưu trữ
+  nhiều thông tin liên hệ hữu ích của user như tên đầy đủ, số phòng,
+  số điện thoại. Các công cụ liên quan:
+    - chfn        : Thiết lập thông tin finger (Full Name cần quyền root)
+    - adduser     : Script tương tác, tự động hỏi thông tin GECOS
+                     khi tạo user mới (trên Ubuntu)
+    - finger      : Hiển thị thông tin này một cách dễ đọc, thân
+                     thiện hơn so với đọc trực tiếp /etc/passwd
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Tìm hiểu về quản lý group trong Linux.
+────────────────────────────────────────────────────────────────
