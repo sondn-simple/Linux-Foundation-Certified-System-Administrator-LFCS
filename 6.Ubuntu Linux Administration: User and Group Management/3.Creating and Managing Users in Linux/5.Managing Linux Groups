@@ -1,0 +1,102 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                     MANAGING LINUX GROUPS                                    ║
+║                (Thực Hành: Quản Lý Group Trong Linux)                        ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Tạo, sửa, xóa group với groupadd, groupmod, groupdel
+  Mục tiêu   : Hiểu cách quản lý group - đơn giản hơn nhiều so với
+               quản lý user vì có ít thuộc tính cần thiết lập
+
+FILE VÀ DATABASE LƯU TRỮ GROUP
+────────────────────────────────────────────────────────────────
+
+  • File: /etc/group
+      - Có thể đọc trực tiếp: cat /etc/group
+      - Có thể grep theo tên group hoặc group ID
+
+  • getent group
+      - Truy vấn database group (có thể bao gồm cả group local lẫn
+        group từ domain)
+      - Ví dụ tra cứu group sudo:
+            getent group sudo
+
+      - Cấu trúc kết quả:
+          • Trường 1: tên group (vd: sudo)
+          • Trường 2: mật khẩu group - thường là "x" (lưu ở nơi
+                       khác, trong file /etc/gshadow)
+          • Trường 3: Group ID (vd: 27)
+          • Trường 4: danh sách user thành viên (phân cách bằng dấu
+                       phẩy nếu có nhiều user)
+
+  • LƯU Ý QUAN TRỌNG:
+      - Thường KHÔNG nên đặt mật khẩu cho group
+      - Đặt mật khẩu cho group làm giảm tính bảo mật, không tăng
+      - Vì nó cho phép user tự ý gia nhập group (self-service) chỉ
+        cần biết mật khẩu
+
+TẠO GROUP MỚI: GROUPADD
+────────────────────────────────────────────────────────────────
+
+  • Xem các tùy chọn có sẵn:
+      groupadd --help
+
+      → Rất ít tùy chọn so với useradd
+      → Chủ yếu có thể tùy chỉnh: -g (Group ID)
+
+  • Tạo group đơn giản (không cần tùy chọn):
+      sudo groupadd sales
+
+  • Kiểm tra kết quả:
+      getent group sales
+
+      → Group được gán Group ID kế tiếp có sẵn (vd: 1006)
+
+  • Lưu ý về mối quan hệ UID/GID:
+      - Khi tạo user độc lập (không dùng private group tự động),
+        UID và GID CÓ THỂ khác nhau
+      - Ví dụ: tạo user "bill" → UID: 1006, nhưng GID (private group
+        của bill): 1007
+      - Kết luận: KHÔNG có mối liên hệ bắt buộc giữa UID và GID, kể
+        cả với private group
+      - Về TÊN thì group và user riêng sẽ trùng nhau (vd: group
+        "bill" ứng với user "bill")
+
+CHỈNH SỬA GROUP: GROUPMOD
+────────────────────────────────────────────────────────────────
+
+  • Lệnh cần quyền root:
+      sudo groupmod -n grp-sales sales
+
+      - -n  : đặt TÊN MỚI cho group
+      - Ví dụ: đổi tên group "sales" thành "grp-sales"
+      - Tình huống thực tế: sau khi tổ chức tái cơ cấu (reorganize),
+        cần đổi tên group cho phù hợp
+
+XÓA GROUP: GROUPDEL
+────────────────────────────────────────────────────────────────
+
+  • Lệnh:
+      sudo groupdel grp-sales
+
+      - Xóa hoàn toàn group khỏi hệ thống
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Quản lý group đơn giản hơn nhiều so với quản lý user vì:
+    - Rất ít thuộc tính cần thiết lập (chủ yếu chỉ có tên và GID)
+    - 3 lệnh chính đủ để quản lý toàn bộ vòng đời của group:
+        • groupadd  : tạo group mới
+        • groupmod  : chỉnh sửa (chủ yếu đổi tên với -n)
+        • groupdel  : xóa group
+    - Nên tránh đặt mật khẩu cho group vì lý do bảo mật
+
+
+────────────────────────────────────────────────────────────────
+Đây là bài thực hành cuối cùng của module. Tiếp theo sẽ quay lại
+slide để tổng kết những gì đã học được.
+────────────────────────────────────────────────────────────────

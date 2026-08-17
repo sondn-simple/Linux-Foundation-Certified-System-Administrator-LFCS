@@ -1,0 +1,97 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                     SUMMARY AND WHAT'S NEXT                                  ║
+║                 (Tổng Kết Và Nội Dung Tiếp Theo)                             ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Tổng kết module Quản Lý User và Group
+  Mục tiêu   : Điểm lại toàn bộ kiến thức đã học trong module
+
+VỀ USER VÀ GROUP DATABASE
+────────────────────────────────────────────────────────────────
+
+  • User account
+      - Lưu tại: /etc/passwd
+      - Tham khảo man page: man 5 passwd
+
+  • Group account
+      - Lưu tại: /etc/group
+
+  • Cách đọc dữ liệu:
+      • Trực tiếp: cat /etc/passwd, cat /etc/group
+      • Qua getent: getent passwd, getent group
+          - Không chỉ đọc file local, mà còn có thể bao gồm cả tài
+            khoản domain nếu hệ thống có kết nối domain (LDAP,
+            Active Directory)
+
+QUẢN LÝ USER
+────────────────────────────────────────────────────────────────
+
+  • useradd    : Tạo user mới
+  • usermod    : Chỉnh sửa user (lưu ý dùng -aG thay vì -G để tránh
+                 ghi đè group)
+  • userdel    : Xóa user
+      - Nếu KHÔNG dùng tùy chọn -r:
+          → Home directory và mail spool file VẪN CÒN sau khi xóa
+
+  • Dọn dẹp file mồ côi (không còn chủ sở hữu) với find:
+      find <thư_mục> -nouser
+
+      - Tìm file/thư mục không có user account tương ứng (vì user
+        đã bị xóa)
+      - Có thể thêm -delete để XÓA NGAY khi tìm thấy:
+            find <thư_mục> -nouser -delete
+
+QUẢN LÝ GROUP
+────────────────────────────────────────────────────────────────
+
+  • groupadd   : Tạo group mới
+  • groupmod   : Chỉnh sửa group (thường dùng để đổi tên với -n)
+  • groupdel   : Xóa group
+
+TRƯỜNG DỮ LIỆU FINGER (GECOS)
+────────────────────────────────────────────────────────────────
+
+  • Thông tin có thể lưu:
+      - Tên đầy đủ (Full Name)
+      - Số phòng (Office number)
+      - Số điện thoại nơi làm việc (Work phone)
+      - Số điện thoại nhà (Home phone)
+
+  • Quyền hạn:
+      - User THƯỜNG: KHÔNG thể tự đặt Full Name, nhưng CÓ THỂ chỉnh
+        các thông tin khác
+      - Quản trị viên (root): có thể thiết lập đầy đủ mọi thông tin,
+        kể cả Full Name
+
+  • Công cụ liên quan:
+      • chfn        : Thiết lập finger data cho chính mình hoặc
+                       (nếu là root) cho user khác
+      • adduser     : Script Perl, tự động hỏi thông tin finger khi
+                       tạo user mới (dành cho quản trị viên)
+      • finger      : Cần cài đặt thêm, hiển thị thông tin finger
+                       dưới định dạng DỄ ĐỌC hơn nhiều so với việc
+                       đọc trực tiếp từ /etc/passwd
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Module này đã trang bị đầy đủ kiến thức về quản lý user và group
+  trong Linux:
+    - Vị trí lưu trữ và cách tra cứu dữ liệu (passwd, group, getent)
+    - Bộ lệnh quản lý user: useradd, usermod, userdel
+    - Bộ lệnh quản lý group: groupadd, groupmod, groupdel
+    - Cách dọn dẹp file mồ côi bằng find -nouser
+    - Cách quản lý thông tin finger/GECOS: chfn, adduser, finger
+
+  Nếu có phần nào chưa nắm chắc, nên quay lại ôn tập trước khi
+  chuyển sang phần tiếp theo.
+
+
+────────────────────────────────────────────────────────────────
+Module tiếp theo: Quản Lý Mật Khẩu Và Xác Thực Trong Linux
+(Managing Passwords and Authentication in Linux)
+────────────────────────────────────────────────────────────────

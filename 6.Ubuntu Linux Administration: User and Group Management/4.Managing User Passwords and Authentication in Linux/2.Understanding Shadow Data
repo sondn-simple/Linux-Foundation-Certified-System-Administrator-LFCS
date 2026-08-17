@@ -1,0 +1,141 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    UNDERSTANDING SHADOW DATA                                 ║
+║              (Thực Hành: Hiểu Về Dữ Liệu File Shadow)                        ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Thực hành tạo user, đặt mật khẩu, và đọc file shadow
+  Hệ thống   : Ubuntu 20.04
+  Mục tiêu   : Hiểu cấu trúc file /etc/shadow, cách đặt mật khẩu mã
+               hóa khi tạo user, và dùng chage để đọc thông tin
+               password aging
+
+TẠO USER MỚI VỚI SHELL TÙY CHỈNH
+────────────────────────────────────────────────────────────────
+
+  • Lệnh tạo user1 với home directory và shell bash:
+      sudo useradd -m -s /bin/bash user1
+
+      - Mặc định trên Ubuntu là Bourne shell (/bin/sh)
+      - Đổi sang /bin/bash để có shell tương tác đầy đủ hơn
+
+  • Xem trợ giúp useradd:
+      useradd --help
+
+      - Có tùy chọn -p hoặc --password để cung cấp mật khẩu
+      - LƯU Ý: yêu cầu MẬT KHẨU ĐÃ MÃ HÓA (encrypted), không thể
+        dùng mật khẩu thô trực tiếp
+
+TẠO USER VỚI MẬT KHẨU MÃ HÓA (-P)
+────────────────────────────────────────────────────────────────
+
+  • Bước 1: Tạo chuỗi mật khẩu mã hóa bằng openssl
+      openssl passwd -6 Password1
+
+      - Module: passwd
+      - Thuật toán: SHA-512 (tùy chọn -6)
+      - Mật khẩu gốc ví dụ: Password1
+
+  • Bước 2: Dùng chuỗi mã hóa vừa tạo để tạo user2:
+      sudo useradd -p <chuỗi_mã_hóa> user2
+
+KIỂM TRA FILE /ETC/SHADOW
+────────────────────────────────────────────────────────────────
+
+  • Xem 2 dòng cuối cùng (mới nhất) của file shadow:
+      sudo tail -n2 /etc/shadow
+
+      - Đây là file RIÊNG TƯ, chỉ root mới đọc được
+
+  • So sánh kết quả:
+      • user1: entry NGẮN
+          - Trường mật khẩu (trường thứ 2) bắt đầu bằng dấu "!"
+          - Dấu "!" = MẬT KHẨU KHÔNG HỢP LỆ
+          - Thường gặp khi: chưa đặt mật khẩu, hoặc tài khoản bị
+            KHÓA (locked) - vẫn giữ mật khẩu cũ nhưng thêm "!" phía
+            trước để vô hiệu hóa
+
+      • user2: entry DÀI HƠN nhiều
+          - Chứa chuỗi mật khẩu đã mã hóa đầy đủ (SHA-512)
+
+TRƯỜNG "PASSWORD LAST CHANGED"
+────────────────────────────────────────────────────────────────
+
+  • Ý nghĩa: số ngày kể từ ngày 1/1/1970 (Unix epoch)
+      - Ví dụ: giá trị 19265
+
+  • Cách tính thủ công bằng lệnh date:
+      date -d "1 Jan 1970 + 19265 days"
+
+      → Cho ra ngày tháng hiện tại tương ứng (vd: 30/9)
+
+  • Cách đọc dễ dàng hơn với chage:
+      sudo chage -l user1
+
+      - -l : list (liệt kê)
+      - Chuyển đổi dữ liệu shadow thô thành thông tin DỄ ĐỌC (ngày
+        tháng cụ thể thay vì số ngày từ epoch)
+
+TÌM HIỂU CẤU TRÚC FILE SHADOW QUA MAN PAGE
+────────────────────────────────────────────────────────────────
+
+  • Lệnh:
+      man 5 shadow
+
+  • Các trường chính trong file shadow:
+      1. Login name                   : Tên đăng nhập
+      2. Encrypted password           : Mật khẩu đã mã hóa
+      3. Last password change         : Ngày đổi mật khẩu gần nhất
+      4. Minimum password age         : Số ngày tối thiểu phải giữ
+                                          mật khẩu trước khi được
+                                          đổi (ngăn user đổi mật khẩu
+                                          liên tục để né minimum
+                                          history)
+      5. Maximum password age         : Số ngày tối đa được giữ mật
+                                          khẩu trước khi BẮT BUỘC đổi
+      6. Password warning period      : Số ngày cảnh báo trước khi
+                                          hết hạn (thường là 7 ngày)
+      7. Password inactivity period   : Số ngày còn được dùng mật
+                                          khẩu SAU KHI đã hết hạn
+      8. Account expiration date      : Ngày tài khoản hết hạn hoàn
+                                          toàn
+
+  • Thoát khỏi man page: q
+
+TRUY VẤN SHADOW DATABASE VỚI GETENT
+────────────────────────────────────────────────────────────────
+
+  • Đọc trực tiếp file shadow: CHỈ thấy dữ liệu LOCAL
+
+  • Dùng getent để lấy TOÀN BỘ database:
+      sudo getent shadow
+
+      - Bao gồm cả tài khoản từ Active Directory hoặc OpenLDAP nếu
+        có cấu hình kết nối
+
+  • Tra cứu 1 user cụ thể (hữu ích khi làm việc trong môi trường
+    domain có nhiều tài khoản):
+      sudo getent shadow user1
+
+      - Kết quả giống với đọc trực tiếp /etc/shadow, nhưng linh
+        hoạt hơn về nguồn dữ liệu
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Qua bài thực hành, ta đã:
+    - Biết cách tạo user với shell tùy chỉnh và mật khẩu mã hóa sẵn
+    - Hiểu cấu trúc 8 trường trong file /etc/shadow
+    - Biết cách đọc thông tin "password last changed" cả thủ công
+      (dùng date) lẫn tự động (dùng chage -l)
+    - Biết cách dùng getent shadow để truy vấn linh hoạt hơn, đặc
+      biệt hữu ích trong môi trường có domain
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Tìm hiểu sâu hơn về cách đặt và quản lý mật khẩu với
+các lệnh passwd và chpasswd.
+────────────────────────────────────────────────────────────────
