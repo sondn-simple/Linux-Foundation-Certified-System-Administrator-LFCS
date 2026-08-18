@@ -1,0 +1,73 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                     SUMMARY AND WHAT'S NEXT                                  ║
+║                 (Tổng Kết Và Nội Dung Tiếp Theo)                             ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Tổng kết module Mật Khẩu User Và Group
+  Mục tiêu   : Điểm lại toàn bộ kiến thức đã học trong module
+
+VỀ MẬT KHẨU USER
+────────────────────────────────────────────────────────────────
+
+  • File liên quan:
+      • /etc/shadow    : lưu trữ thông tin mật khẩu của user
+
+  • Cấu trúc mật khẩu gồm 3 thành phần:
+      1. Algorithm (thuật toán)    : xác định phương pháp băm (vd:
+                                       6 = SHA-512)
+      2. Salt (muối)                : chuỗi văn bản NGẪU NHIÊN, được
+                                       thêm vào cùng mật khẩu trước
+                                       khi băm
+      3. Hash (giá trị băm)         : kết quả từ algorithm + salt +
+                                       mật khẩu gốc
+
+  • CHỈ có Hash là được lưu trữ dưới dạng KHÔNG THỂ đọc ngược lại
+    (không phải văn bản rõ)
+      - Algorithm và Salt đều là văn bản RÕ, có thể đọc được
+      - Chính vì vậy, hệ thống có thể XÁC THỰC bằng cách tái tạo
+        hash từ mật khẩu người dùng nhập + salt/algorithm đã lưu,
+        rồi so sánh với hash gốc
+
+  • Công cụ minh họa: openssl passwd module
+      - Dùng để tự tay tạo hash, chứng minh cơ chế xác thực hoạt
+        động ra sao mà không cần lưu trữ mật khẩu gốc
+
+VỀ MẬT KHẨU GROUP
+────────────────────────────────────────────────────────────────
+
+  • File liên quan:
+      • /etc/gshadow    : lưu trữ thông tin mật khẩu của group
+
+  • Mật khẩu group hữu ích khi cần cấp SELF-SERVICE ACCESS (tự phục
+    vụ) đến tài nguyên
+      - Tuy nhiên, NHÌN CHUNG KHÔNG được khuyến khích sử dụng, vì
+        làm giảm tính bảo mật (nhiều người biết chung 1 mật khẩu)
+
+  • Lệnh gpasswd
+      - Vẫn RẤT HỮU ÍCH dù không dùng để đặt mật khẩu group
+      - Tùy chọn -A (chữ A HOA): chỉ định GROUP ADMINISTRATOR
+          → Cho phép ỦY QUYỀN quản lý thành viên group cho người
+            phù hợp hơn (thường là người gần gũi, hiểu rõ nhu cầu
+            của các thành viên trong group đó)
+          → Giảm tải công việc cho quản trị viên hệ thống chính
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Module này đã giúp làm rõ:
+    - Cấu trúc và cơ chế bảo mật của mật khẩu user (3 thành phần:
+      algorithm, salt, hash)
+    - Cách xác thực hoạt động mà KHÔNG cần lưu trữ mật khẩu gốc
+    - Khái niệm và rủi ro của mật khẩu group
+    - Cách dùng gpasswd để ủy quyền quản lý group thông qua
+      administrator
+
+
+────────────────────────────────────────────────────────────────
+Module tiếp theo: Quản Lý Login Script Toàn Hệ Thống
+(Managing System-Wide Login Scripts)
+────────────────────────────────────────────────────────────────

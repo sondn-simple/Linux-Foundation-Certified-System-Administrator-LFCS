@@ -1,0 +1,116 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                   UNDERSTANDING AUTHENTICATION                               ║
+║                (Thực Hành: Hiểu Về Cơ Chế Xác Thực)                          ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Chứng minh cơ chế xác thực hoạt động thế nào dù
+               không ai đọc được mật khẩu gốc, kể cả root
+  Mục tiêu   : Dùng openssl để tự tay tạo hash và xác minh khớp với
+               hash trong shadow file
+
+CÂU HỎI CỐT LÕI
+────────────────────────────────────────────────────────────────
+
+  • Nếu KHÔNG AI (kể cả root) đọc được mật khẩu gốc của user, vậy
+    hệ thống XÁC THỰC user như thế nào?
+
+  • Câu trả lời: Xác thực KHÔNG cần đọc mật khẩu gốc, mà dựa trên
+    việc SO SÁNH HASH
+
+CÔNG CỤ: OPENSSL PASSWD MODULE
+────────────────────────────────────────────────────────────────
+
+  • Lệnh cơ bản:
+      openssl passwd -6 <mật_khẩu>
+
+      - Module "passwd" của openssl chuyên xử lý mật khẩu kiểu Unix
+      - -6  : chỉ định thuật toán SHA-512
+
+  • Kết quả trả về: chuỗi đầy đủ dạng
+      $6$<salt>$<hash>
+
+      - Nếu KHÔNG chỉ định salt, hệ thống sẽ TỰ SINH salt ngẫu nhiên
+
+THỬ NGHIỆM: TẠI SAO CÙNG 1 MẬT KHẨU LẠI RA HASH KHÁC NHAU?
+────────────────────────────────────────────────────────────────
+
+  • Để dễ quan sát hơn, dùng thuật toán ngắn hơn: MD5 (-1 thay vì -6)
+      openssl passwd -1 Password1
+
+  • Chạy lại NHIỀU LẦN với CÙNG mật khẩu "Password1":
+      → Mỗi lần cho ra HASH KHÁC NHAU
+      → Nguyên nhân: mỗi lần chạy, salt được sinh NGẪU NHIÊN khác
+        nhau
+
+  • Ý NGHĨA CỦA VIỆC DÙNG SALT NGẪU NHIÊN:
+      - Ngăn việc NHẬN DIỆN các user có CÙNG mật khẩu chỉ bằng cách
+        nhìn vào hash
+      - Nếu không có salt ngẫu nhiên, kẻ tấn công có thể dễ dàng
+        nhận ra "mật khẩu mặc định" của tổ chức khi thấy nhiều user
+        có cùng hash
+
+XÁC THỰC = TÁI TẠO HASH VỚI SALT CỐ ĐỊNH
+────────────────────────────────────────────────────────────────
+
+  • Để XÁC THỰC (không phải tạo mới), ta chỉ định RÕ salt đã dùng
+    trước đó, thay vì để hệ thống tự sinh ngẫu nhiên
+
+  • Ví dụ:
+      openssl passwd -1 -salt <salt_đã_lấy_từ_lần_chạy_trước> Password1
+
+      - Lấy salt từ 1 trong các lần chạy trước (chỉ lấy đúng phần
+        salt, KHÔNG lấy dấu $ đi kèm)
+
+  • Kết quả:
+      → Hash sinh ra LẦN NÀY TRÙNG KHỚP HOÀN TOÀN với hash đã tạo
+        ở lần chạy trước đó (dùng cùng salt, cùng mật khẩu)
+
+  • Đây chính là nguyên lý xác thực:
+      Algorithm (từ shadow) + Salt (từ shadow) + Password (user nhập)
+      → Tạo ra hash MỚI
+      → So sánh với hash ĐÃ LƯU trong shadow file
+      → Nếu KHỚP → xác thực thành công
+
+THỰC HÀNH VỚI TÀI KHOẢN THẬT (VD: VAGRANT)
+────────────────────────────────────────────────────────────────
+
+  • Lấy salt và algorithm thực tế từ shadow file của user vagrant
+    (đã làm ở bài trước)
+
+  • Chạy lại với SHA-512, dùng đúng salt đã lấy được:
+      openssl passwd -6 -salt <salt_thực_tế> vagrant
+
+      (giả sử mật khẩu của user vagrant là "vagrant")
+
+  • So sánh kết quả:
+      - So sánh vài ký tự CUỐI của hash vừa tạo với hash đã lưu
+        trong shadow file
+      - Nếu TRÙNG KHỚP ở phần cuối → gần như chắc chắn toàn bộ hash
+        trùng khớp
+      - → XÁC THỰC THÀNH CÔNG bằng chính tay, không cần công cụ
+        đăng nhập hệ thống
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Qua bài thực hành, ta đã CHỨNG MINH được cơ chế xác thực Linux:
+    - Mật khẩu KHÔNG BAO GIỜ được lưu trữ hay đọc lại dưới dạng rõ,
+      kể cả bởi root
+    - Xác thực hoạt động bằng cách:
+        1. Lấy algorithm và salt đã lưu sẵn trong shadow file
+        2. Kết hợp với mật khẩu user vừa nhập
+        3. Tính ra hash mới
+        4. So sánh với hash đã lưu → khớp thì cho đăng nhập
+    - Salt NGẪU NHIÊN khi tạo mật khẩu giúp ngăn việc phát hiện các
+      user dùng chung mật khẩu, nhưng khi XÁC THỰC thì phải dùng
+      LẠI ĐÚNG salt cũ để tạo ra được đúng hash để so sánh
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Tìm hiểu về việc quản lý mật khẩu cho GROUP bằng lệnh
+gpasswd.
+────────────────────────────────────────────────────────────────
