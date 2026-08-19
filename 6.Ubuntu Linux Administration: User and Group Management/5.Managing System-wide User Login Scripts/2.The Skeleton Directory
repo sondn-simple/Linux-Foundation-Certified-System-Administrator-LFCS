@@ -1,0 +1,132 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                     THE SKELETON DIRECTORY                                   ║
+║              (Thực Hành: Thư Mục Mẫu - Skeleton Directory)                   ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Thực hành tạo user, khảo sát skeleton directory, và
+               thêm nội dung template
+  Hệ thống   : ubuntu1
+  Mục tiêu   : Xác nhận /etc/skel là nguồn nội dung mặc định của
+               home directory, và hiểu ý nghĩa 3 login script chính
+
+TẠO USER MỚI VÀ KIỂM TRA HOME DIRECTORY
+────────────────────────────────────────────────────────────────
+
+  • Tạo user với home directory:
+      sudo useradd -m test_user
+
+      - -m : tạo home directory một cách RÕ RÀNG (bất kể giá trị
+        default có cấu hình sẵn hay không)
+
+  • Xem nội dung home directory (bao gồm file ẩn):
+      ls -A ~test_user
+
+      (có thể dùng Esc + . để lấy lại tham số cuối)
+
+      → Kết quả: 3 file
+          .bash_logout
+          .bashrc
+          .profile
+
+  • So sánh -A và -a:
+      ls -a ~test_user
+
+      → Có thêm 2 thư mục ẩn: . (thư mục hiện tại) và .. (thư mục
+        cha)
+      → Về cơ bản không ảnh hưởng nhiều, chỉ là 2 cách xem khác nhau
+
+SO SÁNH VỚI /ETC/SKEL
+────────────────────────────────────────────────────────────────
+
+  • Kiểm tra nội dung skeleton directory mặc định:
+      ls -A /etc/skel
+
+      → Có CÙNG 3 file: .bash_logout, .bashrc, .profile
+      → Xác nhận: nếu không chỉ định skeleton directory khác, nội
+        dung home directory user mới sẽ LẤY TỪ /etc/skel
+
+Ý NGHĨA 3 FILE LOGIN SCRIPT
+────────────────────────────────────────────────────────────────
+
+  • .profile
+      - Là TRUE LOGIN SCRIPT (script đăng nhập thật sự)
+      - Chạy khi có LOGIN SHELL
+      - Hoạt động cho cả Bash lẫn Bourne shell
+      - CHỈ chạy 1 LẦN mỗi khi đăng nhập → giới hạn số lần thực thi
+      - QUAN TRỌNG: .profile thường sẽ GỌI (include) file .bashrc
+        nếu file đó tồn tại → nghĩa là chạy .profile cũng gián tiếp
+        chạy luôn .bashrc
+
+  • .bashrc
+      - Chạy MỖI LẦN mở một Bash session TƯƠNG TÁC (interactive)
+      - Ví dụ: mỗi lần mở terminal Bash mới đều chạy file này
+
+  • .bash_logout
+      - Chạy khi THOÁT khỏi LOGIN SHELL (tức là khi thực sự LOGOUT)
+      - KHÔNG chạy khi chỉ đơn giản đóng một Bash session tương tác
+        thông thường (không phải logout)
+
+THÊM NỘI DUNG VÀO SKELETON DIRECTORY
+────────────────────────────────────────────────────────────────
+
+  • Tạo symbolic link trỏ đến thư mục tài liệu:
+      sudo ln -s /usr/share/doc /etc/skel
+
+      - Nguồn: /usr/share/doc
+      - Đích: /etc/skel (không đặt tên riêng → mặc định lấy tên
+        "doc")
+
+  • Kiểm tra kết quả trong skeleton directory:
+      ls -A /etc/skel
+
+      → Đã thấy thêm symbolic link "doc"
+
+KIỂM TRA ẢNH HƯỞNG ĐẾN USER ĐÃ TỒN TẠI VÀ USER MỚI
+────────────────────────────────────────────────────────────────
+
+  • Kiểm tra lại home directory của test_user (user ĐÃ TỒN TẠI
+    trước khi thay đổi skeleton):
+      ls -A ~test_user
+
+      → KHÔNG thay đổi gì, VẪN chỉ có 3 file cũ
+      → Xác nhận: thay đổi skeleton directory KHÔNG ảnh hưởng đến
+        user đã tồn tại từ trước
+
+  • Tạo user MỚI sau khi đã thay đổi skeleton:
+      sudo useradd -m test_user1
+
+      (Có thể dùng Ctrl+R để tìm lại lệnh useradd trong lịch sử,
+       sau đó Esc để chỉnh sửa, Ctrl+E để về cuối dòng, rồi thêm số
+       "1" vào tên user)
+
+  • Kiểm tra home directory của user MỚI:
+      ls -a ~test_user1
+
+      → Có ĐẦY ĐỦ nội dung mới từ skeleton, bao gồm cả symbolic
+        link "doc"
+      → Xác nhận: thay đổi skeleton CHỈ ảnh hưởng user được tạo SAU
+        thời điểm thay đổi
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Qua bài thực hành, ta đã:
+    - Xác nhận /etc/skel chính là nguồn template cho nội dung home
+      directory mặc định
+    - Hiểu rõ vai trò của 3 file: .profile (login, chạy 1 lần),
+      .bashrc (mỗi session tương tác), .bash_logout (khi logout)
+    - Biết rằng .profile thường include cả .bashrc
+    - Xác nhận việc thay đổi skeleton directory CHỈ ảnh hưởng user
+      MỚI, không tác động ngược lại user đã tồn tại
+    - Đây là cách hữu ích để CHUẨN HÓA nội dung mặc định, nhưng cần
+      LẬP KẾ HOẠCH TRƯỚC khi tạo user, vì không thể áp dụng hồi tố
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Tìm hiểu chi tiết hơn về nội dung bên trong các file
+.profile, .bashrc, .bash_logout, và các login script tập trung.
+────────────────────────────────────────────────────────────────

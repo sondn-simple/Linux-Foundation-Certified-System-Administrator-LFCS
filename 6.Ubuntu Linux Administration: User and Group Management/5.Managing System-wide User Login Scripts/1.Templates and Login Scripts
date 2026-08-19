@@ -1,0 +1,81 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                  TEMPLATES AND LOGIN SCRIPTS                                 ║
+║              (Thư Mục Mẫu Và Các Login Script)                               ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallett
+  Chủ đề     : Quản lý login script toàn hệ thống (system-wide)
+  Mục tiêu   : Giới thiệu tổng quan module về skeleton directory và
+               các login script tập trung
+
+NỘI DUNG SẼ HỌC TRONG MODULE
+────────────────────────────────────────────────────────────────
+
+  • Login script tập trung (centralized)
+  • File trong thư mục skeleton: /etc/skel
+  • Tìm hiểu về home directory của user và các file được tạo sẵn
+    khi tạo home directory
+  • Cách thay đổi nội dung skeleton và ảnh hưởng của nó
+  • Các login/logout script CÁ NHÂN nằm trong skeleton directory
+  • Các login script TẬP TRUNG (áp dụng cho toàn hệ thống):
+      • /etc/bash.bashrc
+      • /etc/profile
+      • /etc/profile.d/ (thư mục mở rộng)
+
+XEM NỘI DUNG MẶC ĐỊNH TỪ /ETC/SKEL
+────────────────────────────────────────────────────────────────
+
+  • Tạo user mới với home directory:
+      sudo useradd -m <tên_user>
+
+      - -m : đảm bảo home directory được tạo
+
+  • Xem nội dung home directory (bao gồm cả file ẩn):
+      ls -A ~<tên_user>
+
+      - -A (uppercase A): hiển thị gần như tất cả file, KHÔNG bao
+        gồm . và .. (khác với -a là hiển thị TẤT CẢ kể cả . và ..)
+
+  • So sánh với nội dung /etc/skel:
+      ls -A /etc/skel
+
+      → Nội dung 2 nơi này GIỐNG HỆT NHAU
+      → Xác nhận: /etc/skel chính là TEMPLATE để tạo nội dung mặc
+        định cho home directory của user mới
+
+CÁC FILE LOGIN/LOGOUT TRONG SKELETON DIRECTORY
+────────────────────────────────────────────────────────────────
+
+  • .profile
+      - Login script CHẠY MỘT LẦN mỗi khi đăng nhập (login shell)
+      - Hoạt động cho CẢ Bash lẫn Bourne shell
+
+  • .bashrc
+      - CHẠY MỖI LẦN mở một Bash session tương tác (interactive)
+      - Mỗi lần mở terminal Bash mới, file này sẽ được thực thi
+
+  • .bash_logout
+      - CHẠY khi THOÁT login shell (tức là khi LOGOUT khỏi hệ
+        thống)
+      - KHÔNG chạy khi chỉ đơn giản mở rồi đóng một Bash shell
+        tương tác thông thường
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Đây là phần giới thiệu tổng quan cho module về login script, tập
+  trung vào 2 nhóm chính:
+    1. Login script CÁ NHÂN (nằm trong /etc/skel, áp dụng riêng cho
+       từng user): .profile, .bashrc, .bash_logout
+    2. Login script TẬP TRUNG (áp dụng cho toàn hệ thống):
+       /etc/bash.bashrc, /etc/profile, /etc/profile.d/
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Thực hành trực tiếp trên dòng lệnh để khám phá các file
+skeleton và login script này.
+────────────────────────────────────────────────────────────────

@@ -1,0 +1,141 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    WORKING WITH LOGIN SHELLS                                 ║
+║           (Thực Hành: Làm Việc Với Login Shell)                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Thực hành với tài liệu bash-doc, .profile, và
+               .bash_logout, sử dụng sed để chỉnh sửa
+  Mục tiêu   : Áp dụng thực tế việc chỉnh sửa umask và thêm lệnh
+               clear vào logout script bằng sed
+
+CÀI ĐẶT TÀI LIỆU THAM KHẢO
+────────────────────────────────────────────────────────────────
+
+  • Cài đặt bash-doc:
+      sudo apt update && sudo apt install -y bash-doc
+
+      - Dùng && để chỉ chạy install NẾU update thành công
+      - -y : tự động xác nhận, không cần hỏi lại
+
+  • Xem thư mục ví dụ:
+      ls /usr/share/doc/bash/examples/startup-files
+
+      - Có các file ví dụ, phân biệt bằng CHỮ HOA/THƯỜNG dựa theo
+        NGƯỜI ĐÓNG GÓP:
+          • Chữ hoa    : ví dụ từ ông Fox
+          • Chữ thường : ví dụ từ ông Remy
+      - Không liên quan gì đến quy tắc đặt tên file trong hệ thống
+
+XEM VÀ CHỈNH SỬA .PROFILE
+────────────────────────────────────────────────────────────────
+
+  • Xem nội dung .profile:
+      cat ~/.profile
+
+      → Có tham chiếu đến tài liệu hướng dẫn
+      → Có dòng thiết lập umask nhưng ĐANG BỊ COMMENT
+
+  • Kiểm tra umask hiện tại:
+      umask
+
+      → Kết quả: 2 (umask mặc định trên Ubuntu)
+      → Ý nghĩa: loại bỏ quyền WRITE của "others" (người khác) khi
+        tạo file/thư mục mới
+
+  • Bỏ comment dòng umask bằng sed (in-place edit):
+      sed -i '/^#umask/s///' ~/.profile
+
+      (theo mô tả trong bài, cú pháp tương đương:)
+      sed -i '/^#umask/s/^#//' ~/.profile
+
+      - Tìm dòng bắt đầu bằng "#umask"
+      - Thay thế phần "#" ở đầu dòng bằng chuỗi rỗng (xóa dấu #)
+
+  • Kiểm tra kết quả:
+      grep umask ~/.profile
+
+      → Xác nhận dòng umask 022 đã KHÔNG còn bị comment
+
+  • LƯU Ý: thay đổi này chỉ có hiệu lực ở LẦN ĐĂNG NHẬP TIẾP THEO
+      - Logout rồi login lại (login shell mới sẽ chạy .profile)
+      - Kiểm tra lại umask sau khi login lại:
+            umask
+            → Kết quả: 022 (loại bỏ write cả GROUP lẫn OTHERS)
+
+  • Muốn COMMENT LẠI dòng umask (khôi phục về trạng thái ban đầu):
+      sed -i '/^umask/s/^/#/' ~/.profile
+
+      - Tìm dòng bắt đầu bằng "umask" (không có #)
+      - Thêm dấu # vào đầu dòng đó
+
+  • Kiểm tra lại bằng shortcut lịch sử lệnh:
+      !g   (lặp lại lệnh gần nhất bắt đầu bằng "g", tức grep)
+
+      → Xác nhận dòng umask đã được comment lại
+
+XEM VÀ CHỈNH SỬA .BASH_LOGOUT
+────────────────────────────────────────────────────────────────
+
+  • Xem nội dung mặc định:
+      cat ~/.bash_logout
+
+      → Có lệnh: clear_console
+
+  • Thử chạy độc lập để kiểm tra:
+      clear_console
+
+      → KHÔNG hoạt động trên PSEUDOTERMINAL
+
+  • Kiểm tra loại terminal đang dùng:
+      tty
+
+      → Xác nhận đang dùng pseudoterminal (terminal phần mềm, khác
+        với terminal vật lý)
+
+  • Thêm lệnh "clear" vào CUỐI file bằng sed:
+      sed -i '$a clear' ~/.bash_logout
+
+      - $ (dollar)  : đại diện cho SỐ DÒNG cuối cùng (không phải
+                       regex lần này)
+      - a           : append (chèn thêm sau dòng đó)
+      - "clear"     : nội dung được thêm vào
+
+  • Kiểm chứng: thêm chút văn bản lên màn hình, sau đó logout
+      (dùng Ctrl+D hoặc exit)
+
+      → Màn hình được XÓA SẠCH khi logout, bảo vệ nội dung khỏi
+        người khác nhìn thấy
+
+  • Muốn HOÀN TÁC (xóa dòng "clear" vừa thêm), đăng nhập lại và chạy:
+      sed -i '$d' ~/.bash_logout
+
+      - $ : dòng cuối cùng
+      - d : delete (xóa)
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Qua bài thực hành, ta đã:
+    - Cài đặt và tham khảo tài liệu bash-doc với các file ví dụ
+      thực tế
+    - Dùng sed để BỎ COMMENT / COMMENT LẠI dòng umask trong .profile,
+      thấy rõ tác động khi login lại
+    - Phát hiện vấn đề clear_console KHÔNG hoạt động trên
+      pseudoterminal (SSH), và khắc phục bằng cách thêm lệnh clear
+      vào .bash_logout bằng sed
+    - Thành thạo hơn với sed: tìm/thay thế theo regex (umask) và
+      thao tác theo số dòng ($a để thêm, $d để xóa dòng cuối)
+
+  sed là công cụ mạnh giúp chỉnh sửa file nhanh chóng mà không cần
+  mở trình soạn thảo, rất hữu ích khi làm việc với login script
+  hoặc tự động hóa qua script.
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Tìm hiểu về các login script TẬP TRUNG (centralized),
+áp dụng cho toàn hệ thống thay vì từng user riêng lẻ.
+────────────────────────────────────────────────────────────────

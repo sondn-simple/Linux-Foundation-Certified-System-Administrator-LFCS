@@ -1,0 +1,149 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                   CENTRALIZED LOGIN SCRIPTS                                  ║
+║        (Thực Hành: Login Script Tập Trung Toàn Hệ Thống)                     ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Quản lý login script áp dụng cho TẤT CẢ user trong
+               hệ thống, thay vì chỉnh sửa từng user riêng lẻ
+  Mục tiêu   : Hiểu và thực hành với /etc/profile, /etc/profile.d,
+               và /etc/bash.bashrc
+
+TỔNG QUAN CÁC FILE TẬP TRUNG
+────────────────────────────────────────────────────────────────
+
+  • /etc/profile
+      - TƯƠNG ĐƯƠNG với file .profile trong home directory user
+      - Thiết lập ở đây áp dụng cho TẤT CẢ user, MIỄN LÀ user đó
+        KHÔNG tự ghi đè trong .profile riêng của họ
+
+  • /etc/profile.d/
+      - Thư mục MỞ RỘNG cho /etc/profile
+      - KHUYẾN NGHỊ: nên thêm script riêng vào đây thay vì sửa trực
+        tiếp /etc/profile
+      - Mỗi script trong này sẽ được thực thi CÙNG với profile chính
+
+  • /etc/bash.bashrc
+      - TƯƠNG ĐƯƠNG với file .bashrc trong home directory user
+      - Dùng cho INTERACTIVE Bash shell (non-login shell)
+      - Thực thi MỖI LẦN Bash shell được chạy
+
+  • LƯU Ý QUAN TRỌNG: Nên ưu tiên tập trung vào /etc/profile (và
+    profile.d) thay vì /etc/bash.bashrc
+      - Lý do: profile chỉ chạy 1 LẦN mỗi lần đăng nhập
+      - bash.bashrc phải chạy LẶP LẠI mỗi lần mở Bash shell mới →
+        tốn tài nguyên hơn nếu không cần thiết
+
+TẠO SCRIPT TÙY CHỈNH TRONG /ETC/PROFILE.D
+────────────────────────────────────────────────────────────────
+
+  • Tạo file mới (dùng editor bất kỳ, vd: Vim):
+      sudo vim /etc/profile.d/custom.sh
+
+      - Tên file KHÔNG quan trọng, nhưng ĐUÔI FILE PHẢI LÀ .sh
+      - Đây là điều kiện để file được /etc/profile TỰ ĐỘNG include
+
+  • KHÔNG cần thêm dòng shebang (#!/bin/bash) vì file này sẽ được
+    chạy bởi chính Bash (được gọi từ profile)
+
+NỘI DUNG THÊM VÀO CUSTOM.SH
+────────────────────────────────────────────────────────────────
+
+  • Thiết lập umask mặc định cho toàn hệ thống:
+      umask 027
+
+      - Loại bỏ TẤT CẢ quyền của "others" (người khác) trên file
+        mới tạo
+
+  • Thêm alias tiện ích "cleanfile":
+      alias cleanfile='grep -Ev "(^#|^$)"'
+
+      - Lọc bỏ các dòng COMMENT (bắt đầu bằng #) và dòng TRỐNG
+      - Giải thích regex:
+          • -E    : dùng Extended Regular Expression
+          • -v    : ĐẢO NGƯỢC kết quả (loại bỏ dòng khớp thay vì
+                     hiển thị dòng khớp)
+          • (^#|^$) : nhóm điều kiện - dòng bắt đầu bằng "#" HOẶC
+                       dòng trống (bắt đầu và kết thúc ngay - $ là
+                       cuối dòng)
+
+  • Thêm shell option "noclobber":
+      set -o noclobber
+
+      - Ngăn việc VÔ TÌNH GHI ĐÈ file đã tồn tại khi dùng redirect
+        (>)
+
+ÁP DỤNG VÀ KIỂM TRA THAY ĐỔI
+────────────────────────────────────────────────────────────────
+
+  • Logout và login lại để chạy centralized profile:
+      exit (rồi đăng nhập lại)
+
+  • Kiểm tra alias đã có:
+      alias
+
+      → Thấy "cleanfile" xuất hiện trong danh sách
+
+  • Thử dùng cleanfile để lọc file .profile (bỏ comment và dòng
+    trống):
+      cleanfile ~/.profile
+
+      → Hiển thị nội dung "sạch", dễ đọc hơn nhiều
+
+  • Kiểm tra umask:
+      umask
+
+      → Kết quả: 27 (loại write của group, loại tất cả quyền của
+        others cho file mới)
+
+  • Kiểm tra shell options hiện tại:
+      set -o
+
+      → Xác nhận noclobber đang BẬT (on)
+
+  • Kiểm chứng noclobber hoạt động:
+      echo hello > file1
+
+        - file1 chưa tồn tại → ghi thành công
+
+      echo hello > file1
+        - Chạy LẠI LẦN NỮA → BỊ CHẶN vì file1 đã tồn tại (không cho
+          ghi đè)
+
+      echo hello >> file1
+        - Dùng >> (append) thay vì > → VẪN ĐƯỢC PHÉP, vì đây là nối
+          thêm chứ không phải ghi đè
+
+LƯU Ý VỀ QUYỀN ƯU TIÊN
+────────────────────────────────────────────────────────────────
+
+  • Mọi thiết lập tập trung (umask, alias, shell option) đều là
+    GIÁ TRỊ MẶC ĐỊNH cho toàn hệ thống
+
+  • Nếu user KHÔNG THÍCH các thiết lập này, họ HOÀN TOÀN CÓ THỂ ghi
+    đè lại trong file .profile CÁ NHÂN của mình
+
+  • Mục tiêu của centralized login script: cung cấp thiết lập HỢP
+    LÝ, HỮU ÍCH cho PHẦN LỚN user, không phải ép buộc tuyệt đối
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Việc quản lý login script tập trung giúp:
+    - Chuẩn hóa các thiết lập (umask, alias, shell option) cho TOÀN
+      BỘ user trong hệ thống
+    - Giảm công sức cấu hình lặp lại cho từng user riêng lẻ
+    - Vẫn giữ được sự LINH HOẠT: user có thể tự ghi đè nếu không
+      phù hợp với nhu cầu cá nhân
+    - Nên ưu tiên dùng /etc/profile.d/*.sh thay vì sửa trực tiếp
+      /etc/profile để dễ quản lý và tránh xung đột khi cập nhật hệ
+      thống
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Quay lại slide để tổng kết toàn bộ module về login
+script.
+────────────────────────────────────────────────────────────────

@@ -1,0 +1,69 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                     SUMMARY AND WHAT'S NEXT                                  ║
+║                 (Tổng Kết Và Nội Dung Tiếp Theo)                             ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Tổng kết module Login Script
+  Mục tiêu   : Điểm lại toàn bộ kiến thức đã học trong module
+
+LOGIN SCRIPT CÁ NHÂN (SKELETON DIRECTORY)
+────────────────────────────────────────────────────────────────
+
+  • Điểm khởi đầu: /etc/skel - thư mục mẫu cho login script cá
+    nhân của từng user
+
+  • .profile
+      - Chạy MỘT LẦN mỗi khi đăng nhập (login)
+
+  • .bashrc
+      - Chạy MỖI LẦN Bash shell được thực thi
+
+  • .bash_logout
+      - Chạy khi THOÁT hoặc RỜI KHỎI login shell
+      - Có thể tùy chỉnh nội dung, ví dụ: thêm lệnh clear màn hình
+
+LOGIN SCRIPT TẬP TRUNG (CENTRALIZED)
+────────────────────────────────────────────────────────────────
+
+  • /etc/profile
+      - File tập trung tương ứng với .profile của từng user
+
+  • /etc/profile.d/
+      - Thư mục MỞ RỘNG cho /etc/profile
+      - KHUYẾN NGHỊ: thêm file riêng vào đây thay vì sửa trực tiếp
+        /etc/profile
+      - LƯU Ý: mọi file thêm vào thư mục này PHẢI có đuôi .sh
+
+  • /etc/bash.bashrc
+      - File tập trung tương ứng với .bashrc của từng user
+      - Áp dụng thiết lập MỖI LẦN Bash shell chạy, cho TẤT CẢ user
+
+  • QUYỀN ƯU TIÊN QUAN TRỌNG
+      - Dù là /etc/profile, /etc/profile.d, hay /etc/bash.bashrc
+      - User VẪN CÓ THỂ ghi đè (override) các thiết lập này trong
+        file CÁ NHÂN của riêng họ (.profile, .bashrc)
+      - Đây là thiết kế linh hoạt: cung cấp mặc định hợp lý cho số
+        đông, nhưng vẫn cho phép tùy biến cá nhân
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Module này đã giúp hiểu rõ:
+    - Sự khác biệt và vai trò của 3 login script cá nhân: .profile,
+      .bashrc, .bash_logout
+    - Cách thiết lập login script TẬP TRUNG cho toàn hệ thống qua
+      /etc/profile, /etc/profile.d/*.sh, và /etc/bash.bashrc
+    - Nguyên tắc: thiết lập tập trung luôn có thể bị user ghi đè
+      trong file cá nhân của họ
+
+  Chúc mừng bạn đã hoàn thành module này! Hãy tự hào về những nỗ
+  lực đầu tư cho việc học tập và sự nghiệp của chính mình.
+
+
+────────────────────────────────────────────────────────────────
+Module tiếp theo: Quản Lý Pluggable Authentication Modules (PAM)
+────────────────────────────────────────────────────────────────
