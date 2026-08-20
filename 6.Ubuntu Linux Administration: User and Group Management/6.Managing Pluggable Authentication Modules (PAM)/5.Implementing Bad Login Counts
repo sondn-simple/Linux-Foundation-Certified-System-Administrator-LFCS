@@ -1,0 +1,155 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                IMPLEMENTING BAD LOGIN COUNTS                                 ║
+║          (Thực Hành: Khóa Tài Khoản Sau Nhiều Lần Đăng Nhập Sai)             ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Thực hành cấu hình pam_tally2, minh họa lỗi thứ tự
+               module và cách khắc phục
+  Mục tiêu   : Tự tay trải nghiệm vì sao thứ tự module trong PAM
+               quan trọng
+
+BƯỚC 1: THÊM DÒNG CẤU HÌNH (BAN ĐẦU - Ở CUỐI FILE)
+────────────────────────────────────────────────────────────────
+
+  • Câu lệnh thêm dòng cấu hình:
+      echo "auth required pam_tally2.so onerr=fail deny=6 unlock_time=300" | sudo tee -a /etc/pam.d/common-auth
+
+      - Type: auth
+      - Control: required
+          → Required KHÔNG phải loại "xấu" - vẫn cho phép các
+            module KHÁC tiếp tục chạy sau nó
+      - Module: pam_tally2.so
+      - Tham số:
+          • onerr=fail       : nếu có lỗi, tính là THẤT BẠI
+          • deny=6           : cho phép tối đa 6 lần đăng nhập sai
+                                (khá rộng rãi)
+          • unlock_time=300  : khóa 300 giây nếu đạt đủ 6 lần sai
+                                liên tiếp không có lần thành công
+                                nào xen giữa
+      - Bất kỳ lần đăng nhập THÀNH CÔNG nào cũng sẽ TỰ ĐỘNG RESET
+        bộ đếm
+
+  • LƯU Ý VỀ CÚ PHÁP:
+      - Dùng echo + pipe + sudo tee -a để ghi vào file cần quyền
+        root, vì dấu ">" (redirect) là toán tử của SHELL HIỆN TẠI
+        (chạy với quyền user thường), KHÔNG PHẢI là command, nên
+        không thể tự nâng quyền khi dùng trực tiếp ">"
+      - tee ghi vào CẢ file LẪN màn hình (hiển thị lại nội dung vừa
+        thêm)
+
+BƯỚC 2: THỬ NGHIỆM - PHÁT HIỆN VẤN ĐỀ
+────────────────────────────────────────────────────────────────
+
+  • Thử đăng nhập sai mật khẩu:
+      su - gandalf
+      (nhập mật khẩu SAI)
+
+  • Kiểm tra bộ đếm:
+      sudo pam_tally2 --user gandalf
+
+      → KẾT QUẢ: KHÔNG CÓ lần thất bại nào được ghi nhận (0 failures)
+
+  • TÌM NGUYÊN NHÂN: kiểm tra xem file có module REQUISITE không:
+      sudo grep requisite /etc/pam.d/common-auth
+
+      (có thể dùng Esc + . để lấy lại tên file đã gõ trước đó)
+
+      → XÁC NHẬN: có module với control là requisite trong file
+      → Module requisite này đứng TRƯỚC dòng pam_tally2 vừa thêm
+        (vì pam_tally2 được APPEND ở CUỐI)
+      → Khi requisite thất bại (do mật khẩu sai) → TOÀN BỘ STACK
+        DỪNG NGAY, pam_tally2 KHÔNG BAO GIỜ được chạy tới
+
+BƯỚC 3: XÓA DÒNG SAI VỊ TRÍ
+────────────────────────────────────────────────────────────────
+
+  • Dùng sed để xóa dòng cuối cùng (dòng vừa thêm sai vị trí):
+      sudo sed -i '$d' /etc/pam.d/common-auth
+
+      - $ : dòng cuối cùng
+      - d : delete (xóa)
+
+BƯỚC 4: CHÈN LẠI ĐÚNG VỊ TRÍ - DÒNG ĐẦU TIÊN
+────────────────────────────────────────────────────────────────
+
+  • Chèn CÙNG nội dung cấu hình vào DÒNG SỐ 1 (đầu file):
+      sudo sed -i '1i auth required pam_tally2.so onerr=fail deny=6 unlock_time=300' /etc/pam.d/common-auth
+
+      - 1  : số dòng (dòng đầu tiên)
+      - i  : insert (chèn vào TRƯỚC dòng đó, khác với "a" là chèn
+              SAU)
+
+  • Kết quả: module pam_tally2 giờ LÀ MODULE ĐẦU TIÊN được thực thi,
+    ĐẢM BẢO nó luôn ghi nhận được kết quả TRƯỚC KHI bất kỳ module
+    requisite nào có cơ hội làm dừng cả stack
+
+BƯỚC 5: KIỂM TRA LẠI - XÁC NHẬN HOẠT ĐỘNG ĐÚNG
+────────────────────────────────────────────────────────────────
+
+  • Thử đăng nhập sai mật khẩu lần nữa:
+      su - gandalf
+      (nhập mật khẩu SAI)
+
+  • Kiểm tra bộ đếm:
+      sudo pam_tally2 --user gandalf
+
+      → LẦN NÀY: đã ghi nhận 1 LẦN THẤT BẠI
+
+  • Thử lại thêm lần nữa (dùng mũi tên lên để lặp lại lệnh su):
+      → Bộ đếm tăng lên 2 LẦN THẤT BẠI
+      → Xác nhận cơ chế đếm HOẠT ĐỘNG ĐÚNG như mong đợi
+
+  • Thử đăng nhập với MẬT KHẨU ĐÚNG:
+      su - gandalf
+      (nhập mật khẩu ĐÚNG)
+      exit
+
+      sudo pam_tally2 --user gandalf
+
+      → Bộ đếm TỰ ĐỘNG RESET về 0 sau lần đăng nhập thành công
+
+RESET THỦ CÔNG BỘ ĐẾM (KHI CẦN)
+────────────────────────────────────────────────────────────────
+
+  • Tình huống thực tế: user thật sự quên mật khẩu, admin đã reset
+    mật khẩu mới cho họ, nhưng bộ đếm THẤT BẠI đã lên cao (vd: đạt
+    6 lần) → tài khoản vẫn có thể bị KHÓA dù mật khẩu mới đúng
+
+  • Admin có thể chủ động RESET bộ đếm:
+      sudo pam_tally2 --user gandalf --reset
+
+      - --reset (hoặc -r) : đặt lại số lần thất bại về 0
+      - Vẫn hiển thị thông tin trước khi reset, sau đó bộ đếm được
+        đặt lại
+
+  • Kiểm tra lại sau khi reset (bỏ tùy chọn -r, chỉ xem thông tin):
+      sudo pam_tally2 --user gandalf
+
+      → Xác nhận: đã về lại 0 failures
+
+  • LƯU Ý: User CŨNG có thể tự "reset" bộ đếm của chính mình đơn
+    giản bằng cách ĐĂNG NHẬP THÀNH CÔNG (miễn là chưa vượt quá số
+    lần cho phép để bị khóa hẳn)
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Qua bài thực hành, ta đã TỰ TAY chứng minh được:
+    - Việc chỉ đơn giản APPEND cấu hình vào cuối file KHÔNG đảm bảo
+      module đó sẽ được thực thi, nếu có module REQUISITE đứng
+      trước nó và thất bại
+    - Cách khắc phục: dùng sed để CHÈN cấu hình vào ĐẦU FILE, đảm
+      bảo module luôn được chạy trước tiên
+    - Cách theo dõi (pam_tally2 --user) và RESET (--reset) bộ đếm
+      đăng nhập thất bại, cả bởi admin lẫn tự động khi user đăng
+      nhập thành công
+
+
+────────────────────────────────────────────────────────────────
+Đây là bài thực hành cuối cùng của module PAM. Tiếp theo sẽ quay
+lại slide để tổng kết toàn bộ những gì đã học.
+────────────────────────────────────────────────────────────────

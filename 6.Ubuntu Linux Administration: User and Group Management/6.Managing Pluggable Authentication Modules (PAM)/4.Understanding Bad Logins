@@ -1,0 +1,131 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    UNDERSTANDING BAD LOGINS                                  ║
+║           (Hiểu Về Cách PAM Xử Lý Đăng Nhập Thất Bại)                        ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Dùng PAM để đếm và khóa tài khoản sau nhiều lần đăng
+               nhập thất bại
+  Mục tiêu   : Hiểu tầm quan trọng của THỨ TỰ module trong PAM, và
+               cách dùng pam_tally2
+
+VẤN ĐỀ VỀ THỨ TỰ MODULE
+────────────────────────────────────────────────────────────────
+
+  • Việc chỉ đơn giản APPEND (thêm vào cuối) file cấu hình có thể
+    KHÔNG hiệu quả đối với các sự kiện xác thực (authentication)
+
+  • Nguyên nhân: các file xác thực THƯỜNG có sẵn module với control
+    "requisite"
+      - Nhắc lại: nếu module requisite THẤT BẠI → KHÔNG module nào
+        khác được thực thi tiếp, kể cả module đếm số lần đăng nhập
+        sai (bad login attempts)
+
+CẤU HÌNH PAM_TALLY2
+────────────────────────────────────────────────────────────────
+
+  • Dòng cấu hình mẫu:
+      auth required pam_tally2.so deny=6 unlock_time=300
+
+      - Loại (type): auth (trong quá trình xác thực)
+      - Control: required
+          → Nhắc lại: required cần trả về THÀNH CÔNG, nhưng KHÔNG
+            ngăn các module khác tiếp tục thực thi (khác với
+            requisite)
+      - Module: pam_tally2.so
+          → Mỗi lần LỖI (error) sẽ được TÍNH LÀ 1 LẦN THẤT BẠI
+
+  • Ý nghĩa các tham số:
+      • deny=6         : Cho phép TỐI ĐA 6 lần đăng nhập sai (khá
+                          rộng rãi)
+      • unlock_time=300 : Nếu đạt đủ 6 lần thất bại, tài khoản sẽ
+                           bị KHÓA trong 300 GIÂY
+
+  • Lưu ý: MỘT lần đăng nhập THÀNH CÔNG sẽ RESET (đặt lại về 0) bộ
+    đếm số lần thất bại
+
+THỬ NGHIỆM BAN ĐẦU (THÊM VÀO CUỐI FILE - KHÔNG HIỆU QUẢ)
+────────────────────────────────────────────────────────────────
+
+  • Thêm dòng vào CUỐI file common-auth (dùng append như bài trước)
+
+  • Thử đăng nhập với mật khẩu SAI cho user gandalf:
+      su - gandalf
+
+  • Kiểm tra số lần đăng nhập thất bại:
+      sudo pam_tally2 --user gandalf
+
+      → KẾT QUẢ: KHÔNG TĂNG lên (bộ đếm không hoạt động)
+
+  • NGUYÊN NHÂN:
+      - File common-auth có sẵn các module REQUISITE ở phía trên
+      - Khi 1 trong các module requisite đó THẤT BẠI (do mật khẩu
+        sai), toàn bộ stack DỪNG NGAY LẬP TỨC
+      - Module pam_tally2 được thêm ở CUỐI file → KHÔNG BAO GIỜ
+        được chạy đến vì quá trình đã dừng từ trước đó
+
+KHẮC PHỤC: XÓA DÒNG SAI VỊ TRÍ
+────────────────────────────────────────────────────────────────
+
+  • Dùng sed để xóa dòng vừa thêm (dòng cuối cùng của file):
+      sudo sed -i '$d' /etc/pam.d/common-auth
+
+      - -i  : in-place edit (sửa trực tiếp trên file)
+      - $   : đại diện cho SỐ DÒNG CUỐI CÙNG
+      - d   : delete (xóa dòng đó)
+
+ĐẶT LẠI ĐÚNG VỊ TRÍ: CHÈN VÀO ĐẦU FILE
+────────────────────────────────────────────────────────────────
+
+  • Nguyên tắc: module đếm lần đăng nhập sai phải chạy TRƯỚC các
+    module requisite, để nó KỊP GHI NHẬN thất bại trước khi stack
+    bị dừng
+
+  • Dùng sed để CHÈN dòng vào ĐẦU file (dòng số 1):
+      sudo sed -i '1i auth required pam_tally2.so deny=6 unlock_time=300' /etc/pam.d/common-auth
+
+      - 1   : số dòng (dòng đầu tiên)
+      - i   : insert (chèn - khác với "a" là append)
+      - Nội dung được chèn: dòng cấu hình pam_tally2 y hệt như trước
+      - Kết quả: module này giờ là MODULE ĐẦU TIÊN được thực thi
+
+  • Ý nghĩa: module vẫn CẦN thành công (required), nhưng vì đứng
+    ĐẦU tiên, nó luôn được chạy TRƯỚC khi bất kỳ module requisite
+    nào có thể làm dừng cả stack
+
+KIỂM TRA LẠI SAU KHI SỬA ĐÚNG VỊ TRÍ
+────────────────────────────────────────────────────────────────
+
+  • Thử lại đăng nhập sai mật khẩu cho gandalf:
+      su - gandalf
+
+  • Kiểm tra lại bộ đếm:
+      sudo pam_tally2 --user gandalf
+
+      → LẦN NÀY: bộ đếm ĐÃ TĂNG LÊN đúng như mong đợi
+      → Xác nhận: thứ tự module đã ĐÚNG, cấu hình hoạt động hiệu
+        quả
+
+  • Reset lại bộ đếm về 0 nếu cần:
+      sudo pam_tally2 --user gandalf --reset
+
+      - --reset (hoặc -r) : đặt lại số lần thất bại về 0
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Bài học quan trọng nhất từ phần này: THỨ TỰ MODULE trong file cấu
+  hình PAM CỰC KỲ QUAN TRỌNG, đặc biệt khi có các module REQUISITE
+  có thể làm DỪNG toàn bộ stack ngay khi thất bại. Module đếm lần
+  đăng nhập sai (pam_tally2) cần được đặt Ở ĐẦU file để đảm bảo nó
+  LUÔN được thực thi và ghi nhận, bất kể kết quả của các module
+  requisite phía sau.
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Thực hành trực tiếp trên dòng lệnh để khóa tài khoản
+gandalf sau nhiều lần đăng nhập sai.
+────────────────────────────────────────────────────────────────

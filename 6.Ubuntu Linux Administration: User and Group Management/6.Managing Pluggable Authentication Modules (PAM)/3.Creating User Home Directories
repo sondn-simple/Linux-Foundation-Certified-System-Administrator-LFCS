@@ -1,0 +1,123 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║               CREATING USER HOME DIRECTORIES                                 ║
+║        (Thực Hành: Tự Động Tạo Home Directory Bằng PAM)                      ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Cấu hình PAM để tự động tạo home directory khi user
+               đăng nhập
+  Mục tiêu   : Thực hành thêm module pam_mkhomedir.so vào file
+               common-session
+
+TÌNH HUỐNG ỨNG DỤNG THỰC TẾ
+────────────────────────────────────────────────────────────────
+
+  • Hữu ích khi:
+      - Sử dụng directory service tập trung (vd: LDAP, Active
+        Directory)
+      - Home directory KHÔNG được tạo cùng lúc với entry tài khoản
+        trong directory service
+
+CHUẨN BỊ: TẠO USER KHÔNG CÓ HOME DIRECTORY
+────────────────────────────────────────────────────────────────
+
+  • Tạo user (mặc định Ubuntu KHÔNG tự tạo home directory):
+      sudo useradd gandalf
+
+  • Đặt mật khẩu không cần tương tác (dùng chpasswd):
+      echo gandalf:Password1 | sudo chpasswd
+
+      - Cách này giúp không phải gõ mật khẩu 2 lần như dùng passwd
+
+KIỂM TRA TRƯỚC KHI CẤU HÌNH PAM
+────────────────────────────────────────────────────────────────
+
+  • Thử đăng nhập full login shell với user gandalf:
+      su - gandalf
+
+      - Nhập mật khẩu Password1
+
+  • Kết quả: gặp CẢNH BÁO không thể chuyển đến home directory vì
+    thư mục ĐÓ CHƯA TỒN TẠI
+      - Đồng thời dùng shell mặc định đơn giản (Bourne shell) vì
+        chưa chỉ định shell khi tạo user
+
+  • Thoát ra:
+      exit
+
+CẤU HÌNH PAM ĐỂ TỰ ĐỘNG TẠO HOME DIRECTORY
+────────────────────────────────────────────────────────────────
+
+  • Thêm dòng cấu hình vào file common-session:
+      echo "session optional pam_mkhomedir.so" | sudo tee -a /etc/pam.d/common-session
+
+      - echo   : in ra nội dung dòng cấu hình
+      - |      : chuyển output qua sudo tee
+      - tee -a : ghi vào file, VỚI TÙY CHỌN -a (APPEND - thêm vào
+                 cuối, KHÔNG ghi đè file)
+      - tee sẽ vừa GHI VÀO FILE, vừa HIỂN THỊ trên màn hình (vì tee
+        gửi output theo 2 hướng)
+
+  • Giải thích dòng cấu hình vừa thêm:
+      session optional pam_mkhomedir.so
+
+      - Loại (type): session
+          → Vì việc tạo home directory xảy ra SAU KHI mọi giới hạn
+            khác đã được kiểm tra, nhưng TRƯỚC KHI service được
+            cấp cho user
+      - Control: optional
+          → KHÔNG quan tâm thành công hay thất bại
+          → Home directory CÓ THỂ đã tồn tại (không cần tạo lại)
+            hoặc CHƯA tồn tại (tạo mới) - đều được, không ảnh hưởng
+      - Module: pam_mkhomedir.so
+          → KHÔNG cung cấp tham số (option) nào, dùng mặc định
+
+  • LƯU Ý: THỨ TỰ thêm dòng này KHÔNG quá quan trọng ở ví dụ này,
+    nhưng với các module KHÁC sau này, THỨ TỰ có thể RẤT QUAN TRỌNG
+
+  • Kiểm tra lại nội dung file để xác nhận đã thêm đúng:
+      cat /etc/pam.d/common-session
+
+      → Xác nhận dòng mới được thêm vào CUỐI file
+
+KIỂM TRA SAU KHI CẤU HÌNH
+────────────────────────────────────────────────────────────────
+
+  • Thử lại đăng nhập với gandalf:
+      su - gandalf
+
+      (nhập lại mật khẩu Password1)
+
+  • Kết quả: Home directory /home/gandalf được TỰ ĐỘNG TẠO ngay khi
+    đăng nhập, KHÔNG còn cảnh báo như trước
+
+  • Thoát về lại tài khoản ban đầu:
+      exit
+
+ỨNG DỤNG THỰC TẾ RỘNG HƠN
+────────────────────────────────────────────────────────────────
+
+  • Hữu ích khi:
+      - Tạo HÀNG TRĂM user cùng lúc (batch), muốn home directory
+        được tạo dần khi từng user đăng nhập (load balancing, giảm
+        tải cho hệ thống)
+      - Kết hợp với directory service (LDAP/AD) khi home directory
+        không được tự động tạo lúc thêm user vào hệ thống
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Bằng cách thêm dòng "session optional pam_mkhomedir.so" vào file
+  /etc/pam.d/common-session, hệ thống sẽ TỰ ĐỘNG TẠO home directory
+  cho user ngay khi họ đăng nhập lần đầu, nếu thư mục đó CHƯA tồn
+  tại. Đây là giải pháp hữu ích cho môi trường sử dụng directory
+  service tập trung hoặc khi tạo user hàng loạt.
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Tìm hiểu về cấu hình PAM phức tạp hơn - khóa tài khoản
+user sau nhiều lần đăng nhập thất bại.
+────────────────────────────────────────────────────────────────

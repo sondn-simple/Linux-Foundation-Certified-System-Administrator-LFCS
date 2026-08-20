@@ -1,0 +1,115 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                          WHAT IS PAM?                                        ║
+║                    (PAM Là Gì? - Giới Thiệu Module)                          ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallett
+  Chủ đề     : Quản lý Pluggable Authentication Modules (PAM)
+  Mục tiêu   : Giới thiệu tổng quan module về PAM
+
+NỘI DUNG SẼ HỌC TRONG MODULE
+────────────────────────────────────────────────────────────────
+
+  • Hiểu về khái niệm và lý do cần có PAM (What & Why)
+  • Tự động tạo home directory khi user đăng nhập
+  • Khóa tài khoản user khi đăng nhập thất bại nhiều lần
+  • Sắp xếp đúng thứ tự các hành động trong cấu hình PAM
+  • Sử dụng pam_tally2 để theo dõi số lần đăng nhập thất bại
+
+PAM LÀ GÌ?
+────────────────────────────────────────────────────────────────
+
+  • PAM (Pluggable Authentication Modules)
+      - Cho phép NẠP (load) các module dùng cho dịch vụ xác thực
+      - Giúp các tính năng có thể được CHIA SẺ (share) giữa nhiều
+        chương trình
+
+  • Lợi ích chính:
+      - KHÔNG cần xây dựng riêng cơ chế lọc/kiểm tra cho từng
+        chương trình xác thực (vd: su, login, sshd)
+      - Thay vào đó, các chương trình này có thể DÙNG CHUNG các
+        module PAM
+
+TÀI LIỆU THAM KHẢO
+────────────────────────────────────────────────────────────────
+
+  • Thư mục cấu hình chính: /etc/pam.d/
+      - Chứa các file cấu hình cho từng dịch vụ
+
+  • Xem hướng dẫn cho MODULE cụ thể:
+      man pam_mkhomedir
+
+      (ví dụ tra cứu module tạo home directory tự động)
+
+CÁC LOẠI MODULE TYPE TRONG PAM
+────────────────────────────────────────────────────────────────
+
+  • auth (authentication)
+      - Module thực thi TRONG QUÁ TRÌNH xác thực
+
+  • account
+      - Module thực thi SAU KHI xác thực thành công
+      - Kiểm tra các GIỚI HẠN tài khoản, ví dụ:
+          • Có được phép đăng nhập vào thời điểm này trong ngày
+            không?
+          • Số lượng phiên (session) đang hoạt động cho phép là
+            bao nhiêu?
+
+  • password
+      - Đơn giản: liên quan đến việc THAY ĐỔI thông tin xác thực
+        (thường là mật khẩu)
+
+  • session
+      - Module thực thi TRƯỚC KHI dịch vụ (vd: sshd, su) được cấp
+        cho user, nhưng SAU KHI các giới hạn khác đã được kiểm tra
+        qua
+      - Ví dụ điển hình: TẠO HOME DIRECTORY
+          - Sau khi vượt qua mọi giới hạn khác, hệ thống mới tiến
+            hành tạo home directory
+          - Home directory có thể được chuẩn bị TRƯỚC khi user
+            thực sự kết nối vào dịch vụ
+
+PAM CONTROL - GIÁ TRỊ TRẢ VỀ CỦA MODULE
+────────────────────────────────────────────────────────────────
+
+  • required
+      - Module BẮT BUỘC phải trả về THÀNH CÔNG
+      - Nhưng các module KHÁC trong stack VẪN được chạy tiếp bất kể
+        kết quả của module này
+
+  • requisite
+      - GẦN GIỐNG với required
+      - ĐIỂM KHÁC BIỆT QUAN TRỌNG: nếu module này THẤT BẠI, thì
+        KHÔNG có module nào khác được chạy tiếp, và TOÀN BỘ stack
+        THẤT BẠI NGAY LẬP TỨC
+
+  • sufficient
+      - GẦN NHƯ NGƯỢC LẠI với requisite
+      - Nếu module trả về THÀNH CÔNG, thì KHÔNG cần chạy thêm module
+        nào khác nữa
+      - Chỉ cần module này thành công là đủ
+
+  • optional
+      - KHÔNG quan trọng việc thành công hay thất bại
+      - Chỉ có ý nghĩa khi đây là module DUY NHẤT được thực thi
+        trong stack đó
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Đây là phần giới thiệu tổng quan cho module về PAM, bao gồm:
+    - Khái niệm cơ bản và lợi ích của việc dùng module dùng chung
+    - 4 loại module type: auth, account, password, session
+    - 4 loại control: required, requisite, sufficient, optional
+      quyết định cách các module phối hợp và ảnh hưởng đến kết quả
+      cuối cùng của quá trình xác thực
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Thực hành trực tiếp trên dòng lệnh để khám phá các file
+cấu hình PAM trong /etc/pam.d/.
+────────────────────────────────────────────────────────────────

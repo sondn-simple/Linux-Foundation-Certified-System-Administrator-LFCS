@@ -1,0 +1,124 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                        WORKING WITH PAM                                      ║
+║              (Thực Hành: Làm Việc Với Cấu Hình PAM)                          ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Khảo sát file cấu hình PAM, xem help module và tìm
+               hiểu cách các module phối hợp với nhau
+  Hệ thống   : Ubuntu 20.04
+  Mục tiêu   : Hiểu cách đọc file cấu hình PAM thực tế trong thư
+               mục /etc/pam.d/
+
+XEM DANH SÁCH FILE CẤU HÌNH PAM
+────────────────────────────────────────────────────────────────
+
+  • Liệt kê thư mục cấu hình:
+      ls /etc/pam.d
+
+      hoặc dễ đọc hơn (mỗi file 1 dòng):
+      ls -l /etc/pam.d
+
+  • Các file tiêu biểu đại diện cho từng dịch vụ:
+      • atd     : daemon lập lịch chạy job (at daemon)
+      • login   : đăng nhập hệ thống
+      • sshd    : SSH daemon
+      • su      : lệnh su
+      • sudo    : lệnh sudo
+
+      → Mỗi dịch vụ CẦN xác thực đều có file cấu hình riêng trong
+        thư mục này
+
+XEM CHI TIẾT FILE CẤU HÌNH VÍ DỤ: ATD
+────────────────────────────────────────────────────────────────
+
+  • Xem nội dung:
+      cat /etc/pam.d/atd
+
+  • Đặc điểm quan trọng:
+      - Có dòng "include" các file cấu hình DÙNG CHUNG (common)
+      - Giúp CHIA SẺ thiết lập giữa NHIỀU dịch vụ khác nhau
+      - Chỉ cần cấu hình MỘT LẦN ở nơi chung, rồi include vào nhiều
+        file khác nhau
+
+  • Phân tích các dòng ĐỘC LẬP (không dùng chung) trong file:
+
+      1. session required pam_loginuid.so
+           - Loại: session
+           - Control: required (BẮT BUỘC trả về thành công)
+           - LƯU Ý: dù required, các module KHÁC vẫn tiếp tục chạy
+             ngay cả khi module này thất bại (giống như "lỗi nhỏ"
+             trong bài thi lái xe - vẫn tiếp tục lái, chỉ báo trượt
+             khi về đến trung tâm)
+           - Không có tham số (option) nào được cung cấp
+           - Chức năng: đảm bảo có đúng USER ID gắn với phiên đăng
+             nhập tương tác (interactive login)
+
+      2. session required pam_limits.so
+           - Loại: session, Control: required
+           - Chức năng: kiểm tra giới hạn kết nối
+               • Có bao nhiêu kết nối khác đang tồn tại?
+               • Giới hạn số lượng kết nối ĐỒNG THỜI (concurrent)
+                 mà MỘT user được phép có
+
+      3. auth required pam_env.so user_readenv=1
+           - Loại: auth (trong quá trình xác thực)
+           - Control: required
+           - Module có kèm THAM SỐ: user_readenv=1
+               → Đọc file môi trường (environment) của user
+               → Giá trị 1 = BẬT (on), 0 = TẮT (off)
+
+TRA CỨU Ý NGHĨA THAM SỐ QUA MAN PAGE
+────────────────────────────────────────────────────────────────
+
+  • Xem chi tiết 1 module cụ thể:
+      man pam_env
+
+      - KHÔNG cần thêm đuôi .so khi tra cứu man page
+      - Cuộn xuống phần OPTIONS để xem giải thích rõ:
+          user_readenv có thể nhận giá trị 0 hoặc 1
+          - 0 : tắt (off)
+          - 1 : bật (on)
+
+  • Xem hướng dẫn về CẤU TRÚC file cấu hình PAM nói chung:
+      man pam.d
+
+      (hoặc man pam.conf)
+
+      - Giải thích các LOẠI module (module type):
+          • account
+          • auth
+          • password
+          • session
+
+      - Giải thích các giá trị CONTROL:
+          • required
+          • requisite
+          • sufficient
+          • optional
+          • (cùng với cú pháp cho câu lệnh include)
+
+  • Thoát khỏi man page: nhấn q
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Qua bài thực hành, ta đã:
+    - Xem được cấu trúc thư mục /etc/pam.d/, mỗi file tương ứng
+      với 1 dịch vụ cần xác thực
+    - Hiểu cách các file cấu hình PAM dùng "include" để CHIA SẺ
+      thiết lập chung, tránh lặp lại code
+    - Phân tích được ví dụ thực tế với 3 dòng cấu hình độc lập, bao
+      gồm module type, control, tên module, và tham số (option)
+    - Biết cách tra cứu ý nghĩa của từng tham số qua man page riêng
+      của module (vd: man pam_env), và cấu trúc tổng thể qua man
+      pam.d
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Tìm hiểu cách cấu hình PAM để TỰ ĐỘNG TẠO HOME DIRECTORY
+khi user đăng nhập lần đầu.
+────────────────────────────────────────────────────────────────
