@@ -1,0 +1,81 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                              SUMMARY                                         ║
+║                       (Tổng Kết Module PAM)                                  ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Tổng kết toàn bộ module về PAM (Pluggable
+               Authentication Modules)
+  Mục tiêu   : Điểm lại kiến thức đã học và kết thúc toàn bộ khóa
+               học
+
+TÀI LIỆU THAM KHẢO PAM
+────────────────────────────────────────────────────────────────
+
+  • man pam.d
+      - Xem cấu trúc chung để tạo file cấu hình cho các dịch vụ
+
+  • man <tên_module>
+      - Xem chi tiết tùy chọn (options) của TỪNG module cụ thể
+      - Ví dụ đã thực hành:
+          • pam_mkhomedir  : tự động tạo home directory
+          • pam_tally2     : đếm số lần đăng nhập thất bại
+
+CÁC FILE CẤU HÌNH DÙNG CHUNG (COMMON)
+────────────────────────────────────────────────────────────────
+
+  • common-session
+      - Nơi thêm cấu hình pam_mkhomedir
+      - "Common" nghĩa là được INCLUDE (bao gồm) vào NHIỀU dịch vụ
+        khác nhau, thay vì phải thêm riêng lẻ vào từng file cấu
+        hình dịch vụ
+
+  • common-auth
+      - Nơi thêm cấu hình pam_tally2 (vì xảy ra TRONG QUÁ TRÌNH xác
+        thực - authentication)
+
+TẦM QUAN TRỌNG CỦA THỨ TỰ MODULE
+────────────────────────────────────────────────────────────────
+
+  • Đặc biệt với các file liên quan đến AUTHENTICATION, thường có
+    sẵn các module với control là REQUISITE
+      - Ví dụ: module pam_deny được đặt là requisite
+      - Nếu module requisite THẤT BẠI → KHÔNG module nào khác được
+        thực thi tiếp theo
+
+  • Bài học rút ra: module pam_tally2 CẦN được đặt TRƯỚC module
+    requisite (pam_deny) trong file cấu hình, để đảm bảo nó LUÔN
+    được thực thi và ghi nhận kết quả
+
+QUẢN LÝ BAD LOGIN COUNT VỚI PAM_TALLY2
+────────────────────────────────────────────────────────────────
+
+  • Xem số lần đăng nhập thất bại:
+      sudo pam_tally2 --user <username>
+
+  • Reset lại bộ đếm về 0:
+      sudo pam_tally2 --user <username> --reset
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Module PAM đã giúp hiểu rõ:
+    - Cách tra cứu tài liệu (man pam.d và man cho từng module)
+    - Cách sử dụng file cấu hình dùng chung (common-session,
+      common-auth) để chia sẻ thiết lập giữa nhiều dịch vụ
+    - Tầm quan trọng SỐNG CÒN của THỨ TỰ module, đặc biệt khi có
+      module requisite
+    - Cách quản lý số lần đăng nhập thất bại và khóa/mở khóa tài
+      khoản bằng pam_tally2
+
+
+────────────────────────────────────────────────────────────────
+Chúc mừng bạn đã hoàn thành TOÀN BỘ khóa học
+"Ubuntu Linux Administration: User and Group Management"!
+Cảm ơn bạn đã dành thời gian và công sức cho việc học tập.
+Chúc bạn thành công trên con đường trở thành một Linux
+administrator xuất sắc!
+────────────────────────────────────────────────────────────────

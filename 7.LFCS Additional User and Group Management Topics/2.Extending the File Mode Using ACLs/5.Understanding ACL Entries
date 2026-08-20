@@ -1,0 +1,135 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                   UNDERSTANDING ACL ENTRIES                                  ║
+║              (Hiểu Về Các Entry Trong Access Control List)                   ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Thiết lập ACL cho user cụ thể, default ACL, và cách
+               xóa entry/toàn bộ ACL
+  Mục tiêu   : Hiểu cách cấp quyền chi tiết cho từng user/group và
+               cách quản lý (xóa) các entry đã thiết lập
+
+TẠO THƯ MỤC RIÊNG TƯ (PRIVATE)
+────────────────────────────────────────────────────────────────
+
+  • Tạo thư mục mới với quyền hạn chế (chỉ owner truy cập được):
+      sudo mkdir private
+      sudo chmod 700 private
+
+      - 700 : chỉ USER (owner) có đầy đủ quyền (rwx), group và
+               others KHÔNG có quyền gì
+      - Với quyền này, user vagrant (không phải owner) sẽ KHÔNG
+        truy cập được vào thư mục
+
+CẤP QUYỀN CHO USER CỤ THỂ QUA ACL
+────────────────────────────────────────────────────────────────
+
+  • Thêm quyền cho user vagrant vào thư mục private:
+      sudo setfacl -m u:vagrant:rwx private
+
+      - -m         : modify (thêm/sửa ACL)
+      - u:vagrant:rwx : user vagrant được cấp quyền READ, WRITE,
+                        EXECUTE
+
+  • Kết quả: user vagrant giờ có thể TỰ DO thao tác với thư mục
+    private, dù không phải chủ sở hữu (owner) theo file mode
+    truyền thống
+
+THIẾT LẬP DEFAULT ACL CHO THƯ MỤC PRIVATE
+────────────────────────────────────────────────────────────────
+
+  • Thêm default ACL để áp dụng cho MỌI file/thư mục MỚI tạo bên
+    trong private:
+      sudo setfacl -m d:u:vagrant:rwx private
+
+      - d           : default (chỉ áp dụng cho nội dung MỚI tạo
+                       bên trong, KHÔNG phải chính thư mục private)
+      - u:vagrant:rwx : user vagrant, quyền read/write/execute
+
+  • LƯU Ý QUAN TRỌNG:
+      - Default ACL vẫn thiết lập quyền EXECUTE trong entry, nhưng
+        HỆ THỐNG SẼ TỰ ĐỘNG:
+          • Áp dụng đầy đủ rwx cho THƯ MỤC con mới tạo
+          • KHÔNG bao giờ tự động thêm quyền EXECUTE cho FILE mới
+            tạo (chỉ áp dụng cho file khi CẦN thiết, tương tự cách
+            umask hoạt động với file thông thường)
+
+XÓA MỘT ENTRY ACL CỤ THỂ
+────────────────────────────────────────────────────────────────
+
+  • Ví dụ: thêm nhầm 1 entry cho user apache:
+      sudo setfacl -m u:apache:rx private
+
+      - u:apache:rx : user apache, quyền READ + EXECUTE
+
+  • Nếu đây là LỖI, có thể XÓA RIÊNG entry này:
+      sudo setfacl -x u:apache private
+
+      - -x            : xóa (remove) MỘT entry cụ thể
+      - u:apache       : chỉ định entry cần xóa (không cần ghi lại
+                          quyền, chỉ cần user/group)
+
+XÓA TOÀN BỘ ACCESS CONTROL LIST
+────────────────────────────────────────────────────────────────
+
+  • Xóa TOÀN BỘ ACL khỏi file/thư mục (đưa về file mode thông
+    thường):
+      sudo setfacl -b private
+
+      - -b : xóa HOÀN TOÀN access control list
+      - KHÔNG cần chỉ định entry cụ thể nào (xóa tất cả cùng lúc)
+
+THIẾT LẬP ACL CHO GROUP
+────────────────────────────────────────────────────────────────
+
+  • Thay vì user, có thể cấp quyền cho GROUP bằng chữ "g" thay vì "u":
+      sudo setfacl -m g:wheel:rx private
+
+      - g:wheel:rx : group "wheel", quyền READ + EXECUTE
+
+  • Cú pháp TƯƠNG TỰ với user, chỉ khác ký tự đầu (u → g)
+
+TỔNG HỢP CÚ PHÁP SETFACL
+────────────────────────────────────────────────────────────────
+
+  • Thêm/sửa entry (modify):
+      setfacl -m <rule1>,<rule2>,... <file/directory>
+
+  • Xóa MỘT entry cụ thể:
+      setfacl -x <entry> <file/directory>
+
+  • Xóa TOÀN BỘ ACL:
+      setfacl -b <file/directory>
+
+  • Ký hiệu chỉ định đối tượng trong rule:
+      • u:<username>:<permissions>   → user cụ thể
+      • g:<groupname>:<permissions>  → group cụ thể
+      • o::<permissions>              → others
+      • d:...                        → thêm tiền tố "d:" để biến
+                                        thành DEFAULT ACL (áp dụng
+                                        cho nội dung mới tạo bên
+                                        trong thư mục)
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Qua bài này, ta đã học cách:
+    - Cấp quyền CHI TIẾT cho một USER cụ thể vượt qua giới hạn của
+      file mode truyền thống (700)
+    - Thiết lập DEFAULT ACL để tự động áp dụng quyền cho nội dung
+      mới tạo trong thư mục (lưu ý: EXECUTE không tự động thêm cho
+      FILE, chỉ cho THƯ MỤC)
+    - XÓA một entry cụ thể bằng -x, hoặc XÓA TOÀN BỘ ACL bằng -b
+    - Thiết lập ACL cho GROUP bằng ký tự "g" thay vì "u"
+
+  Đây là những slide tham khảo hữu ích, nhưng kỹ năng THỰC SỰ chỉ
+  đến từ việc THỰC HÀNH trực tiếp trên dòng lệnh.
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Thực hành trực tiếp trên dòng lệnh với các entry ACL,
+và tìm hiểu cách ACL ảnh hưởng đến GROUP MODE tiêu chuẩn của file.
+────────────────────────────────────────────────────────────────

@@ -1,0 +1,141 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║          CHECKING FOR ACL SUPPORT IN YOUR SYSTEM                             ║
+║        (Thực Hành: Kiểm Tra Hỗ Trợ ACL Trên Hệ Thống)                        ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Kiểm tra hỗ trợ POSIX ACL trên kernel, package, và
+               file system
+  Hệ thống   : Rocky Linux 9 và Ubuntu 20.04
+  Mục tiêu   : Xác nhận ACL được hỗ trợ đầy đủ trước khi sử dụng
+
+TẠI SAO CẦN ACL?
+────────────────────────────────────────────────────────────────
+
+  • UNIX file mode truyền thống KHÔNG được thiết kế cho chia sẻ
+    file quy mô ENTERPRISE
+      - Chỉ hỗ trợ: 1 user, 1 group, và others
+
+  • Giải pháp "chữa cháy" truyền thống: tạo thêm GROUP mới cho từng
+    nhu cầu truy cập khác nhau
+      - Vấn đề: KHÓ QUẢN LÝ về lâu dài, số lượng group tăng vô hạn
+      - Vẫn KHÔNG giải quyết được trường hợp: 1 group cần quyền
+        READ, nhưng group KHÁC lại cần quyền READ+WRITE trên CÙNG
+        1 file/thư mục
+
+  • POSIX ACL giải quyết được các hạn chế này:
+      - Cho phép liệt kê NHIỀU user và NHIỀU group với quyền RIÊNG
+        BIỆT trên cùng 1 file
+      - Có thể đặt DEFAULT PERMISSIONS trên thư mục → file/thư mục
+        MỚI tạo bên trong sẽ TỰ ĐỘNG kế thừa quyền từ thư mục cha
+
+3 ĐIỀU KIỆN CẦN KIỂM TRA ĐỂ CÓ HỖ TRỢ ACL
+────────────────────────────────────────────────────────────────
+
+  1. Kernel có hỗ trợ ACL không (compiled hoặc loadable module)
+  2. Package ACL đã được cài đặt chưa (cho lệnh getfacl, setfacl)
+  3. File system có bật tùy chọn ACL không (đặc biệt với EXT4)
+
+KIỂM TRA HỖ TRỢ TỪ KERNEL
+────────────────────────────────────────────────────────────────
+
+  • Kiểm tra file cấu hình kernel:
+      grep -i acl /boot/config-$(uname -r)
+
+      - -i             : case-insensitive (không phân biệt hoa/thường)
+      - $(uname -r)     : subshell lấy phiên bản kernel hiện tại,
+                           giúp lệnh CHẠY ĐƯỢC trên nhiều máy khác
+                           nhau mà không cần biết trước tên file
+      - Có thể dùng TAB COMPLETION nếu chỉ có 1 kernel cài đặt
+
+  • Kết quả (chạy trên cả Rocky và Ubuntu):
+      → Thấy hỗ trợ ACL cho: EXT4, XFS, TMPFS, NFS, CEPH (Rocky)
+      → Ubuntu còn thêm: REISER, JFS, BTRFS
+      → Cả 2 hệ thống đều có hỗ trợ ACL cho EXT4 và XFS - 2 file
+        system chính thường dùng
+
+KIỂM TRA PACKAGE ACL ĐÃ CÀI CHƯA
+────────────────────────────────────────────────────────────────
+
+  • Trên Ubuntu (dùng apt):
+      apt list acl
+
+      - Nếu chỉ liệt kê tên package mà KHÔNG có chữ "[installed]"
+        → CHƯA được cài
+      - Cài đặt:
+            sudo apt install acl
+
+      - Kiểm tra lại:
+            apt list acl
+            → Có "[installed]" → xác nhận đã cài thành công
+
+  • Trên Rocky Linux (dùng yum):
+      yum list acl
+
+      → Thường đã được cài SẴN mặc định
+
+XÁC ĐỊNH FILE THUỘC VỀ PACKAGE NÀO
+────────────────────────────────────────────────────────────────
+
+  • Trên Rocky (dùng rpm):
+      rpm -qf /bin/getfacl
+
+      - -q  : query
+      - -f  : tra theo file
+      → Xác nhận: getfacl thuộc package "acl"
+
+  • Trên Ubuntu (dùng dpkg):
+      dpkg -S /bin/getfacl
+
+      - -S  : search (tìm package chứa file này)
+      → Xác nhận: getfacl thuộc package "acl"
+
+  • Đây là kỹ năng HỮU ÍCH cả trong thi cử lẫn công việc thực tế: có
+    thể tra ngược package từ 1 file cụ thể
+
+KIỂM TRA HỖ TRỢ ACL Ở CẤP FILE SYSTEM
+────────────────────────────────────────────────────────────────
+
+  • Với EXT4: CẦN mount option "acl" (có thể là tùy chọn khi mount
+    thủ công, hoặc là DEFAULT MOUNT OPTION đã được build sẵn vào
+    file system)
+
+  • Kiểm tra mount hiện tại (Ubuntu, dùng mount):
+      mount | grep sda1
+
+      → Có thể KHÔNG thấy "acl" hiển thị trực tiếp, không có nghĩa
+        là KHÔNG hỗ trợ (có thể là DEFAULT, không cần hiện rõ)
+
+  • Kiểm tra default mount option built-in bằng tune2fs:
+      sudo tune2fs -l /dev/sda1 | grep -i acl
+
+      - tune2fs -l  : liệt kê TOÀN BỘ metadata của file system EXT4
+      - Kết hợp grep -i acl để lọc ra dòng liên quan
+      → Xác nhận: ACL là DEFAULT MOUNT OPTION đã có sẵn
+
+  • Với XFS (Rocky Linux): KHÔNG CẦN kiểm tra mount option ACL
+      - ACL được TÍCH HỢP SẴN (built-in) vào chính file system XFS,
+        không cần bật riêng như EXT4
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Trước khi sử dụng ACL, cần xác nhận đủ 3 điều kiện:
+    1. Kernel hỗ trợ ACL (kiểm tra qua /boot/config-$(uname -r))
+    2. Package ACL đã cài đặt (apt/yum list acl)
+    3. File system hỗ trợ ACL:
+        • EXT4  : cần mount option "acl" (kiểm tra bằng tune2fs -l)
+        • XFS   : tự động hỗ trợ, không cần cấu hình thêm
+
+  Trên các bản phân phối Linux hiện đại, đa số các điều kiện này đã
+  được đáp ứng sẵn, nhưng vẫn nên biết cách kiểm tra để đảm bảo an
+  toàn trước khi triển khai ACL trong môi trường thực tế.
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Tìm hiểu các công cụ quản lý ACL và cách thiết lập
+access control list thực tế trên file/thư mục.
+────────────────────────────────────────────────────────────────

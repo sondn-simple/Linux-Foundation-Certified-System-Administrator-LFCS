@@ -1,0 +1,152 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                  WORKING WITH THE DEFAULT ACL                                ║
+║           (Thực Hành: Làm Việc Với Default ACL)                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Thiết lập DEFAULT ACL trên thư mục để tự động áp
+               dụng quyền cho file/thư mục mới tạo bên trong
+  Hệh thống  : Rocky Linux 9 (dùng httpd/Apache làm ví dụ)
+  Mục tiêu   : Hiểu cách "zero-touch administration" bằng default ACL
+
+KHÁI NIỆM DEFAULT ACL
+────────────────────────────────────────────────────────────────
+
+  • Default ACL: thiết lập quyền MẶC ĐỊNH áp dụng cho MỌI file/thư
+    mục MỚI được tạo BÊN TRONG một thư mục cha
+      - KHÔNG ảnh hưởng đến quyền của CHÍNH thư mục cha đó
+      - CHỈ ảnh hưởng đến NỘI DUNG được tạo SAU KHI thiết lập
+
+  • Ký hiệu: dùng tùy chọn "d" (default) khi thiết lập với setfacl
+
+CẤU TRÚC LỆNH SETFACL
+────────────────────────────────────────────────────────────────
+
+  • Cú pháp tổng quát:
+      setfacl <rules> <files>
+
+      - rules  : một hoặc NHIỀU quy tắc, phân cách bằng DẤU PHẨY
+      - files  : một hoặc NHIỀU file/thư mục áp dụng
+
+  • Ví dụ với 2 rule:
+      setfacl -m d:u:apache:r,d:o::- /var/www/html
+
+      - Rule 1: d:u:apache:r
+          → Default, user apache, quyền READ
+      - Rule 2: d:o::-
+          → Default, others, KHÔNG có quyền gì (dấu "-")
+
+CHUẨN BỊ: CÀI ĐẶT WEB SERVER
+────────────────────────────────────────────────────────────────
+
+  • Cài đặt httpd (trên Rocky; Ubuntu dùng package apache2):
+      sudo yum install -y httpd
+
+  • Kiểm tra quyền thư mục document root ban đầu:
+      ls -l /var/www/html
+
+      → Owner: root, Group: root
+      → OTHERS có quyền READ + EXECUTE
+      → VẤN ĐỀ: user Apache (chạy web server) cũng được xem như
+        "others" → không phải cách làm TỐI ƯU về bảo mật
+
+THIẾT LẬP DEFAULT ACL CHO THƯ MỤC WEB
+────────────────────────────────────────────────────────────────
+
+  • Lệnh thiết lập:
+      sudo setfacl -m d:u:apache:r,d:o::- /var/www/html
+
+      - -m         : modify (thêm/sửa)
+      - d          : default (chỉ áp dụng cho NỘI DUNG MỚI, không
+                      áp dụng cho chính thư mục /var/www/html)
+      - u:apache:r  : user apache, quyền READ
+      - o::-        : others, KHÔNG quyền gì (dấu "-")
+
+  • Kiểm tra kết quả:
+      ls -l /var/www/html
+
+      → Xuất hiện dấu "+" → xác nhận ĐÃ có access control list
+
+  • Xem chi tiết ACL:
+      getfacl /var/www/html
+
+      → Thấy có ACL nhưng CHỈ Ở DẠNG DEFAULT (chưa áp dụng cho
+        chính thư mục)
+
+  • Xem RIÊNG phần default ACL:
+      getfacl -d /var/www/html
+
+      - -d : chỉ hiển thị phần DEFAULT của ACL
+
+TẠO FILE MỚI ĐỂ KIỂM TRA HIỆU QUẢ
+────────────────────────────────────────────────────────────────
+
+  • Tạo file index.html mới bằng echo + tee (cần quyền root):
+      echo hello | sudo tee /var/www/html/index.html
+
+  • Kiểm tra quyền của file MỚI này:
+      ls -l /var/www/html/index.html
+
+      → Owner (root): read + write
+      → Group (root): read
+      → Others: KHÔNG có quyền gì
+      → Xác nhận: file MỚI đã TỰ ĐỘNG kế thừa default ACL từ thư
+        mục cha, dù KHÔNG hề set ACL trực tiếp lên file này
+
+KIỂM CHỨNG BẢO MẬT HOẠT ĐỘNG ĐÚNG
+────────────────────────────────────────────────────────────────
+
+  • Thử đọc file với quyền user thường (KHÔNG phải root/apache):
+      cat /var/www/html/index.html
+
+      → BỊ TỪ CHỐI truy cập
+      → Xác nhận: "others" (bao gồm cả user hiện tại) KHÔNG có
+        quyền đọc file, đúng như thiết kế
+
+  • Kiểm tra ACL chi tiết của file:
+      getfacl /var/www/html/index.html
+
+      → Xác nhận: user apache CÓ quyền đọc (read) file này
+
+  • Khởi động web server và kiểm tra thực tế:
+      sudo systemctl start httpd
+
+      curl localhost
+
+      → Trang web HIỂN THỊ THÀNH CÔNG
+      → Chứng minh: tài khoản Apache (chạy service httpd) CÓ quyền
+        truy cập file, dù "others" bị chặn hoàn toàn
+
+Ý NGHĨA THỰC TIỄN QUAN TRỌNG
+────────────────────────────────────────────────────────────────
+
+  • Đây là ví dụ điển hình của "ZERO-TOUCH ADMINISTRATION"
+      - Sau khi thiết lập default ACL MỘT LẦN DUY NHẤT trên thư mục
+      - MỌI file/thư mục MỚI tạo sau này sẽ TỰ ĐỘNG có đúng quyền
+        cần thiết
+      - KHÔNG CẦN quản trị viên phải set ACL thủ công cho từng file
+        mới một cách lặp đi lặp lại
+
+  • Giúp tăng cường bảo mật: nội dung web chỉ có thể truy cập bởi
+    chính web server (apache), NGĂN người dùng khác trên hệ thống
+    đọc trực tiếp
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Default ACL (dùng tùy chọn "d" với setfacl) là công cụ CỰC KỲ
+  MẠNH MẼ để tự động hóa việc phân quyền cho nội dung MỚI trong một
+  thư mục. Đây là cách tiếp cận hiệu quả để:
+    - Đảm bảo TÍNH NHẤT QUÁN về bảo mật cho mọi file mới
+    - GIẢM CÔNG SỨC quản trị (không cần set ACL thủ công từng file)
+    - Phù hợp lý tưởng cho các thư mục dùng chung như document root
+      của web server, nơi liên tục có nội dung mới được thêm vào
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Tìm hiểu cách xóa entry ACL hoặc xóa toàn bộ access
+control list khỏi file/thư mục.
+────────────────────────────────────────────────────────────────

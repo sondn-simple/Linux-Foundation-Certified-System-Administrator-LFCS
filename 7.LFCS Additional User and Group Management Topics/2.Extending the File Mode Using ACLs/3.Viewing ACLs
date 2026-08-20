@@ -1,0 +1,123 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                        VIEWING ACLS                                          ║
+║                (Thực Hành: Xem Access Control List)                         ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Xem và thiết lập ACL cơ bản, phân biệt với SELinux
+               context
+  Hệ thống   : Rocky Linux 9
+  Mục tiêu   : Hiểu cách nhận biết file có ACL, dùng getfacl,
+               getfattr, và setfacl
+
+DẤU HIỆU NHẬN BIẾT FILE CÓ ACL
+────────────────────────────────────────────────────────────────
+
+  • Ký tự CUỐI CÙNG trong chuỗi permission khi dùng ls -l:
+      • Dấu "." (chấm)  : có SELinux context
+      • Dấu "+" (cộng)  : có ACCESS CONTROL LIST (ACL)
+
+  • LƯU Ý: chỉ hiển thị được MỘT extended attribute tại một thời
+    điểm ở cuối chuỗi (hoặc "." hoặc "+", không phải cả 2)
+
+TẠO FILE MẪU VÀ KIỂM TRA BAN ĐẦU
+────────────────────────────────────────────────────────────────
+
+  • Tạo file mới:
+      touch file1
+
+  • Kiểm tra permission:
+      ls -l file1
+
+      → Thấy dấu "." ở cuối (vì Rocky có SELinux) → CHỈ có SELinux
+        context, CHƯA có ACL
+
+CẢNH BÁO: DỄ NHẦM LẪN VỚI GETFACL
+────────────────────────────────────────────────────────────────
+
+  • Chạy thử:
+      getfacl file1
+
+      → CÓ kết quả trả về, nhưng ĐỪNG NHẦM LẪN rằng đây là bằng
+        chứng có ACL
+      → Đây CHỈ là hiển thị FILE MODE THÔNG THƯỜNG (1 user, 1
+        group, others) - KHÔNG PHẢI access control list thực sự
+      → getfacl LUÔN hiển thị thông tin cơ bản này, dù file CÓ hay
+        KHÔNG có ACL mở rộng
+
+XÁC MINH CHÍNH XÁC BẰNG GETFATTR
+────────────────────────────────────────────────────────────────
+
+  • ACL được lưu trữ như một EXTENDED ATTRIBUTE của file
+
+  • Cài đặt package cần thiết (giống nhau trên cả Ubuntu và Rocky):
+      sudo yum install attr
+      (hoặc: sudo apt install attr trên Ubuntu)
+
+  • Kiểm tra extended attribute cụ thể của POSIX ACL:
+      getfattr -n system.posix_acl_access file1
+
+      - -n  : chỉ định TÊN attribute cần xem
+      - Tên attribute: system.posix_acl_access
+          → Xác nhận đây đúng là thuộc tính liên quan đến POSIX ACL
+
+  • Kết quả TRƯỚC KHI thiết lập ACL:
+      → Thông báo: "No such attribute" (không có thuộc tính này)
+      → XÁC NHẬN CHÍNH XÁC: file CHƯA có ACL (khác với getfacl có
+        thể gây nhầm lẫn)
+
+THIẾT LẬP ACL VỚI SETFACL
+────────────────────────────────────────────────────────────────
+
+  • Thêm quyền cho user root vào file1:
+      setfacl -m u:root:rw file1
+
+      - -m       : modify (thêm/sửa entry ACL)
+      - u:root:rw : chỉ định USER root được quyền READ + WRITE
+
+KIỂM TRA SAU KHI THIẾT LẬP ACL
+────────────────────────────────────────────────────────────────
+
+  • Kiểm tra lại permission:
+      ls -l file1
+
+      → Giờ đã thấy dấu "+" ở cuối (thay vì ".")
+      → Xác nhận: file NAY ĐÃ CÓ Access Control List
+
+  • Xem chi tiết ACL vừa thiết lập:
+      getfacl file1
+
+      → Giờ đã thấy ĐẦY ĐỦ:
+          - User owner mặc định (default owner)
+          - User bổ sung: root (với quyền rw đã thêm)
+
+  • Xác nhận lại bằng getfattr:
+      getfattr -n system.posix_acl_access file1
+
+      → Lần này CÓ giá trị trả về (dạng RAW - dữ liệu thô, khó đọc
+        với con người, dùng nội bộ bởi file system)
+      → Chứng minh: attribute ĐÃ được thiết lập thành công
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  • Công cụ chính dùng để QUẢN LÝ (thực tế hàng ngày):
+      • getfacl   : XEM access control list
+      • setfacl   : THIẾT LẬP access control list
+
+  • Công cụ getfattr chỉ mang tính CHỨNG MINH/XÁC MINH kỹ thuật
+    (raw data), KHÔNG phải công cụ quản lý thường dùng
+
+  • BÀI HỌC QUAN TRỌNG: getfacl LUÔN trả về kết quả (kể cả khi
+    KHÔNG có ACL thực sự), nên cần dựa vào dấu "+" trong ls -l hoặc
+    kiểm tra bằng getfattr để XÁC ĐỊNH CHÍNH XÁC file có ACL hay
+    không, tránh nhầm lẫn với file mode thông thường
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Tìm hiểu sâu hơn về cách thiết lập ACL cho nhiều
+user/group, và cách đặt DEFAULT ACL cho thư mục.
+────────────────────────────────────────────────────────────────

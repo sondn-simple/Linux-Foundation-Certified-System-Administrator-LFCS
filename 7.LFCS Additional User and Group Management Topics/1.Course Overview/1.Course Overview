@@ -1,0 +1,61 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                          COURSE OVERVIEW                                     ║
+║                       (Tổng Quan Khóa Học)                                   ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallett
+  Đơn vị     : Chủ sở hữu The Urban Penguin (Vương quốc Anh)
+  Khóa học   : LFCS Additional User Topics
+               (Các Chủ Đề Bổ Sung Về User Cho LFCS)
+
+GIỚI THIỆU GIẢNG VIÊN
+────────────────────────────────────────────────────────────────
+
+  • Là Urban Penguin, chuyên đào tạo và tư vấn về Linux trong nhiều năm
+  • Kinh nghiệm thực tế:
+      - System Administrator
+      - Developer (chủ yếu làm việc với Python hiện nay)
+      - Làm việc với các hệ thống quản lý cấu hình:
+          • Ansible
+          • Puppet
+          • Salt
+
+VỀ KHÓA HỌC
+────────────────────────────────────────────────────────────────
+
+  • Bảo mật và quản lý user là những chủ đề NỀN TẢNG trong quản trị
+    Linux
+
+  • Khóa học này giúp học thêm về:
+      - Bảo mật file system NÂNG CAO bằng ACLs (Access Control Lists)
+      - Triển khai dịch vụ thư mục LDAP để THỐNG NHẤT tài khoản
+        (unify accounts) trên nhiều hệ thống
+
+NỘI DUNG CHÍNH CỦA KHÓA HỌC
+────────────────────────────────────────────────────────────────
+
+  • Triển khai POSIX-based ACLs (Access Control Lists theo chuẩn
+    POSIX)
+  • Cài đặt dịch vụ thư mục sử dụng 389-ds
+  • Quản lý tài khoản user trên OpenLDAP
+  • Xác thực (authenticate) cả hệ thống Debian-based lẫn Red
+    Hat-based vào directory OpenLDAP
+
+MỤC TIÊU KHÓA HỌC
+────────────────────────────────────────────────────────────────
+
+  Sau khi hoàn thành khóa học, bạn sẽ:
+    - Hiểu cách BẢO MẬT file system bằng ACLs
+    - QUAN TRỌNG NHẤT: Biết cách TRIỂN KHAI dịch vụ thư mục
+      (directory services) trên toàn bộ hệ thống (estate) của tổ
+      chức
+
+
+────────────────────────────────────────────────────────────────
+Chào mừng bạn đến với hành trình học các chủ đề bổ sung về quản
+lý user trong Linux!
+────────────────────────────────────────────────────────────────

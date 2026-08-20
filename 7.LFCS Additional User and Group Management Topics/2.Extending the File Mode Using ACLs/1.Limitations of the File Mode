@@ -1,0 +1,128 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║               LIMITATIONS OF THE FILE MODE                                   ║
+║             (Giới Hạn Của File Mode Truyền Thống)                           ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallett
+  Khóa học   : LFCS User and Group Management Topics
+  Chủ đề     : Giới hạn của file mode và giới thiệu ACL (Access
+               Control Lists)
+
+TỔNG QUAN NỘI DUNG KHÓA HỌC
+────────────────────────────────────────────────────────────────
+
+  • 2 module chính:
+      1. POSIX Access Control Lists (ACLs)
+      2. Directory Services với OpenLDAP
+
+MODULE HIỆN TẠI: ACCESS CONTROL LISTS
+────────────────────────────────────────────────────────────────
+
+  • Nội dung sẽ học:
+      - Thảo luận giới hạn của file mode truyền thống
+      - Kiểm tra hỗ trợ POSIX ACLs trên hệ thống
+      - Công cụ quản lý ACL
+      - Thiết lập ACL
+      - Thiết lập DEFAULT ACL
+      - Xóa entry ACL hoặc xóa toàn bộ ACL
+
+THIẾT LẬP MÔI TRƯỜNG LAB
+────────────────────────────────────────────────────────────────
+
+  • Cần chuẩn bị:
+      - Máy host chạy chip Intel
+      - Cài đặt: Vagrant + VirtualBox
+          • VirtualBox : phần mềm ảo hóa
+          • Vagrant     : công cụ quản lý máy ảo
+
+  • Tải Vagrantfile từ GitHub repository (URL trong video) để định
+    nghĩa máy ảo
+
+  • 2 máy ảo được sử dụng:
+      • Ubuntu 20.04
+      • Rocky Linux 9
+
+  • LÝ DO dùng 2 distro khác nhau:
+      - Chứng chỉ LFCS (Linux Foundation Certified System
+        Administrator) KHÔNG PHỤ THUỘC vào 1 distro cụ thể
+        (distribution-agnostic)
+      - Mục tiêu là học Linux NÓI CHUNG, nên khóa học cho xem cả 2
+        góc độ khác nhau
+
+  • Lưu ý: Module này KHÔNG đi sâu vào file mode cơ bản
+      - Nếu cần ôn lại chi tiết, tham khảo khóa "Ubuntu Linux
+        Administration: Essential Commands"
+
+GIỚI HẠN CỦA FILE MODE TRUYỀN THỐNG
+────────────────────────────────────────────────────────────────
+
+  • File mode chỉ cho phép thiết lập quyền cho:
+      1. MỘT user duy nhất (owner)
+      2. MỘT group duy nhất
+      3. Others (tất cả những người còn lại)
+
+  • QUAN TRỌNG: quyền hạn KHÔNG CỘNG DỒN (not cumulative)
+      - Nếu MATCH với user (owner) → chỉ áp dụng quyền của USER,
+        KHÔNG xét đến group hay others
+      - Nếu MATCH với group → chỉ áp dụng quyền của GROUP, KHÔNG
+        xét đến others
+      - CHỈ khi KHÔNG match cả user lẫn group, mới áp dụng quyền
+        của OTHERS
+
+CÁC LỆNH XEM FILE MODE
+────────────────────────────────────────────────────────────────
+
+  • ls -l
+      - Long listing truyền thống
+
+  • stat
+      - Xem TOÀN BỘ metadata của file
+      - stat -c "%a"  : hiển thị quyền dạng OCTAL (số)
+      - stat -c "%A"  : hiển thị quyền dạng SYMBOLIC (chữ, giống
+                         ls -l)
+
+THỰC HÀNH TRÊN ROCKY LINUX 9
+────────────────────────────────────────────────────────────────
+
+  • Kết nối vào máy ảo Rocky:
+      vagrant status     (kiểm tra máy ảo đang chạy)
+      vagrant ssh rocky   (kết nối vào máy Rocky)
+
+  • Xem quyền file /etc/hosts:
+      ls -l /etc/hosts
+
+      → Ví dụ kết quả:
+          - User: root, quyền read+write
+          - Group: root, quyền read
+          - Others: quyền read
+          - Chỉ 1 user và 1 group được chỉ định
+
+  • LƯU Ý ĐẶC BIỆT: DẤU CHẤM (.) ở CUỐI chuỗi quyền
+      - Trên hệ thống Rocky Linux (Red Hat-based), dấu "." ở cuối
+        cho biết FILE CÓ SELINUX CONTEXT được thiết lập
+      - Xem context cụ thể bằng:
+            ls -Z /etc/hosts
+
+      - QUAN TRỌNG: dấu "." này sẽ ĐỔI THÀNH DẤU "+" khi file có
+        thiết lập ACCESS CONTROL LIST (ACL)
+      - Trên Ubuntu: KHÔNG thấy dấu "." này vì mặc định KHÔNG cài
+        SELinux
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  File mode truyền thống (owner/group/others) có giới hạn RÕ RÀNG:
+  chỉ hỗ trợ 1 user và 1 group cho mỗi file, và quyền không cộng
+  dồn giữa các cấp độ. Đây chính là lý do cần đến ACL (Access
+  Control List) - giải pháp mở rộng cho phép thiết lập quyền linh
+  hoạt hơn cho NHIỀU user và NHIỀU group trên cùng một file.
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Kiểm tra hỗ trợ POSIX ACL trên hệ thống và tìm hiểu các
+công cụ quản lý ACL.
+────────────────────────────────────────────────────────────────
