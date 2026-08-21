@@ -1,0 +1,130 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║              BACKING UP AND RESTORING ACLS                                   ║
+║           (Thực Hành: Sao Lưu Và Khôi Phục Access Control List)             ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Sao chép, sao lưu, và khôi phục ACL
+  Mục tiêu   : Hiểu vì sao cần backup ACL riêng biệt, và cách dùng
+               getfacl kết hợp setfacl để copy/backup/restore
+
+TẠI SAO CẦN SAO LƯU ACL RIÊNG?
+────────────────────────────────────────────────────────────────
+
+  • ACL KHÔNG phải là một phần "bên trong" nội dung file
+      - Nó là EXTENDED ATTRIBUTE, lưu TRỮ RIÊNG biệt với dữ liệu
+        file
+      - Nếu phần mềm backup KHÔNG hỗ trợ ACL, khi phục hồi file sẽ
+        MẤT hoàn toàn thông tin ACL
+
+  • Giải pháp: cần đảm bảo phần mềm backup HỖ TRỢ ACL, hoặc TỰ TAY
+    sao lưu ACL một cách ĐỘC LẬP
+
+COPY ACL TỪ FILE NÀY SANG FILE KHÁC
+────────────────────────────────────────────────────────────────
+
+  • Kiểm tra ACL hiện có trên file1:
+      getfacl file1
+
+      → Có entry đơn giản: thêm user root
+
+  • Tạo file mới (file2) và copy CHÍNH XÁC ACL từ file1 sang:
+      touch file2
+      getfacl file1 | setfacl --set-file=- file2
+
+      - getfacl file1        : lấy ACL của file1
+      - | (pipe)              : chuyển output sang setfacl
+      - --set-file=-          : đọc ACL từ STANDARD INPUT (dấu "-"
+                                 đại diện cho input đến từ pipe)
+      - Áp dụng ACL đó lên file2
+
+  • Kiểm tra kết quả:
+      getfacl file2
+
+      → Xác nhận file2 đã có ACL Y HỆT file1
+
+BACKUP ACL RA FILE VĂN BẢN
+────────────────────────────────────────────────────────────────
+
+  • Kiểm tra ACL phức tạp hơn trên thư mục /private (đã có default
+    ACL, user, group từ bài trước):
+      getfacl /private
+
+  • LƯU Ý QUAN TRỌNG: getfacl TỰ ĐỘNG LOẠI BỎ dấu "/" ở đầu đường
+    dẫn khi hiển thị
+      - Trong output, chỉ thấy tên "private", KHÔNG có "/private"
+      - Điều này SẼ QUAN TRỌNG khi thực hiện RESTORE sau này
+
+  • Backup ra file văn bản:
+      getfacl /private > /tmp/acl.txt
+
+  • Kiểm tra nội dung file backup:
+      cat /tmp/acl.txt
+
+      → Giống hệt những gì thấy trên màn hình khi chạy getfacl
+      → Đây chính là bản backup có thể dùng để khôi phục sau này
+
+THỬ NGHIỆM: XÓA VÀ KHÔI PHỤC ACL
+────────────────────────────────────────────────────────────────
+
+  • Bước 1: Di chuyển về ROOT của file system (thư mục gốc /)
+      cd /
+
+      - LÝ DO: vì file backup ghi đường dẫn TƯƠNG ĐỐI là "private"
+        (không có dấu / ở đầu), nên khi restore, thư mục làm việc
+        HIỆN TẠI phải khớp để hệ thống tìm đúng "private"
+
+  • Bước 2: Xóa hoàn toàn ACL (minh họa việc "phá hủy" để test khôi phục):
+      setfacl -b private
+
+      - Nếu quên sudo, có thể dùng shortcut:
+            sudo !!
+        (chạy lại lệnh VỪA RỒI với toàn bộ tham số, thêm sudo vào
+        trước)
+
+  • Bước 3: Khôi phục ACL từ file backup:
+      sudo setfacl --restore=/tmp/acl.txt
+
+      - --restore=<file>  : đọc và áp dụng lại ACL từ file backup
+      - CẦN chạy với sudo
+
+  • Bước 4: Kiểm tra kết quả:
+      getfacl private
+
+      → Xác nhận: ACL ĐÃ ĐƯỢC KHÔI PHỤC ĐẦY ĐỦ (default ACL, user,
+        group...) giống như trước khi xóa
+
+LƯU Ý QUAN TRỌNG KHI RESTORE
+────────────────────────────────────────────────────────────────
+
+  • File backup (acl.txt) chỉ ghi đường dẫn TƯƠNG ĐỐI (vd:
+    "private", không phải "/private")
+
+  • Khi chạy lệnh restore, ĐƯỜNG DẪN "private" TRONG FILE BACKUP
+    PHẢI KHỚP với vị trí TƯƠNG ĐỐI từ THƯ MỤC LÀM VIỆC HIỆN TẠI
+      - Đây là lý do TẠI SAO phải di chuyển về "/" trước khi restore
+      - Nếu KHÔNG ở đúng thư mục, hệ thống sẽ KHÔNG TÌM THẤY
+        "private" và restore sẽ THẤT BẠI
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Qua bài thực hành, ta đã học được:
+    - Cách COPY ACL từ file này sang file khác bằng cách kết hợp
+      getfacl và setfacl --set-file=-
+    - Cách BACKUP ACL ra file văn bản bằng getfacl > file.txt
+    - Cách KHÔI PHỤC ACL bằng setfacl --restore=<file>
+    - LƯU Ý QUAN TRỌNG: đường dẫn trong file backup là TƯƠNG ĐỐI
+      (getfacl tự loại bỏ dấu "/" ở đầu), nên cần đảm bảo đang ở
+      ĐÚNG THƯ MỤC LÀM VIỆC khi restore để tránh lỗi không tìm thấy
+      file/thư mục
+
+
+────────────────────────────────────────────────────────────────
+Đây là bài thực hành cuối cùng của phần Access Control Lists.
+Tiếp theo sẽ chuyển sang tìm hiểu về triển khai dịch vụ thư mục
+OpenLDAP.
+────────────────────────────────────────────────────────────────

@@ -1,0 +1,76 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                     SUMMARY AND WHAT'S NEXT                                  ║
+║                 (Tổng Kết Và Nội Dung Tiếp Theo)                             ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Tổng kết module Access Control Lists (ACLs)
+  Mục tiêu   : Điểm lại toàn bộ kiến thức đã học trong module
+
+GIỚI HẠN CỦA FILE MODE TRUYỀN THỐNG
+────────────────────────────────────────────────────────────────
+
+  • Rất HẠN CHẾ, chỉ hỗ trợ:
+      - MỘT user (owner)
+      - MỘT group
+      - Tất cả những người còn lại được gộp chung là "others"
+
+ƯU ĐIỂM CỦA ACCESS CONTROL LIST (ACL)
+────────────────────────────────────────────────────────────────
+
+  • Cho phép thiết lập entry cho:
+      - NHIỀU user khác nhau
+      - NHIỀU group khác nhau
+
+  • Có thể thiết lập DEFAULT ACL cho thư mục
+      - File/thư mục MỚI tạo bên trong sẽ TỰ ĐỘNG KẾ THỪA quyền từ
+        thư mục cha
+      - Giúp tự động hóa việc phân quyền ("zero-touch
+        administration")
+
+CẤU TRÚC VÀ CÔNG CỤ QUẢN LÝ ACL
+────────────────────────────────────────────────────────────────
+
+  • ACL bao gồm nhiều ACL ENTRY (mục thiết lập quyền riêng lẻ)
+
+  • Công cụ quản lý nằm trong package ACL:
+      • getfacl   : XEM (get) access control list
+      • setfacl   : THIẾT LẬP (set) access control list
+
+  • Ví như "getter" và "setter" trong lập trình - một công cụ để
+    ĐỌC, một công cụ để GHI
+
+LỢI ÍCH TỔNG THỂ CỦA VIỆC DÙNG ACL
+────────────────────────────────────────────────────────────────
+
+  • Mang lại sự LINH HOẠT và CHI TIẾT (granularity) hơn nhiều so
+    với file mode truyền thống trong việc kiểm soát quyền truy cập
+    file/thư mục
+
+TÓM TẮT CÁC KỸ NĂNG ĐÃ HỌC TRONG MODULE
+────────────────────────────────────────────────────────────────
+
+  • Kiểm tra hỗ trợ ACL (kernel, package, file system)
+  • Xem ACL với getfacl, xác minh với getfattr
+  • Thiết lập ACL cho user/group cụ thể với setfacl -m
+  • Thiết lập Default ACL cho thư mục
+  • Xóa một entry (-x) hoặc toàn bộ ACL (-b)
+  • Hiểu về ACL MASK và ảnh hưởng của group mode lên mask
+  • Copy, backup, và restore ACL giữa các file/thư mục
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Module này đã trang bị đầy đủ kiến thức về Access Control Lists -
+  công cụ mạnh mẽ giúp vượt qua giới hạn của file mode truyền thống,
+  mang lại khả năng kiểm soát truy cập file một cách CHI TIẾT và
+  LINH HOẠT hơn nhiều cho môi trường quản trị hệ thống thực tế.
+
+
+────────────────────────────────────────────────────────────────
+Module tiếp theo: Triển Khai Dịch Vụ Thư Mục OpenLDAP
+(Implementing OpenLDAP Directory Services)
+────────────────────────────────────────────────────────────────

@@ -1,0 +1,124 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║      INSTALL 389-DS DIRECTORY SERVICE ON UBUNTU 20.04                        ║
+║   (Cài Đặt Dịch Vụ Thư Mục 389-DS Trên Ubuntu 20.04)                        ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallett
+  Chủ đề     : Triển khai OpenLDAP directory service qua 389-ds
+  Mục tiêu   : Giới thiệu tổng quan module và cài đặt 389-ds trên
+               Ubuntu 20.04
+
+NỘI DUNG SẼ HỌC TRONG MODULE
+────────────────────────────────────────────────────────────────
+
+  • Cài đặt và cấu hình 389 Directory Service (389-ds) trên Ubuntu
+  • Dùng LDAP tools để truy vấn directory service
+  • Tạo tài khoản LDAP
+  • Cấu hình sssd-ldap client trên CẢ Ubuntu lẫn Rocky Linux
+      → Minh họa cách CHIA SẺ tài khoản giữa nhiều distro khác nhau
+
+THIẾT LẬP MÔI TRƯỜNG LAB
+────────────────────────────────────────────────────────────────
+
+  • Sử dụng Vagrantfile từ Git repository (giống các khóa trước)
+  • Yêu cầu: Intel host + VirtualBox
+  • 2 máy ảo:
+      • Ubuntu 20.04  : cài 389-ds + cấu hình LDAP client
+      • Rocky Linux    : cài công cụ để xác thực với 389-ds server
+        trên Ubuntu
+
+TẠI SAO CẦN CENTRALIZED USER ACCOUNTS (TÀI KHOẢN TẬP TRUNG)?
+────────────────────────────────────────────────────────────────
+
+  • Vấn đề với tài khoản LOCAL (lưu trong /etc/passwd):
+      - Nếu có 10 server → cần 10 tài khoản riêng biệt
+      - Phải quản lý 10 MẬT KHẨU KHÁC NHAU
+      - KHÔNG hiệu quả khi mở rộng quy mô
+
+  • Giải pháp: DIRECTORY SERVICE (vd: OpenLDAP, Active Directory)
+      - CHỈ CẦN 1 tài khoản + 1 mật khẩu
+      - Dùng được trên TẤT CẢ hệ thống kết nối vào directory đó
+
+GIỚI THIỆU 389-DS
+────────────────────────────────────────────────────────────────
+
+  • Là phiên bản CORE/FREE của Red Hat Directory Services
+  • Dựa trên nền tảng OpenLDAP, nhưng đơn giản hóa việc quản lý và
+    thiết lập
+  • Hỗ trợ cả 2 giao thức:
+      • LDAP (clear text)  : cổng 389
+      • LDAPS (secure)     : cổng 636
+      - LDAPS mặc định dùng CHỨNG CHỈ TỰ KÝ (self-signed
+        certificate) → KHÔNG LÝ TƯỞNG cho production, có thể thay
+        đổi chứng chỉ nếu cần
+
+  • LƯU Ý VỀ PHẠM VI KỲ THI:
+      - Việc CÀI ĐẶT và CẤU HÌNH OpenLDAP KHÔNG nằm trong mục tiêu
+        của kỳ thi LFCS
+      - Kỳ thi chỉ yêu cầu biết cách KẾT NỐI (connect) vào OpenLDAP
+      - Tuy nhiên, khóa học vẫn hướng dẫn cài đặt để có MÔI TRƯỜNG
+        LAB thực hành kết nối
+
+CÀI ĐẶT 389-DS TRÊN UBUNTU
+────────────────────────────────────────────────────────────────
+
+  • Lệnh cài đặt:
+      sudo apt install -y 389-ds
+
+      - Chỉ cài đặt PHẦN MỀM directory server
+      - CHƯA tạo bất kỳ directory instance nào
+
+  • Kiểm tra các cổng đang mở:
+      ss -ntl
+
+      → Thấy cổng 9090 (giao diện quản trị web Cockpit)
+      → Có thể quản lý qua web, nhưng khóa học tập trung vào DÒNG
+        LỆNH
+
+TẠO DIRECTORY INSTANCE VỚI DSCREATE
+────────────────────────────────────────────────────────────────
+
+  • Clone Git repository chứa file cấu hình mẫu:
+      git clone https://github.com/urbanpenguin/lfcs
+
+  • Xem file cấu hình mẫu:
+      cat ~/lfcs/additional/user/example.conf
+
+      - Nội dung mẫu bao gồm:
+          • Tên instance: localhost
+          • Tài khoản quản trị: Directory Manager
+          • Mật khẩu: password1 (chỉ mang tính DEMO đơn giản)
+          • Domain: dc=example,dc=conf
+
+  • Tạo directory instance từ file cấu hình:
+      sudo -i
+      dscreate from-file /home/vagrant/lfcs/additional/user/example.conf
+
+      - dscreate  : công cụ tạo directory instance
+      - from-file : đọc cấu hình từ FILE thay vì phải trả lời TỪNG
+                     CÂU HỎI tương tác (nếu chạy dscreate KHÔNG có
+                     tham số, sẽ hỏi rất nhiều câu)
+
+  • Kiểm tra lại các cổng sau khi tạo:
+      ss -ntl
+
+      → Xác nhận: đang LẮNG NGHE (listening) trên CẢ 2 cổng 389 và
+        636
+      → Xác nhận: DIRECTORY SERVICE đã HOẠT ĐỘNG THÀNH CÔNG
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Đã hoàn thành việc cài đặt và khởi tạo 389-ds directory service
+  trên Ubuntu 20.04, sẵn sàng cho các bước tiếp theo: tạo tài khoản
+  LDAP và cấu hình client để xác thực từ cả Ubuntu lẫn Rocky Linux.
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Sử dụng LDAP tools để truy vấn directory service và tạo
+tài khoản người dùng LDAP.
+────────────────────────────────────────────────────────────────

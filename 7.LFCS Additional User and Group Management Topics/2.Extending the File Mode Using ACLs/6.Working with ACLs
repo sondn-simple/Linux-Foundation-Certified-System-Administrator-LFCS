@@ -1,0 +1,186 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                        WORKING WITH ACLS                                     ║
+║                (Thực Hành: Làm Việc Với ACL Chi Tiết)                        ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Thực hành thêm/xóa entry ACL, và hiểu về ACL MASK
+  Mục tiêu   : Hiểu cách setfacl ảnh hưởng đến GROUP MODE, và vai
+               trò của MASK trong việc giới hạn quyền hiệu lực
+
+TẠO THƯ MỤC RIÊNG TƯ VÀ KIỂM TRA
+────────────────────────────────────────────────────────────────
+
+  • Tạo thư mục private với quyền hạn chế:
+      sudo mkdir private
+      sudo chmod 700 private
+
+      - 700 : chỉ user root (owner) có đầy đủ quyền rwx
+
+  • Thử truy cập với user vagrant (không phải owner):
+      cd private
+
+      → Permission denied (đúng như mong đợi)
+
+  • Xem quyền ban đầu:
+      ls -ld private
+
+      → user root: rwx
+      → group: KHÔNG có quyền gì
+      → LƯU Ý: chú ý phần GROUP MODE hiện đang trống, sẽ thay đổi
+        sau khi thiết lập ACL
+
+THÊM QUYỀN CHO USER VAGRANT QUA ACL
+────────────────────────────────────────────────────────────────
+
+  • Lệnh:
+      sudo setfacl -m u:vagrant:rwx private
+
+  • Kiểm tra lại:
+      ls -ld private
+
+      → PHÁT HIỆN QUAN TRỌNG: GROUP MODE đã THAY ĐỔI, giờ hiển thị
+        rwx (dù chưa hề động đến group nào)
+      → Ý nghĩa: khi có ACL, vị trí "group" trong file mode KHÔNG
+        còn đại diện cho GROUP THỰC nữa, mà đại diện cho MASK của
+        ACL
+
+VAI TRÒ CỦA MASK TRONG ACL
+────────────────────────────────────────────────────────────────
+
+  • Kiểm tra ACL chi tiết:
+      getfacl private
+
+      → Có dòng "mask" xuất hiện
+      → MASK = giới hạn TỐI ĐA các quyền được PHÉP ÁP DỤNG qua ACL
+      → Vì đã cấp user vagrant rwx, nên mask cũng tự động là rwx để
+        cho phép quyền đó "chảy" qua ACL
+
+  • LƯU Ý QUAN TRỌNG VỀ BẢO MẬT:
+      - Group hiển thị trong file mode LÚC NÀY (thường là group
+        root) KHÔNG còn ý nghĩa thực tế nữa
+      - Vì group root chỉ có user root là thành viên, mà root vốn
+        đã có toàn quyền → không phải rủi ro bảo mật
+      - NHƯNG nếu group hiển thị là 1 GROUP NGẪU NHIÊN/KHÔNG MONG
+        MUỐN, đây SẼ LÀ lỗ hổng bảo mật nghiêm trọng
+
+THỬ NGHIỆM: THAY ĐỔI GROUP MODE ẢNH HƯỞNG ĐẾN MASK
+────────────────────────────────────────────────────────────────
+
+  • Giảm group mode xuống chỉ read + execute:
+      sudo chmod g=rx private
+
+  • Kiểm tra ACL sau khi đổi:
+      getfacl private
+
+      → MASK ĐÃ THAY ĐỔI theo (giờ chỉ còn read + execute)
+      → User vagrant giờ CHỈ CÒN quyền HIỆU LỰC (effective) là read
+        + execute, dù entry gốc vẫn ghi là rwx
+      → Quyền WRITE bị "khóa" lại vì KHÔNG được mask cho phép
+
+  • Khôi phục lại group mode về đầy đủ:
+      sudo chmod g=rwx private
+
+  • Kiểm tra lại:
+      getfacl private
+
+      → User vagrant giờ CÓ ĐẦY ĐỦ rwx, KHÔNG còn ghi chú "effective"
+        giới hạn nào nữa
+
+  • Xác nhận truy cập thành công:
+      cd private
+
+      → THÀNH CÔNG, user vagrant giờ vào được thư mục
+
+XÓA MỘT ENTRY CỤ THỂ TRONG ACL
+────────────────────────────────────────────────────────────────
+
+  • Thêm thử 1 entry mới (user apache, chỉ read + execute):
+      sudo setfacl -m u:apache:rx private
+
+      → Giờ có 3 "user": mode user (root), vagrant, và apache
+
+  • Giả sử đây là LỖI, muốn XÓA RIÊNG entry apache:
+      sudo setfacl -x u:apache private
+
+      - -x           : xóa MỘT entry cụ thể
+      - u:apache      : chỉ cần nêu tên đối tượng, KHÔNG cần ghi
+                        lại quyền hạn
+
+XÓA TOÀN BỘ ACCESS CONTROL LIST
+────────────────────────────────────────────────────────────────
+
+  • Lệnh xóa TOÀN BỘ:
+      sudo setfacl -b private
+
+  • Kiểm tra kết quả:
+      ls -ld private
+
+      → Trở về ĐÚNG NHƯ BAN ĐẦU: chỉ có file mode chuẩn (không còn
+        dấu "+"), GROUP MODE cũng trở về giá trị GỐC (không còn bị
+        "chiếm dụng" bởi ACL mask nữa)
+
+THIẾT LẬP LẠI NHIỀU RULE CÙNG LÚC (KẾT HỢP DEFAULT + GROUP)
+────────────────────────────────────────────────────────────────
+
+  • Có thể set NHIỀU rule trong 1 lệnh duy nhất, phân cách bằng dấu
+    phẩy:
+      sudo setfacl -m u:vagrant:rwx,d:u:vagrant:rwx,g:wheel:rwx private
+
+      - Rule 1: u:vagrant:rwx      → user vagrant, quyền đầy đủ
+      - Rule 2: d:u:vagrant:rwx     → DEFAULT cho user vagrant
+                                       (áp dụng cho file/thư mục
+                                       MỚI tạo bên trong)
+      - Rule 3: g:wheel:rwx         → group wheel, quyền đầy đủ
+
+  • LƯU Ý: default (d:) CHỈ áp dụng cho user vagrant trong ví dụ
+    này, KHÔNG áp dụng cho group wheel (vì rule default chỉ được
+    thiết lập cho user, không cho group trong lệnh trên)
+
+  • Kiểm tra kết quả:
+      ls -ld private
+
+      → Có dấu "+" xác nhận ACL đã được thiết lập, MASK xuất hiện
+        thay cho group mode thông thường
+
+      getfacl private
+
+      → Xác nhận đầy đủ:
+          - user vagrant: rwx
+          - group wheel: rwx
+          - default cho user vagrant: rwx (chỉ user vagrant kế thừa
+            cho nội dung mới tạo, KHÔNG áp dụng cho group wheel)
+
+TỔNG KẾT VỀ CÁCH THAO TÁC LINH HOẠT
+────────────────────────────────────────────────────────────────
+
+  • Có thể thiết lập ACL theo 2 CÁCH:
+      1. THIẾT LẬP TỪNG RULE RIÊNG LẺ, chạy nhiều lệnh setfacl
+      2. THIẾT LẬP TẤT CẢ RULE TRONG MỘT LỆNH DUY NHẤT (dùng dấu
+         phẩy để phân cách)
+
+  • Cả 2 cách đều cho ra KẾT QUẢ TƯƠNG ĐƯƠNG - đây là điểm quan
+    trọng đối với các kỳ thi THỰC HÀNH (practical exam): không cần
+    nhớ CHÍNH XÁC 1 cách làm, miễn là ĐẠT ĐƯỢC kết quả đúng
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Qua bài thực hành, ta đã hiểu sâu hơn về:
+    - Khi thiết lập ACL, GROUP MODE trong file mode truyền thống sẽ
+      bị THAY THẾ bởi ACL MASK, không còn phản ánh group thực tế
+    - MASK giới hạn quyền HIỆU LỰC (effective permission) của các
+      entry trong ACL - thay đổi group mode (chmod g=...) sẽ TRỰC
+      TIẾP ảnh hưởng đến mask và quyền hiệu lực
+    - Cách xóa MỘT entry cụ thể (-x) hoặc XÓA TOÀN BỘ ACL (-b)
+    - Có thể kết hợp NHIỀU rule (user, default, group) trong CÙNG
+      MỘT lệnh setfacl bằng cách phân cách với dấu phẩy
+
+
+────────────────────────────────────────────────────────────────
+Đây là bài thực hành cuối cùng của phần ACL. Tiếp theo sẽ tìm hiểu
+về việc triển khai dịch vụ thư mục OpenLDAP.
+────────────────────────────────────────────────────────────────
