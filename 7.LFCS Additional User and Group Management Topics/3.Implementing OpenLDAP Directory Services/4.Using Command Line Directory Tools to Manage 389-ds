@@ -1,0 +1,190 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║   USING COMMAND LINE DIRECTORY TOOLS TO MANAGE 389-DS                        ║
+║   (Thực Hành: Quản Lý 389-DS Bằng Công Cụ Dòng Lệnh)                         ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Sử dụng ldapsearch, cấu hình LDAP client, và dsidm
+  Mục tiêu   : Thực hành đầy đủ các công cụ dòng lệnh để quản lý
+               389-ds, bao gồm tạo user với dsidm
+
+CÁC CÔNG CỤ LDAP CƠ BẢN
+────────────────────────────────────────────────────────────────
+
+  • Xem danh sách công cụ LDAP có sẵn (dùng tab completion):
+      ldap<Tab><Tab>
+
+      → Thấy các lệnh: ldapadd, ldapdelete, ldapmodify, ldapsearch,...
+
+  • Đây là các công cụ CHUẨN, TRUYỀN THỐNG của LDAP
+      - Sẽ tìm hiểu thêm về công cụ WRAPPER (bọc) đơn giản hơn sau
+        này (dsidm)
+
+THỰC HÀNH VỚI LDAPSEARCH QUA LDAP (KHÔNG MÃ HÓA)
+────────────────────────────────────────────────────────────────
+
+  • Cú pháp đầy đủ:
+      ldapsearch -H ldap://ubuntu1:389 -D "cn=Directory Manager" -W \
+        -b dc=example,dc=com -x
+
+      - -H  : chỉ định host và protocol (ldap://ubuntu1:389)
+      - -D  : Bind DN - tài khoản dùng để kết nối
+              (LƯU Ý: vì "cn=Directory Manager" có KHOẢNG TRẮNG,
+              cần đặt trong DẤU NGOẶC KÉP)
+      - -W  : yêu cầu NHẬP MẬT KHẨU (prompt)
+      - -b  : base DN - vị trí bắt đầu tìm kiếm
+      - -x  : dùng simple authentication
+
+  • Nhập mật khẩu: Password1 (chữ P hoa, theo cấu hình mẫu đã dùng)
+
+  • Kết quả: liệt kê CHI TIẾT các object trong directory
+      - Có thể LỌC theo object cụ thể
+      - Có thể chỉ hiển thị DISTINGUISHED NAMES nếu muốn
+
+THỬ NGHIỆM VỚI LDAPS (MÃ HÓA) - GẶP LỖI
+────────────────────────────────────────────────────────────────
+
+  • Chạy lại lệnh TƯƠNG TỰ, nhưng đổi sang LDAPS/636:
+      ldapsearch -H ldaps://ubuntu1:636 -D "cn=Directory Manager" -W \
+        -b dc=example,dc=com -x
+
+  • KẾT QUẢ: LỖI, KHÔNG kết nối được (dù nhập đúng mật khẩu)
+      - Thông báo lỗi KHÔNG rõ ràng
+      - NGUYÊN NHÂN THỰC SỰ: đang dùng CHỨNG CHỈ TỰ KÝ (self-signed
+        certificate)
+
+KHẮC PHỤC: CẤU HÌNH LDAP CLIENT BỎ QUA KIỂM TRA CHỨNG CHỈ
+────────────────────────────────────────────────────────────────
+
+  • Nâng quyền root:
+      sudo -i
+
+  • Thêm dòng cấu hình vào file LDAP client:
+      echo "TLS_REQCERT never" >> /etc/ldap/ldap.conf
+
+      - >> : APPEND (thêm vào cuối, KHÔNG ghi đè file)
+      - TLS_REQCERT never : KHÔNG kiểm tra chứng chỉ TLS (kết nối
+        vẫn được MÃ HÓA, chỉ là bỏ qua bước xác minh chứng chỉ)
+
+  • Kiểm tra lại nội dung file:
+      cat /etc/ldap/ldap.conf
+
+  • Quay lại tài khoản vagrant thông thường, chạy lại ldapsearch qua
+    LDAPS:
+      → LẦN NÀY THÀNH CÔNG, dữ liệu được truyền qua kết nối MÃ HÓA
+
+KẾT NỐI QUA SOCKET (LDAPI) - CHỈ DÀNH CHO ROOT
+────────────────────────────────────────────────────────────────
+
+  • Ngoài LDAP và LDAPS, còn có thể kết nối qua SOCKET nếu là ROOT
+
+  • Bước 1: Đăng nhập với quyền root
+
+  • Bước 2: Tạo file cấu hình shortcut ~/.dsrc (trong home directory
+    của root)
+
+  • Nội dung file .dsrc:
+      [localhost]
+      uri = ldapi://%%2fvar%%2frun%%2fslapd-localhost.socket
+      basedn = dc=example,dc=com
+      binddn = cn=Directory Manager
+
+  • Giải thích chi tiết:
+      - [localhost]   : tên INSTANCE (trùng với instance đã tạo
+                         bằng dscreate)
+      - uri           : đường dẫn kết nối qua SOCKET
+          • ldapi://    : protocol kết nối qua socket
+          • Đường dẫn thực tế: /var/run/slapd-localhost.socket
+          • VẤN ĐỀ: KHÔNG THỂ đưa dấu "/" trực tiếp vào URL
+          • GIẢI PHÁP: dùng PERCENT ENCODING
+              - %% là ký tự ESCAPE
+              - 2f là mã HEX của ASCII cho dấu "/"
+              - Mọi dấu "/" trong đường dẫn PHẢI đổi thành %%2f
+      - basedn        : giống như trước, dc=example,dc=com
+      - binddn        : tài khoản đăng nhập, cn=Directory Manager
+                         (LẦN NÀY KHÔNG CẦN dấu ngoặc kép)
+
+  • LƯU Ý: chỉ ROOT mới có quyền kết nối qua socket này theo mặc định
+
+SỬ DỤNG DSIDM SAU KHI CÓ FILE .DSRC
+────────────────────────────────────────────────────────────────
+
+  • Liệt kê danh sách user:
+      dsidm localhost user list
+
+      - Không cần thêm tham số phức tạp vì file .dsrc đã cấu hình
+        sẵn mọi thứ cần thiết
+      - Kết quả: chỉ hiển thị TÊN USERNAME
+
+  • Liệt kê danh sách group:
+      dsidm localhost group list
+
+      → Thấy có: demo_user, demo_group (dữ liệu mẫu có sẵn)
+
+TẠO USER MỚI BẰNG DSIDM
+────────────────────────────────────────────────────────────────
+
+  • Lệnh tạo user:
+      dsidm localhost user create --uid alice --cn "Alice User" \
+        --uidNumber 2000 --gidNumber 100 --homeDirectory /home/alice
+
+      - --uid            : tên đăng nhập (username), vd: alice
+      - --cn              : common name (tên đầy đủ), có khoảng
+                             trắng nên cần dấu ngoặc kép: "Alice User"
+      - --uidNumber 2000  : UID số, chọn 2000 để TRÁNH TRÙNG với
+                             UID có sẵn trên bất kỳ hệ thống khách
+                             nào kết nối vào directory
+      - --gidNumber 100    : dùng GID CÓ SẴN trên hệ thống Linux,
+                              cụ thể là group ID 100 (group "users")
+                              - KHÔNG cần tạo group riêng trong
+                                directory
+      - --homeDirectory    : đường dẫn home directory, /home/alice
+
+  • Nếu THIẾU thông tin bắt buộc (vd: display name):
+      → Hệ thống sẽ TỰ ĐỘNG HỎI THÊM
+      → Ví dụ: nhập "Alice User" khi được hỏi Display Name
+
+  • Kiểm tra lại:
+      dsidm localhost user list
+
+      → Thấy cả demo_user VÀ alice
+
+ĐẶT MẬT KHẨU CHO USER ALICE
+────────────────────────────────────────────────────────────────
+
+  • Lệnh:
+      dsidm localhost account reset_password "uid=alice,ou=people,dc=example,dc=com"
+
+      - account reset_password : hành động đặt lại mật khẩu
+      - Tham số: FULLY QUALIFIED NAME của user, dạng comma-separated
+          uid=alice,ou=people,dc=example,dc=com
+
+  • Sau khi chạy, hệ thống sẽ hỏi nhập MẬT KHẨU MỚI (có thể đặt bất
+    kỳ giá trị nào, miễn nhớ được)
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Qua bài thực hành, ta đã:
+    - Dùng ldapsearch để truy vấn qua CẢ LDAP (389) lẫn LDAPS (636)
+    - Khắc phục lỗi self-signed certificate bằng cách thêm
+      "TLS_REQCERT never" vào /etc/ldap/ldap.conf (chỉ nên dùng cho
+      môi trường lab/test)
+    - Cấu hình kết nối qua SOCKET (ldapi) dành riêng cho ROOT, với
+      file .dsrc chứa các thông tin SHORTCUT (bao gồm PERCENT
+      ENCODING cho dấu "/")
+    - Dùng dsidm để LIỆT KÊ user/group, TẠO USER MỚI (alice), và
+      ĐẶT MẬT KHẨU cho user đó
+
+  Với tài khoản alice đã có đầy đủ thông tin và mật khẩu, ta đã sẵn
+  sàng để CẤU HÌNH CLIENT (Ubuntu và Rocky) kết nối và xác thực với
+  directory service này.
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Cấu hình client (sssd-ldap) trên Ubuntu và Rocky Linux
+để xác thực người dùng thông qua directory service vừa thiết lập.
+────────────────────────────────────────────────────────────────

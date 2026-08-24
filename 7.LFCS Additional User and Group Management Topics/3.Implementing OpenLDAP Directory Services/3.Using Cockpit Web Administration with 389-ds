@@ -1,0 +1,100 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║        USING COCKPIT WEB ADMINISTRATION WITH 389-DS                          ║
+║      (Thực Hành: Quản Lý 389-DS Bằng Giao Diện Web Cockpit)                  ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Quản lý directory service bằng công cụ đồ họa Cockpit
+  Mục tiêu   : Khám phá giao diện web quản trị 389-ds thay vì dùng
+               dòng lệnh
+
+TRUY CẬP COCKPIT WEB MANAGER
+────────────────────────────────────────────────────────────────
+
+  • Địa chỉ truy cập:
+      https://192.168.56.101:9090
+
+      - Đây là IP giao diện mạng PUBLIC của máy ảo (theo cấu hình
+        Vagrant mặc định trong khóa học)
+      - Port 9090: cổng của Cockpit Web Manager
+      - IP này CẦN có thể truy cập được TỪ máy host chạy Vagrant
+
+  • Đăng nhập:
+      - Username: vagrant
+      - Password: vagrant (chữ thường)
+
+  • Tùy chọn "Reuse my password for privileged task"
+      - Cho phép TỰ ĐỘNG nâng quyền (privilege escalation) khi cần,
+        KHÔNG cần nhập lại mật khẩu nhiều lần
+
+KHÁM PHÁ GIAO DIỆN QUẢN LÝ 389 DIRECTORY SERVER
+────────────────────────────────────────────────────────────────
+
+  • Phần "Directory Server Management"
+      - Hiển thị dịch vụ slapd (LDAP daemon)
+      - Instance hiện có: localhost (giống instance đã tạo bằng
+        dscreate ở bài trước)
+
+  • Tạo INSTANCE MỚI qua giao diện:
+      - Vào menu "Actions" → "Create Instance"
+      - Quy trình TƯƠNG TỰ như khi dùng lệnh dscreate ở dòng lệnh
+      - CÓ THỂ chạy NHIỀU instance trên CÙNG 1 server
+          → Chỉ cần dùng CỔNG (port) riêng biệt và SUFFIX khác nhau
+
+QUẢN LÝ CHỨNG CHỈ BẢO MẬT (CERTIFICATE MANAGEMENT)
+────────────────────────────────────────────────────────────────
+
+  • Vào phần "Server Settings" → "Security"
+      - Xem tên chứng chỉ server: Server-Cert
+
+  • Vào "Certificate Management"
+      - Xem danh sách:
+          • Trusted CA (chứng chỉ CA đáng tin cậy)
+          • TLS Certificates (chứng chỉ TLS đang dùng)
+      - HIỆN TẠI: đều là CHỨNG CHỈ TỰ KÝ (self-signed)
+
+  • Thêm CA Certificate của tổ chức:
+      - Có nút "Add CA Certificate"
+      - Dùng để thêm CHỨNG CHỈ CA CỦA TỔ CHỨC (organizational
+        trusted CA)
+      - CA này sẽ KÝ (sign) yêu cầu chứng chỉ (signing request) từ
+        server
+      - Sau khi ký xong, chứng chỉ server được THÊM vào qua trang
+        "TLS Certificates"
+
+QUẢN LÝ DATABASE VÀ SUFFIX
+────────────────────────────────────────────────────────────────
+
+  • Vào phần "Database"
+      - Xem SUFFIX hiện có: dc=example,dc=com
+      - Tên database lưu trữ: userRoot
+
+  • Thêm SUFFIX MỚI qua "Create Suffix"
+      - Ví dụ ứng dụng thực tế:
+          • dc=customer,dc=example,dc=com  → dành cho khách hàng
+          • Suffix RIÊNG cho nhân viên (staff)
+      - Cho phép TỔ CHỨC DỮ LIỆU theo nhiều "domain" logic khác
+        nhau trong CÙNG 1 directory server
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Cockpit Web Manager cung cấp giao diện ĐỒ HỌA TRỰC QUAN để quản
+  lý 389-ds, bao gồm:
+    - Tạo/quản lý instance directory server
+    - Quản lý chứng chỉ bảo mật (CA, TLS certificates)
+    - Quản lý database và suffix (cấu trúc domain logic)
+
+  Đây là lựa chọn THAY THẾ cho dòng lệnh, phù hợp với những ai
+  thích thao tác trực quan. Tuy nhiên, phần lớn công việc quản trị
+  thực tế (và trong phạm vi thi cử) vẫn sẽ tập trung vào các công
+  cụ DÒNG LỆNH.
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Quay lại dòng lệnh để tìm hiểu các công cụ quản lý LDAP
+qua terminal.
+────────────────────────────────────────────────────────────────

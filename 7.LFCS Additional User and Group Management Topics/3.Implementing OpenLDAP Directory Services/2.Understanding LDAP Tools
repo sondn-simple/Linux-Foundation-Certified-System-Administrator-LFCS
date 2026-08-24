@@ -1,0 +1,151 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                   UNDERSTANDING LDAP TOOLS                                   ║
+║              (Hiểu Về Các Công Cụ LDAP Và Dsidm)                             ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Giới thiệu công cụ LDAP chuẩn và dsidm của 389-ds
+  Mục tiêu   : Hiểu khác biệt LDAP/LDAPS, cách dùng ldapsearch, và
+               cách tạo user bằng dsidm
+
+LDAP vs LDAPS
+────────────────────────────────────────────────────────────────
+
+  • LDAP
+      - Tương đương với HTTP
+      - Chạy mặc định trên CỔNG 389
+      - Dữ liệu truyền KHÔNG mã hóa
+
+  • LDAPS (Secure LDAP)
+      - Tương đương với HTTPS
+      - Chạy trên CỔNG 636
+      - ĐƯỢC ƯU TIÊN sử dụng, đặc biệt khi làm việc với mật khẩu
+        (thêm user, xác thực...)
+
+THỬ NGHIỆM VỚI LDAPSEARCH
+────────────────────────────────────────────────────────────────
+
+  • Tìm kiếm qua LDAP thường (port 389):
+      ldapsearch -h ldap://ubuntu1:389 -D "cn=Directory Manager" -W \
+        -b "dc=example,dc=com" -x
+
+      - -h  : host và protocol
+      - -D  : tài khoản đăng nhập (bind DN)
+      - -W  : yêu cầu NHẬP MẬT KHẨU (prompt for password)
+      - -b  : base DN - vị trí BẮT ĐẦU tìm kiếm trong cây LDAP
+      - -x  : dùng SIMPLE AUTHENTICATION
+
+      → Kết quả: HOẠT ĐỘNG BÌNH THƯỜNG
+
+  • Thử LẠI với LDAPS (port 636), CÙNG cú pháp nhưng đổi protocol:
+
+      → KẾT QUẢ: LỖI vì có CHỨNG CHỈ TỰ KÝ (self-signed certificate)
+        trong chuỗi chứng chỉ
+      → Mặc định hệ thống KHÔNG chấp nhận self-signed certificate
+
+XỬ LÝ LỖI CHỨNG CHỈ TỰ KÝ (TẠM THỜI, CHO MỤC ĐÍCH LAB)
+────────────────────────────────────────────────────────────────
+
+  • Thêm cấu hình vào LDAP client config:
+      /etc/ldap/ldap.conf
+
+  • Thêm dòng (cần quyền root, dùng >> để APPEND):
+      echo "TLS_REQCERT never" | sudo tee -a /etc/ldap/ldap.conf
+
+      - TLS_REQCERT never : BỎ QUA việc kiểm tra chứng chỉ TLS
+
+  • Sau khi thêm, chạy lại ldapsearch qua LDAPS (636) → THÀNH CÔNG
+
+  • LƯU Ý QUAN TRỌNG:
+      - Đây CHỈ là giải pháp TẠM THỜI cho môi trường LAB/THỬ NGHIỆM
+      - Trong môi trường THỰC TẾ (production), NÊN dùng CHỨNG CHỈ
+        ĐƯỢC KÝ (signed certificate) đáng tin cậy, KHÔNG nên tắt
+        kiểm tra TLS
+
+CÁC CÔNG CỤ LDAP TIÊU CHUẨN
+────────────────────────────────────────────────────────────────
+
+  • ldapsearch   : TÌM KIẾM (search) trong directory
+  • ldapadd      : THÊM (add) entry mới
+  • ldapmodify   : SỬA (modify) entry đã có
+
+  • Đây là các công cụ CHUẨN của LDAP, hoạt động với bất kỳ LDAP
+    server nào (không riêng gì 389-ds)
+
+389-DS: CÔNG CỤ QUẢN LÝ ĐƠN GIẢN HÓA - DSIDM
+────────────────────────────────────────────────────────────────
+
+  • Ưu điểm của 389-ds: có công cụ dsidm giúp quản lý ĐƠN GIẢN HƠN
+    nhiều so với các lệnh ldap* tiêu chuẩn
+
+  • Bước 1: Tạo file cấu hình ~/.dsrc (trong home directory của
+    ROOT):
+      - Chỉ định instance: localhost (trùng tên với instance đã
+        tạo trước đó bằng dscreate)
+      - URI sử dụng: ldapi (kết nối qua SOCKET, không qua network)
+      - Với kết nối qua ldapi + là ROOT: KHÔNG CẦN nhập mật khẩu
+
+  • LƯU Ý VỀ PERCENT ENCODING trong URI:
+      - Khi cần đưa dấu "/" (forward slash) vào trong đường dẫn
+        URL, phải mã hóa thành: %2f
+      - Giải thích: 2f là mã HEX của ký tự ASCII 47, chính là dấu
+        "/" - đây gọi là "percent encoding" (mã hóa phần trăm), để
+        bảo vệ các ký tự đặc biệt khi truyền qua URL
+
+  • Bước 2: Liệt kê user (sau khi cấu hình .dsrc):
+      dsidm localhost user list
+
+      - Không cần chỉ định nhiều tham số vì .dsrc đã lưu sẵn cấu
+        hình instance
+
+TẠO USER MỚI VỚI DSIDM
+────────────────────────────────────────────────────────────────
+
+  • Lệnh:
+      dsidm localhost user create --uid <username> --cn <common_name> \
+        --displayName <display_name> --uidNumber 2000 \
+        --gidNumber <gid> --homeDirectory /home/<username>
+
+  • Giải thích các thuộc tính cần cung cấp:
+      • uid            : user ID (tên đăng nhập)
+      • cn (common name) : tên đầy đủ
+      • displayName     : tên hiển thị
+      • uidNumber       : số UID
+          - Bắt đầu từ 2000 để TRÁNH TRÙNG với UID đã có sẵn trong
+            /etc/passwd của bất kỳ host nào
+      • gidNumber       : số GID
+          - Dùng GID có sẵn từ /etc/group của hệ thống, KHÔNG cần
+            tạo group riêng trong directory
+      • homeDirectory   : đường dẫn home directory
+
+ĐẶT MẬT KHẨU CHO USER VỪA TẠO
+────────────────────────────────────────────────────────────────
+
+  • Lệnh:
+      dsidm localhost account reset-password "<fully_qualified_name>"
+
+      - "fully qualified name" : tên ĐẦY ĐỦ dạng comma-separated
+                                  (vd: uid=username,ou=people,
+                                  dc=example,dc=com)
+
+  • Sau khi chạy, hệ thống sẽ HỎI NHẬP MẬT KHẨU 2 LẦN để xác nhận
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Đây là phần giới thiệu tổng quan về các công cụ LDAP, bao gồm:
+    - Khác biệt LDAP (389) và LDAPS (636)
+    - Cách xử lý (tạm thời) lỗi self-signed certificate cho môi
+      trường lab
+    - Các công cụ chuẩn: ldapsearch, ldapadd, ldapmodify
+    - Công cụ dsidm của 389-ds giúp đơn giản hóa việc TẠO USER và
+      ĐẶT MẬT KHẨU trong directory service
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Thực hành trực tiếp trên dòng lệnh để sử dụng các công
+cụ LDAP và dsidm vừa được giới thiệu.
+────────────────────────────────────────────────────────────────
