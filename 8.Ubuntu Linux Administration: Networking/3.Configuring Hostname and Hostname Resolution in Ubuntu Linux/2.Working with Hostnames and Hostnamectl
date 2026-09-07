@@ -1,0 +1,168 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║           WORKING WITH HOSTNAMES AND HOSTNAMECTL                             ║
+║          (Thực Hành: Làm Việc Với Hostname Và Hostnamectl)                   ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Thực hành xem và cấu hình hostname bằng hostnamectl
+  Hệ thống   : ubuntu1
+  Mục tiêu   : Hiểu khác biệt giữa STATIC và TRANSIENT hostname, và
+               cách hostnamectl đồng bộ cả 2 phía
+
+XEM THÔNG TIN HOSTNAME (VỚI USER THƯỜNG)
+────────────────────────────────────────────────────────────────
+
+  • Lệnh cơ bản:
+      hostnamectl
+
+  • Kết quả cho thấy STATIC HOSTNAME
+      - Khi CHỈ có static hostname được hiển thị (không có transient
+        riêng) → nghĩa là cấu hình BACK-END (file) và FRONT-END
+        (bộ nhớ) đang ĐỒNG BỘ với nhau
+
+HAI LOẠI HOSTNAME: STATIC vs TRANSIENT
+────────────────────────────────────────────────────────────────
+
+  • Static hostname
+      - Lưu trong FILE cấu hình (back-end)
+      - File: /etc/hostname (trên hệ thống Debian-based)
+
+  • Transient hostname
+      - Lưu TRONG BỘ NHỚ (in-memory), CHỈ tồn tại đến khi reboot
+
+  • Thử đổi hostname CHỈ trong bộ nhớ bằng lệnh hostname:
+      sudo hostname server1
+
+  • Kiểm tra lại:
+      hostnamectl
+
+      → LẦN NÀY thấy CẢ static VÀ transient hostname riêng biệt:
+          • Static: vẫn là ubuntu1 (KHÔNG đổi)
+          • Transient: server1 (chỉ đổi trong bộ nhớ)
+
+  • Xác nhận file back-end KHÔNG bị ảnh hưởng:
+      !ca    (lặp lại lệnh gần nhất bắt đầu bằng "ca", tức cat)
+
+      → File /etc/hostname vẫn hiển thị: ubuntu1
+
+  • Ý NGHĨA: nếu REBOOT hệ thống lúc này, hostname sẽ QUAY VỀ
+    ubuntu1 (vì đó là giá trị trong FILE, transient chỉ tồn tại
+    tạm thời)
+
+CÁCH LÀM ĐÚNG: DÙNG HOSTNAMECTL ĐỂ ĐỔI CẢ 2 PHÍA CÙNG LÚC
+────────────────────────────────────────────────────────────────
+
+  • Ưu điểm của hostnamectl: TỰ ĐỘNG ghi vào CẢ FILE (back-end)
+    VÀ bộ nhớ (front-end) trong CÙNG MỘT lệnh, không cần lo về
+    việc ĐỒNG BỘ thủ công
+
+  • Lệnh:
+      sudo hostnamectl set-hostname "andrew's vm"
+
+      - Chứa 2 KÝ TỰ KHÔNG HỢP LỆ trong hostname chuẩn: DẤU NHÁY
+        ĐƠN (') và DẤU CÁCH (space)
+      - Hệ thống VẪN CHO PHÉP đặt tên này (vì có ý nghĩa thực tế,
+        như đặt tên máy theo người dùng)
+
+  • Kết quả kiểm tra lại (hostnamectl):
+      → Static hostname: "andrewsvm" (đã LOẠI BỎ dấu nháy và dấu
+        cách, gộp thành 1 từ)
+      → NHƯNG "Andrew's vm" (bản gốc, đầy đủ) VẪN ĐƯỢC LƯU dưới
+        dạng PRETTY NAME
+
+  • Kiểm tra file /etc/hostname:
+      → CHỈ lưu phiên bản HỢP LỆ (concatenated): andrewsvm
+
+FILE MACHINE-INFO - NƠI LƯU THÔNG TIN BỔ SUNG
+────────────────────────────────────────────────────────────────
+
+  • Khi đặt PRETTY NAME, hệ thống sẽ TỰ ĐỘNG TẠO file:
+      /etc/machine-info
+
+      (nếu file này CHƯA tồn tại trước đó)
+
+  • File này lưu KHÔNG CHỈ pretty name, mà còn nhiều METADATA khác,
+    hữu ích cho hệ thống KIỂM KÊ (inventory)
+
+  • Thiết lập vị trí (LOCATION):
+      sudo hostnamectl set-location "Chicago"
+
+  • Thiết lập loại triển khai (DEPLOYMENT):
+      sudo hostnamectl set-deployment "development"
+
+      - Giá trị này HOÀN TOÀN TÙY Ý (production, development, hay
+        bất kỳ tên nào phù hợp), KHÔNG có quy định cố định
+
+  • Kiểm tra lại:
+      hostnamectl
+
+      → Thấy đầy đủ: Pretty hostname, Location: Chicago, Deployment:
+        development
+
+  • Xem trực tiếp file lưu trữ (dùng shortcut lịch sử lệnh):
+      !ca
+
+      → Xác nhận: TẤT CẢ thông tin (pretty name, location,
+        deployment) đều nằm CHUNG trong /etc/machine-info
+
+MACHINE ID - ĐỊNH DANH DUY NHẤT CỦA MÁY
+────────────────────────────────────────────────────────────────
+
+  • Xem trong kết quả hostnamectl:
+      - Machine ID hiển thị dưới dạng SỐ HEXADECIMAL
+      - Là ĐỊNH DANH DUY NHẤT của máy này
+
+  • File lưu trữ: /etc/machine-id
+
+  • MẸO SỬ DỤNG TAB COMPLETION:
+      - Gõ: cat /etc/machine-i<Tab>
+      - Hệ thống báo TÊN BỊ MƠ HỒ (ambiguous) vì có cả machine-id
+        VÀ machine-info
+      - Nhấn Tab THÊM LẦN NỮA để xem cả 2 lựa chọn khả dụng
+      - LỜI KHUYÊN: nên LÀM QUEN với việc dùng TAB COMPLETION
+        thường xuyên để tăng tốc độ làm việc
+
+  • Máy ID có thể được thiết lập:
+      - Trong quá trình CÀI ĐẶT hệ thống
+      - Hoặc vào LẦN KHỞI ĐỘNG ĐẦU TIÊN (first boot)
+
+XEM THÔNG TIN HỆ ĐIỀU HÀNH
+────────────────────────────────────────────────────────────────
+
+  • hostnamectl cũng hiển thị thông tin OS:
+      → Ví dụ: "Ubuntu 20.04.5 LTS" (bản vá 5, phiên bản LTS -
+        Long Term Support)
+
+  • Nguồn dữ liệu này đến từ file:
+      /etc/os-release
+
+      - Có trường "PRETTY_NAME" hiển thị chính là dòng thông tin
+        OS được hostnamectl trình bày
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Qua bài thực hành, ta đã:
+    - Phân biệt STATIC hostname (lưu file) và TRANSIENT hostname
+      (lưu bộ nhớ, mất khi reboot)
+    - Hiểu tại sao NÊN dùng hostnamectl thay vì lệnh hostname đơn
+      thuần, vì nó TỰ ĐỘNG đồng bộ CẢ 2 phía
+    - Biết cách đặt PRETTY NAME với ký tự đặc biệt, LOCATION, và
+      DEPLOYMENT - tất cả lưu trong /etc/machine-info
+    - Hiểu về MACHINE ID (/etc/machine-id) - định danh duy nhất
+      của máy
+    - Biết nguồn gốc thông tin HỆ ĐIỀU HÀNH hiển thị qua hostnamectl
+      đến từ /etc/os-release
+
+  Hệ sinh thái SYSTEMD (bao gồm hostnamectl) mang lại cách QUẢN LÝ
+  NHẤT QUÁN và TIỆN LỢI, áp dụng được trên HẦU HẾT các bản phân
+  phối Linux hiện đại, không chỉ riêng Ubuntu.
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Tìm hiểu về phân giải tên (name resolution) với
+systemd-resolved và các file cấu hình liên quan.
+────────────────────────────────────────────────────────────────

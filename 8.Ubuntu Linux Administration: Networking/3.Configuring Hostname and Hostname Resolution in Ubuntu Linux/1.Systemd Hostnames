@@ -1,0 +1,111 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                      SYSTEMD HOSTNAMES                                       ║
+║              (Quản Lý Hostname Với Systemd)                                  ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallett
+  Chủ đề     : Cấu hình hostname và phân giải hostname trong Ubuntu
+               Linux
+  Mục tiêu   : Giới thiệu tổng quan module về hostname và name
+               resolution
+
+NỘI DUNG SẼ HỌC TRONG MODULE
+────────────────────────────────────────────────────────────────
+
+  • Lệnh hostnamectl
+      - Hiển thị và cấu hình thông tin liên quan đến:
+          • hostname file
+          • machine-id file
+          • machine-info file
+          • os-release file
+      - TẤT CẢ thông tin này được TỔNG HỢP qua MỘT lệnh duy nhất
+
+  • Dịch vụ backend: systemd-hostnamed
+      - Đảm bảo mọi thay đổi cấu hình được GHI ĐÚNG vào TẤT CẢ các
+        file liên quan
+
+  • Phân giải tên (name resolution) trên Ubuntu 20.04
+      - Quản lý bởi: systemd-resolved
+      - Các file liên quan:
+          • /etc/systemd/resolved.conf
+          • /etc/nsswitch.conf (xác định THỨ TỰ phân giải tên)
+          • /etc/resolv.conf (LƯU Ý: đây là SYMBOLIC LINK trỏ đến
+            file cấu hình của systemd, không phải file thực)
+
+  • Công cụ dòng lệnh: dig
+      - Công cụ MẠNH MẼ để kiểm tra và xác minh thông tin phân giải
+        tên
+
+GIỚI THIỆU VỀ METADATA CỦA MÁY (MACHINE METADATA)
+────────────────────────────────────────────────────────────────
+
+  • Hostname TRUYỀN THỐNG vẫn còn tồn tại, NHƯNG hệ thống hiện đại
+    còn hỗ trợ THÊM nhiều thông tin khác
+
+  • Pretty Name (Tên hiển thị đẹp)
+      - Đôi khi ta muốn đặt tên máy theo TÊN NGƯỜI DÙNG, ví dụ:
+        "Andrew's laptop" hoặc "Andrew's desktop"
+      - VẤN ĐỀ: hostname CHUẨN không cho phép các KÝ TỰ ĐẶC BIỆT
+        (như dấu nháy đơn ')
+      - GIẢI PHÁP: "Pretty Name" cho phép LƯU TRỮ tên có ký tự
+        không hợp lệ, trong khi HOSTNAME THỰC vẫn tuân thủ quy tắc
+        chuẩn (dấu nháy sẽ bị LOẠI BỎ khỏi hostname chính thức)
+      - Thông tin này lưu tại: /etc/machine-info
+
+  • Machine ID
+      - Là ĐỊNH DANH DUY NHẤT (UUID) của máy
+      - Thường được TẠO TỰ ĐỘNG trong quá trình CÀI ĐẶT, hoặc có
+        thể được thiết lập vào LẦN KHỞI ĐỘNG ĐẦU TIÊN (first boot)
+      - HỮU ÍCH cho: hệ thống KIỂM KÊ (inventory) - giúp PHÂN BIỆT
+        chính xác máy này với các máy Ubuntu 20.04 KHÁC
+
+XEM VÀ CẤU HÌNH VỚI HOSTNAMECTL
+────────────────────────────────────────────────────────────────
+
+  • hostnamectl là một phần của HỆ SINH THÁI SYSTEMD
+
+  • Có thể hiển thị:
+      - Hostname (tên máy chuẩn)
+      - Pretty name (tên hiển thị đẹp)
+      - Các thông tin CẤU HÌNH THÊM khác
+
+  • Ví dụ đặt Pretty Name có ký tự đặc biệt:
+      Đặt "Andrew's" làm tên
+      → Dấu nháy đơn (') sẽ được LOẠI BỎ khỏi HOSTNAME CHÍNH THỨC
+      → NHƯNG được GIỮ NGUYÊN trong PRETTY NAME
+
+  • Có thể thiết lập THÊM các thông tin khác:
+      • Deployment (môi trường triển khai)
+          - Ví dụ: production, development
+          - KHÔNG CÓ tên cố định bắt buộc, TÙY Ý người quản trị đặt
+
+      • Location (vị trí địa lý)
+          - Ví dụ: Chicago
+          - HỮU ÍCH cho các HỆ THỐNG KIỂM KÊ (inventory systems)
+
+  • LƯU Ý QUAN TRỌNG:
+      - Mỗi giá trị này được LƯU TRỮ trong CÁC FILE RIÊNG BIỆT
+      - hostnamectl chỉ là CÔNG CỤ TỔNG HỢP để XEM và THIẾT LẬP các
+        giá trị này một cách THUẬN TIỆN
+      - Việc đảm bảo dữ liệu được GHI ĐÚNG vào từng file backend là
+        NHIỆM VỤ của dịch vụ systemd-hostnamed
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Đây là phần giới thiệu tổng quan cho module về hostname, bao gồm:
+    - Khái niệm hostname, pretty name, machine-id, deployment,
+      location
+    - Vai trò của hostnamectl như công cụ TỔNG HỢP quản lý
+    - Vai trò của systemd-hostnamed và systemd-resolved trong việc
+      quản lý cấu hình backend
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Thực hành trực tiếp trên dòng lệnh với hostnamectl và
+các file cấu hình liên quan.
+────────────────────────────────────────────────────────────────

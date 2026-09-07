@@ -1,0 +1,107 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                      NETWORKING IN UBUNTU                                    ║
+║                (Giới Thiệu Về Networking Trong Ubuntu)                       ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallett
+  Khóa học   : Ubuntu Linux Administration: Networking
+  Chủ đề     : Giới thiệu tổng quan module và cấu hình địa chỉ IP
+
+NỘI DUNG TOÀN BỘ KHÓA HỌC
+────────────────────────────────────────────────────────────────
+
+  • Đọc cấu hình địa chỉ IP
+  • Phân giải hostname (hostname resolution)
+  • Thiết lập NTP client (Network Time Protocol) - đồng bộ thời gian
+  • Kết nối giữa các mạng và giao thức routing (định tuyến)
+  • Firewall với cả 2 công cụ:
+      • iptables
+      • UFW (Uncomplicated Firewall)
+
+TRỌNG TÂM MODULE HIỆN TẠI
+────────────────────────────────────────────────────────────────
+
+  • Tập trung vào lệnh ip
+      - Hiển thị cấu hình địa chỉ IP hiện tại
+      - Cấu hình IP dạng TẠM THỜI (transient/memory resident) - chỉ
+        tồn tại trong bộ nhớ, mất khi reboot
+
+  • Netplan
+      - Dùng để LƯU TRỮ (persist) cấu hình IP bền vững
+      - Netplan sẽ nạp cấu hình vào Network Manager ở phía sau
+        (back-end)
+
+THIẾT LẬP MÔI TRƯỜNG LAB
+────────────────────────────────────────────────────────────────
+
+  • Kỳ thi LFCS là kỳ thi THỰC HÀNH (practical-based)
+      - KHÔNG có câu hỏi trắc nghiệm khó hiểu
+      - CẦN kỹ năng CẤU HÌNH THỰC TẾ dựa trên tình huống cho trước
+      - Kinh nghiệm THỰC HÀNH là yếu tố QUYẾT ĐỊNH
+
+  • Môi trường lab NHẤT QUÁN xuyên suốt toàn bộ track Ubuntu LFCS
+      - Được mô tả chi tiết trong khóa "Ubuntu Linux Administration:
+        Essential Commands"
+      - Sử dụng Vagrant + VirtualBox
+      - Vagrantfile cung cấp sẵn để tái tạo 2 hệ thống lab dùng
+        xuyên suốt các khóa học
+      - KHUYẾN NGHỊ MẠNH: nên dùng chính hệ thống này để đảm bảo
+        MÔI TRƯỜNG GIỐNG với video demo (dù có thể dùng hệ thống
+        khác nếu muốn)
+
+LỆNH IP - CÔNG CỤ CHÍNH ĐỂ QUẢN LÝ MẠNG
+────────────────────────────────────────────────────────────────
+
+  • Lệnh ifconfig (TRUYỀN THỐNG)
+      - Đã bị ĐÁNH DẤU LỖI THỜI (deprecated)
+      - Được THAY THẾ bởi lệnh ip
+      - VẪN CÓ THỂ cài thêm package net-tools nếu muốn dùng ifconfig
+      - NHƯNG nên xem đây là LỆNH LEGACY (cũ), không nên dựa vào nó
+
+  • Lệnh ip - "CON DAO ĐA NĂNG" (Swiss Army knife) của networking
+      - KHÔNG chỉ quản lý địa chỉ IP, mà còn nhiều tính năng mạng
+        khác
+
+XEM CẤU HÌNH IP HIỆN TẠI (TẠM THỜI - MEMORY RESIDENT)
+────────────────────────────────────────────────────────────────
+
+  • Xem địa chỉ IP:
+      ip address show
+
+      - Có thể VIẾT TẮT:
+            ip addr show
+            (hoặc ngắn hơn nữa, nhưng nên giữ ở mức "addr" để vẫn
+            DỄ ĐỌC, dễ hiểu)
+
+  • Thêm địa chỉ IP mới (tạm thời, mất sau khi reboot):
+      ip addr add 192.168.1.1/24 dev enp0s8
+
+      - 192.168.1.1/24  : địa chỉ IP với subnet mask 24-bit
+      - dev enp0s8        : gán vào network interface enp0s8
+
+LỜI KHUYÊN QUAN TRỌNG
+────────────────────────────────────────────────────────────────
+
+  • Nên xây dựng NỀN TẢNG KIẾN THỨC dựa trên lệnh ip
+      - KHÔNG nên phụ thuộc vào các lệnh LEGACY như ifconfig, dù
+        vẫn có thể cài đặt nếu thực sự cần thiết
+
+  • Lệnh ip sẽ được tìm hiểu SÂU HƠN xuyên suốt toàn bộ khóa học
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Đây là phần giới thiệu tổng quan cho khóa học Networking, tập
+  trung vào việc chuyển đổi tư duy từ các lệnh LEGACY (ifconfig)
+  sang lệnh IP hiện đại, đồng thời giới thiệu về Netplan để lưu trữ
+  cấu hình bền vững.
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Thực hành trực tiếp trên dòng lệnh với lệnh ip để đọc và
+cấu hình địa chỉ IP.
+────────────────────────────────────────────────────────────────

@@ -1,0 +1,180 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                MANAGING TRANSIENT IP ADDRESSES                               ║
+║           (Thực Hành: Quản Lý Địa Chỉ IP Tạm Thời)                          ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Đọc và cấu hình địa chỉ IP tạm thời bằng lệnh ip và
+               ifconfig
+  Hệ thống   : ubuntu1 và ubuntu2
+  Mục tiêu   : Thêm địa chỉ IP mới và kiểm tra kết nối giữa 2 máy
+
+CHUẨN BỊ
+────────────────────────────────────────────────────────────────
+
+  • Mở sẵn terminal cho CẢ HAI máy: ubuntu1 và ubuntu2
+  • Có thể mở nhiều tab: ví dụ 2 tab cho ubuntu1, 1 tab cho ubuntu2
+
+XEM CẤU HÌNH ĐỊA CHỈ IP HIỆN TẠI
+────────────────────────────────────────────────────────────────
+
+  • Lệnh cơ bản (chạy được với USER THƯỜNG):
+      ip address show
+
+      → Hiển thị:
+          • Loopback (địa chỉ local)
+          • 2 network interface: enp0s3, enp0s8
+
+  • Chỉ xem network card (không cần chi tiết địa chỉ):
+      ip link show
+
+      → Thông tin NGẮN GỌN HƠN, chỉ về các card mạng
+
+CÁCH ĐẶT TÊN NETWORK INTERFACE HIỆN ĐẠI
+────────────────────────────────────────────────────────────────
+
+  • Tên interface dựa trên ĐỊA CHỈ PHẦN CỨNG (hardware address):
+      • en   : Ethernet
+      • p0   : PCI Bus 0
+      • s3   : Slot 3 (hoặc s8 = Slot 8)
+
+  • Ý NGHĨA: đặt tên dựa trên vị trí phần cứng giúp TRÁNH LỖI PHÁT
+    HIỆN SAI, cho tên GỌI NHẤT QUÁN (miễn phần cứng không đổi slot)
+      - Khác với cách đặt tên CŨ như eth0, eth1 (dễ bị đổi thứ tự)
+
+VIẾT TẮT LỆNH IP
+────────────────────────────────────────────────────────────────
+
+  • Có thể RÚT GỌN dần các subcommand:
+      ip address show
+      ip addr show      (rút gọn "address" → "addr")
+      ip a               (rút gọn tối đa, vẫn HOẠT ĐỘNG vì "a"
+                           KHÔNG BỊ NHẦM LẪN với lệnh nào khác)
+
+  • Subcommand mặc định của "ip address" chính là "show"
+      - Có thể BỎ QUA "show" mà lệnh vẫn chạy đúng
+
+  • Tương tự với ip link:
+      ip l
+
+      - HOẠT ĐỘNG nhưng KHÔNG RÕ RÀNG/dễ hiểu bằng cách viết đầy đủ
+        "ip addr"
+
+LỌC THEO PHIÊN BẢN IP VÀ INTERFACE CỤ THỂ
+────────────────────────────────────────────────────────────────
+
+  • Chỉ xem địa chỉ IPv4:
+      ip -4 address show
+
+      - IPv4 : định dạng địa chỉ TRUYỀN THỐNG
+      - IPv6 : định dạng MỚI HƠN, cho phép NHIỀU DẢI ĐỊA CHỈ hơn
+
+  • Chỉ xem 1 interface cụ thể:
+      ip -4 addr show enp0s8
+
+      → Ví dụ kết quả: 192.168.56.101
+
+THÊM ĐỊA CHỈ IP MỚI (TẠM THỜI)
+────────────────────────────────────────────────────────────────
+
+  • Cần quyền ROOT (không chạy được với user thường):
+      sudo ip address add 192.168.1.1/24 dev enp0s8
+
+  • Giải thích các thành phần:
+      • 192.168.1.1     : địa chỉ IP muốn thêm
+      • /24               : SUBNET MASK
+          - Chia địa chỉ IP thành phần NETWORK và phần NODE
+          - Với /24: 3 nhóm số đầu (192.168.1) là NETWORK, số cuối
+            (.1) là NODE (thiết bị)
+      • dev enp0s8        : chỉ định network interface áp dụng
+
+  • LƯU Ý: cấu hình này CHỈ LÀ TẠM THỜI (transient), lưu trong bộ
+    nhớ, sẽ MẤT khi reboot
+
+THIẾT LẬP TƯƠNG TỰ TRÊN UBUNTU2 VÀ KIỂM TRA KẾT NỐI
+────────────────────────────────────────────────────────────────
+
+  • Copy lệnh từ ubuntu1 sang ubuntu2, nhưng ĐỔI địa chỉ IP để
+    TRÁNH TRÙNG LẶP trên cùng 1 mạng:
+      sudo ip address add 192.168.1.2/24 dev enp0s8
+
+      - Đổi phần NODE từ .1 thành .2
+      - LƯU Ý: địa chỉ IP PHẢI DUY NHẤT trên mạng
+
+  • Kiểm tra kết nối từ ubuntu2 sang ubuntu1:
+      ping 192.168.1.1
+
+      → Nhận được PHẢN HỒI, xác nhận CẤU HÌNH ĐÚNG
+      → Dừng ping bằng Ctrl+C
+
+  • Kiểm tra CHIỀU NGƯỢC LẠI, từ ubuntu1 sang ubuntu2:
+      ping 192.168.1.2
+
+      → Cũng nhận được PHẢN HỒI thành công
+
+  • Ý nghĩa lệnh ping: công cụ KIỂM TRA MẠNG ĐƠN GIẢN để xác nhận có
+    GIAO TIẾP được với thiết bị từ xa hay không
+
+SO SÁNH VỚI IFCONFIG (LỆNH CŨ/LEGACY)
+────────────────────────────────────────────────────────────────
+
+  • Thử chạy trực tiếp:
+      ifconfig
+
+      → KHÔNG TÌM THẤY lệnh (command not found), nhưng hệ thống GỢI
+        Ý cách cài đặt
+
+  • Cài đặt package cần thiết:
+      sudo apt install net-tools
+
+      - Cung cấp các công cụ NETWORKING KIỂU CŨ (legacy), bao gồm
+        ifconfig
+      - KHÔNG khuyến khích sử dụng, nhưng vẫn có thể cài nếu đã
+        QUEN THUỘC với công cụ này
+
+  • Chạy lại sau khi cài:
+      ifconfig
+
+      → PHÁT HIỆN SỰ KHÔNG NHẤT QUÁN: enp0s8 chỉ hiển thị địa chỉ
+        GỐC (192.168.56.101), KHÔNG hiển thị địa chỉ MỚI thêm
+        (192.168.1.1), dù địa chỉ đó VẪN HOẠT ĐỘNG (đã ping thành
+        công)
+
+  • Xác nhận bằng lệnh ip:
+      ip -4 a
+
+      → Thấy CẢ 2 địa chỉ (56.101 và 1.1) đều được gán cho enp0s8
+
+BÀI HỌC RÚT RA VỀ IFCONFIG vs IP
+────────────────────────────────────────────────────────────────
+
+  • ifconfig CÓ SẴN nhưng KÉM ĐẦY ĐỦ TÍNH NĂNG hơn nhiều so với các
+    công cụ HIỆN ĐẠI như lệnh ip
+  • Đây chính là LÝ DO ifconfig KHÔNG được cài SẴN mặc định trên hệ
+    thống mới
+  • Đặc biệt nếu MỚI LÀM QUEN với Linux, NÊN tập trung học lệnh ip
+    thay vì công cụ cũ
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Qua bài thực hành, ta đã:
+    - Thành thạo các cách VIẾT TẮT của lệnh ip (address → addr → a)
+    - Thêm địa chỉ IP TẠM THỜI bằng ip address add, hiểu ý nghĩa
+      subnet mask /24
+    - Kiểm tra kết nối 2 chiều giữa các máy bằng ping
+    - Phát hiện SỰ KHÔNG ĐỒNG BỘ giữa ifconfig (cũ) và ip (mới) khi
+      hiển thị thông tin - MINH CHỨNG RÕ RÀNG cho việc nên CHUYỂN
+      HẲN sang dùng lệnh ip
+
+  Cấu hình vừa thực hiện chỉ là TẠM THỜI, sẽ MẤT khi reboot hệ
+  thống.
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Tìm hiểu cách làm cho cấu hình IP trở nên VĨNH VIỄN
+(persistent) bằng Netplan.
+────────────────────────────────────────────────────────────────

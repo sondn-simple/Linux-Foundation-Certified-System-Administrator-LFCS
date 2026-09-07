@@ -1,0 +1,213 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                 USING NETPLAN IN UBUNTU 20.04                                ║
+║           (Thực Hành: Sử Dụng Netplan Trên Ubuntu 20.04)                    ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Cấu hình địa chỉ IP bền vững bằng Netplan, dùng
+               netplan try để test an toàn trước khi apply
+  Hệ thống   : ubuntu1 và ubuntu2
+  Mục tiêu   : Thực hành đầy đủ quy trình cấu hình static IP, kiểm
+               tra rollback tự động, và xác nhận tính persistent
+               qua reboot
+
+TÌNH TRẠNG BAN ĐẦU: ĐỊA CHỈ TẠM THỜI VẪN CÒN
+────────────────────────────────────────────────────────────────
+
+  • Nhắc lại: địa chỉ IP TẠM THỜI (transient) đã cấu hình ở bài
+    trước SẼ MẤT nếu:
+      - Áp dụng cấu hình MỚI
+      - Reboot hệ thống
+
+  • Kiểm tra lại địa chỉ hiện tại của enp0s8:
+      ip -4 addr show enp0s8
+
+      → Thấy CẢ 2 địa chỉ:
+          • 56.101 (PERSISTENT - đã cấu hình từ trước)
+          • 1.1     (TRANSIENT - chỉ tồn tại trong bộ nhớ)
+
+XEM TRỢ GIÚP VÀ THÔNG TIN VỀ NETPLAN
+────────────────────────────────────────────────────────────────
+
+  • Xem trợ giúp:
+      netplan --help
+
+  • Xem thông tin dự án (bao gồm cả LINK đến trang chủ):
+      netplan info
+
+      → Trỏ đến netplan.io - trang CHÍNH THỨC có tài liệu chi tiết
+        hơn nhiều, đáng để tham khảo thêm
+
+XEM THÔNG TIN DHCP LEASE
+────────────────────────────────────────────────────────────────
+
+  • Lệnh (chạy được với USER THƯỜNG):
+      netplan ip leases enp0s3
+
+  • Thông tin quan trọng trong kết quả:
+      • Address           : địa chỉ IP đã được cấp
+      • Lifetime           : 86400 giây (= 1 ngày) - thời gian địa
+                              chỉ có hiệu lực
+      • T1 (renewal time)  : 43200 giây (nửa lifetime) - LẦN GIA
+                              HẠN ĐẦU TIÊN được thử
+      • T2 (rebinding time): 75600 giây (3/4 lifetime) - LẦN GIA
+                              HẠN THỨ HAI nếu T1 thất bại
+
+      → Ý nghĩa: hệ thống sẽ CỐ GẮNG gia hạn địa chỉ TRƯỚC KHI hết
+        hạn, tránh bị MẤT địa chỉ đột ngột
+
+XEM FILE CẤU HÌNH NETPLAN
+────────────────────────────────────────────────────────────────
+
+  • Vị trí: /etc/netplan/
+      - Có 2 file YAML:
+          1. cloud-init...yaml  : Do image cung cấp SẴN, cấu hình
+                                    DHCP
+          2. 50-vagrant.yaml     : File chứa cấu hình STATIC cho
+                                    enp0s8 (được thêm vào khi ta cấu
+                                    hình địa chỉ thứ 2 trước đây)
+
+CẤU TRÚC FILE YAML
+────────────────────────────────────────────────────────────────
+
+  • Mở file bằng editor (vim hoặc nano):
+      sudo vim /etc/netplan/50-vagrant.yaml
+
+  • Cấu trúc:
+      ---                    ← document header (3 dấu gạch ngang)
+      network:               ← key cấp cao nhất, là 1 DICTIONARY
+        version: 2           ← key-value pair đơn giản
+        renderer: networkd   ← key-value pair đơn giản
+        ethernets:           ← dictionary con
+          enp0s8:             ← tên network card
+            addresses:        ← LIST các địa chỉ IP
+              - 192.168.56.101/24   ← mỗi phần tử LIST bắt đầu
+                                       bằng dấu "-"
+
+  • LƯU Ý: MỨC THỤT LỀ (indent level) thể hiện quan hệ CHA-CON
+    trong cấu trúc dữ liệu
+
+THÊM ĐỊA CHỈ IP MỚI VÀO FILE YAML (VIM)
+────────────────────────────────────────────────────────────────
+
+  • Copy dòng địa chỉ hiện có:
+      yy    (copy dòng - "yank")
+
+  • Dán dòng vừa copy:
+      p     (paste)
+
+  • Chỉnh sửa dòng mới dán:
+      i     (chuyển sang chế độ Insert để sửa)
+      → Đổi thành: 192.168.2.201/24
+
+  • LƯU Ý: cố tình dùng địa chỉ KHÁC với địa chỉ TRANSIENT đã đặt ở
+    bài trước (192.168.1.1), để MINH HỌA RÕ mối quan hệ giữa cấu
+    hình PERSISTENT và TRANSIENT
+
+KIỂM TRA CẤU HÌNH AN TOÀN VỚI NETPLAN TRY
+────────────────────────────────────────────────────────────────
+
+  • Lệnh:
+      sudo netplan try
+
+      - Có thể thêm tùy chọn TIMEOUT nếu muốn, mặc định là 120 GIÂY
+
+  • QUAN TRỌNG: sau khi chạy, hệ thống sẽ CHỜ XÁC NHẬN
+      - Nếu KHÔNG NHẤN ENTER trong 120 giây → TỰ ĐỘNG ROLLBACK (khôi
+        phục cấu hình CŨ)
+      - Đây là cơ chế BẢO VỆ CỰC KỲ QUAN TRỌNG khi làm việc TỪ XA
+        (remote), tránh trường hợp:
+          "Cấu hình sai lúc 3 giờ sáng, mất kết nối, phải lái xe
+          đến tận nơi để sửa" - hệ thống sẽ TỰ PHỤC HỒI sau 2 phút
+
+  • Kiểm tra bằng CỬA SỔ TERMINAL THỨ 2 (đang mở sẵn cho ubuntu1):
+      ip -4 address show enp0s8
+
+      → THẤY cấu hình MỚI đã áp dụng: 101 và 201
+
+  • Để TEST rollback: KHÔNG NHẤN ENTER, chờ hết 120 giây
+      → Sau khi hết giờ, kiểm tra lại:
+            ip -4 address show enp0s8
+
+      → XÁC NHẬN: đã ROLLBACK về CHỈ CÒN địa chỉ 101 (cấu hình gốc)
+      → LƯU Ý QUAN TRỌNG: địa chỉ TRANSIENT (1.1) đã cấu hình trước
+        đó CŨNG BỊ MẤT LUÔN, vì hệ thống áp dụng LẠI cấu hình GỐC
+        (không có ghi nhận gì về cấu hình transient)
+
+ÁP DỤNG CẤU HÌNH CHÍNH THỨC VỚI NETPLAN APPLY
+────────────────────────────────────────────────────────────────
+
+  • Vì đã HÀI LÒNG với cấu hình (201 hoạt động tốt trong lúc try),
+    chỉ cần dùng lại lệnh cũ (mũi tên lên) và đổi "try" thành "apply":
+      sudo netplan apply
+
+  • Kết quả: áp dụng NGAY LẬP TỨC và VĨNH VIỄN
+      - Kiểm tra lại: thấy CẢ 101 VÀ 201 đều có mặt
+
+KIỂM TRA TÍNH PERSISTENT BẰNG REBOOT
+────────────────────────────────────────────────────────────────
+
+  • Reboot hệ thống ubuntu1:
+      sudo reboot
+
+  • TRONG LÚC ubuntu1 đang khởi động lại, chuyển sang làm việc trên
+    ubuntu2:
+
+CẤU HÌNH TƯƠNG TỰ TRÊN UBUNTU2
+────────────────────────────────────────────────────────────────
+
+  • Mở file cấu hình:
+      sudo vim /etc/netplan/50-vagrant.yaml
+
+  • Nội dung file TƯƠNG TỰ, chỉ khác ĐỊA CHỈ IP
+
+  • Copy/paste dòng địa chỉ (yy, p), sửa thành:
+      192.168.2.202/24
+
+  • Áp dụng NGAY (không cần try, vì đã hiểu rõ cách hoạt động):
+      sudo netplan apply
+
+  • Kết quả: cấu hình mới có hiệu lực NGAY LẬP TỨC trên ubuntu2
+
+  • KHÔNG reboot ubuntu2 lần này (chỉ demo áp dụng trực tiếp)
+
+QUAY LẠI UBUNTU1 VÀ XÁC NHẬN SAU REBOOT
+────────────────────────────────────────────────────────────────
+
+  • Kết nối SSH lại vào ubuntu1 (sau khi đã khởi động lại xong):
+      vagrant ssh ubuntu1
+
+  • Kiểm tra kết nối bằng ping đến ubuntu2:
+      ping 192.168.2.202
+
+      → THÀNH CÔNG, nhận được phản hồi
+      → XÁC NHẬN: cả 2 hệ thống đều có địa chỉ trên CÙNG MẠNG
+        192.168.2.0/24 và GIAO TIẾP được với nhau
+      → CHỨNG MINH: cấu hình trên ubuntu1 ĐÃ ĐƯỢC GIỮ NGUYÊN (persist)
+        sau khi reboot
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Qua bài thực hành đầy đủ này, ta đã:
+    - Hiểu và sử dụng netplan info, netplan ip leases để xem thông
+      tin DHCP
+    - Chỉnh sửa file YAML để thêm địa chỉ IP TĨNH mới
+    - Sử dụng netplan try để KIỂM TRA AN TOÀN cấu hình TRƯỚC KHI áp
+      dụng chính thức, với cơ chế ROLLBACK TỰ ĐỘNG sau 120 giây nếu
+      không xác nhận
+    - Áp dụng cấu hình VĨNH VIỄN bằng netplan apply
+    - XÁC NHẬN THÀNH CÔNG tính PERSISTENT của cấu hình bằng cách
+      REBOOT hệ thống và kiểm tra kết nối vẫn hoạt động bình thường
+
+  Netplan try là công cụ CỰC KỲ QUAN TRỌNG trong công việc quản trị
+  hệ thống THỰC TẾ, đặc biệt khi làm việc TỪ XA, giúp TRÁNH RỦI RO
+  bị KHÓA KẾT NỐI hoàn toàn do lỗi cấu hình.
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Tóm tắt lại toàn bộ nội dung đã học trong module này.
+────────────────────────────────────────────────────────────────

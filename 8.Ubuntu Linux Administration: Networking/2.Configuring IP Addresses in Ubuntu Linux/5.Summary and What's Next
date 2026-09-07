@@ -1,0 +1,48 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                     SUMMARY AND WHAT'S NEXT                                  ║
+║                 (Tổng Kết Và Nội Dung Tiếp Theo)                             ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Tổng kết Module 1 - Cấu hình địa chỉ IP
+  Mục tiêu   : Điểm lại kiến thức đã học trong module đầu tiên
+
+NỘI DUNG ĐÃ HỌC
+────────────────────────────────────────────────────────────────
+
+  • Cấu hình địa chỉ IP trên Ubuntu 20.04
+
+  • Lệnh ip
+      - Công cụ CHÍNH, HIỆN ĐẠI để quản lý địa chỉ IP
+      - Nên TẬP TRUNG học và sử dụng lệnh này
+
+  • Lệnh ifconfig
+      - Công cụ LEGACY (cũ), đã bị đánh dấu LỖI THỜI (deprecated)
+      - Vẫn có thể cài đặt (qua package net-tools) nếu cần dùng,
+        nhưng KHÔNG NÊN là trọng tâm học tập
+
+  • Netplan
+      - Công cụ giúp LƯU TRỮ BỀN VỮNG (persist) cấu hình IP
+      - Cấu hình được lưu trong các file YAML
+
+  • LƯU Ý VỀ YAML
+      - File YAML sử dụng THỤT LỀ (indentation) để thể hiện MỐI
+        QUAN HỆ giữa các KEY và VALUE
+      - Cần cẩn thận với khoảng trắng khi chỉnh sửa các file này
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Module đầu tiên đã hoàn thành, trang bị nền tảng về:
+    - Đọc và cấu hình địa chỉ IP TẠM THỜI bằng lệnh ip
+    - Cấu hình địa chỉ IP BỀN VỮNG bằng Netplan và file YAML
+    - Hiểu lý do nên ưu tiên lệnh ip thay vì ifconfig
+
+
+────────────────────────────────────────────────────────────────
+Module tiếp theo: Cấu Hình Hostname Và Phân Giải Hostname Trong
+Ubuntu Linux (Hostnames and Hostname Resolution)
+────────────────────────────────────────────────────────────────

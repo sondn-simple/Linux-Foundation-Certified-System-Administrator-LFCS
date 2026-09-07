@@ -1,0 +1,109 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║             UNDERSTANDING PERSISTENT IP ADDRESSES                            ║
+║           (Hiểu Về Địa Chỉ IP Bền Vững - Persistent)                        ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Cấu hình địa chỉ IP BỀN VỮNG (persistent) bằng
+               Netplan trên Ubuntu 20.04
+  Mục tiêu   : Giới thiệu Netplan, file YAML, và các lệnh quản lý
+
+TẠI SAO CẦN CẤU HÌNH PERSISTENT?
+────────────────────────────────────────────────────────────────
+
+  • Hầu hết các trường hợp CẦN địa chỉ IP GIỮ NGUYÊN sau khi reboot
+  • Trên Ubuntu 20.04, việc này được quản lý bằng NETPLAN
+
+VỊ TRÍ VÀ ĐỊNH DẠNG FILE CẤU HÌNH
+────────────────────────────────────────────────────────────────
+
+  • Vị trí lưu trữ: /etc/netplan/
+  • Định dạng file: YAML
+  • Lệnh quản lý chính: netplan
+
+CÁC LỆNH KIỂM TRA NETPLAN
+────────────────────────────────────────────────────────────────
+
+  • Xem thông tin tổng quan về khả năng của netplan:
+      netplan info
+
+  • Xem thông tin DHCP LEASE (địa chỉ được cấp động):
+      netplan ip <interface>
+
+      - Áp dụng cho interface dùng DHCP (vd: enp0s3)
+      - Cho biết:
+          • Địa chỉ IP đã được CẤP
+          • THỜI GIAN cấp (lease time)
+          • THỜI ĐIỂM cần GIA HẠN (renew)
+
+CẤU HÌNH ĐỊA CHỈ TĨNH (STATIC) CHO ENP0S8
+────────────────────────────────────────────────────────────────
+
+  • File cấu hình sử dụng: /etc/netplan/50-vagrant.yaml
+
+  • Cấu trúc file YAML:
+      - Định nghĩa cho Ethernet interfaces
+      - Có mục cấu hình cho enp0s8
+      - Địa chỉ IP được khai báo dưới dạng LIST (danh sách)
+          - Mỗi phần tử LIST bắt đầu bằng DẤU GẠCH NGANG (-)
+
+  • Ví dụ thêm địa chỉ IP MỚI vào danh sách:
+      addresses:
+        - 192.168.56.101/24    (địa chỉ GỐC, đã có sẵn)
+        - 192.168.2.201/24     (địa chỉ MỚI được thêm vào)
+
+  • LƯU Ý QUAN TRỌNG: cố tình dùng địa chỉ KHÁC với địa chỉ đã cấu
+    hình TẠM THỜI (transient) ở bài trước (192.168.1.1)
+      - MỤC ĐÍCH: để CHỨNG MINH tính PERSISTENT (bền vững) sau khi
+        reboot
+      - Sau khi reboot: SẼ MẤT địa chỉ TẠM THỜI (1.1), NHƯNG SẼ CÓ
+        địa chỉ MỚI (2.201) từ cấu hình Netplan
+
+CÁC LỆNH ÁP DỤNG CẤU HÌNH NETPLAN
+────────────────────────────────────────────────────────────────
+
+  • netplan try
+      - Áp dụng cấu hình NGAY LẬP TỨC, nhưng CHỈ TRONG 2 PHÚT
+      - Nếu KHÔNG XÁC NHẬN (accept) trong 2 phút → TỰ ĐỘNG ROLLBACK
+        (khôi phục lại cấu hình CŨ)
+      - CỰC KỲ HỮU ÍCH: nếu lỡ CẤU HÌNH SAI làm MẤT KẾT NỐI MẠNG,
+        hệ thống sẽ TỰ ĐỘNG khôi phục lại sau 2 phút, TRÁNH bị KHÓA
+        HOÀN TOÀN khỏi hệ thống
+
+  • netplan apply
+      - Áp dụng cấu hình NGAY và VĨNH VIỄN (không có cơ chế rollback
+        tự động)
+      - Dùng khi ĐÃ CHẮC CHẮN cấu hình là ĐÚNG
+
+LƯU Ý VỀ ĐỊNH DẠNG YAML
+────────────────────────────────────────────────────────────────
+
+  • YAML biểu diễn cấu trúc dữ liệu bằng THỤT LỀ (indentation) dùng
+    KHOẢNG TRẮNG (whitespace)
+
+  • QUAN TRỌNG:
+      - Khoảng trắng có Ý NGHĨA và ẢNH HƯỞNG trực tiếp đến cấu trúc
+      - PHẢI dùng ĐÚNG MỨC THỤT LỀ (số khoảng trắng nhất quán)
+      - TUYỆT ĐỐI KHÔNG dùng TAB trong file YAML (sẽ gây lỗi cấu
+        trúc)
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Đây là phần giới thiệu tổng quan về Netplan - công cụ quản lý cấu
+  hình mạng BỀN VỮNG trên Ubuntu 20.04, bao gồm:
+    - Vị trí file cấu hình (YAML trong /etc/netplan/)
+    - Cách xem thông tin (netplan info, netplan ip)
+    - Cách áp dụng cấu hình an toàn với netplan try (có rollback
+      tự động sau 2 phút) hoặc chắc chắn với netplan apply
+    - Lưu ý quan trọng về cú pháp YAML (thụt lề bằng khoảng trắng,
+      không dùng tab)
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Thực hành trực tiếp trên dòng lệnh để cấu hình địa chỉ
+IP tĩnh bằng Netplan.
+────────────────────────────────────────────────────────────────
