@@ -1,0 +1,72 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                              SUMMARY                                         ║
+║                  (Tổng Kết Module OpenLDAP Directory Services)              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Tổng kết toàn bộ module về Directory Services
+  Mục tiêu   : Điểm lại kiến thức đã học và kết thúc khóa học
+
+VỀ DIRECTORY SERVICES
+────────────────────────────────────────────────────────────────
+
+  • Directory service có thể là:
+      • OpenLDAP     (trọng tâm của module này)
+      • Active Directory (có thể tích hợp tương tự)
+
+  • Module tập trung vào 389-ds
+      - Là một WRAPPER (lớp bọc) xung quanh OpenLDAP
+      - Giúp việc QUẢN LÝ đơn giản hơn, THÂN THIỆN với quản trị
+        viên hơn
+
+CỔNG KẾT NỐI LDAP
+────────────────────────────────────────────────────────────────
+
+  • LDAP (clear text - không mã hóa):
+      • TCP port 389
+
+  • LDAPS (secure - mã hóa):
+      • TCP port 636 (mặc định)
+
+VẤN ĐỀ HOME DIRECTORY VỚI TÀI KHOẢN CHIA SẺ
+────────────────────────────────────────────────────────────────
+
+  • Khi dùng TÀI KHOẢN DÙNG CHUNG (shared accounts) trong directory
+    service, LÝ TƯỞNG NHẤT là cũng nên có THƯ MỤC HOME DÙNG CHUNG
+
+  • Giải pháp 1: TẬP TRUNG HÓA qua NFS
+      - Trên LDAP client: mount thư mục export home
+      - Trỏ đến NFS SHARE trên FILE SERVER TẬP TRUNG
+      - ƯU ĐIỂM: NỘI DUNG NHẤT QUÁN dù đăng nhập từ hệ thống nào,
+        vì home directory THỰC SỰ được CHIA SẺ
+
+  • Giải pháp 2: TẠO HOME DIRECTORY RIÊNG khi đăng nhập
+      - Trên hệ thống RED HAT-based: dùng oddjob
+      - Trên Ubuntu: dùng pam_mkhomedir (đã thực hành trong module)
+      - Mỗi hệ thống sẽ tự tạo home directory RIÊNG cho user
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Module này đã trang bị đầy đủ kiến thức để:
+    - Triển khai 389-ds (wrapper của OpenLDAP)
+    - Hiểu về các cổng kết nối LDAP/LDAPS
+    - Cấu hình SSSD để xác thực trên CẢ Ubuntu lẫn Rocky Linux
+    - Giải quyết vấn đề home directory (qua NFS hoặc pam_mkhomedir/
+      oddjob)
+    - Khắc phục sự KHÔNG NHẤT QUÁN về shell qua thuộc tính
+      loginShell
+
+  Hy vọng bạn đã có được nền tảng vững chắc để bắt đầu triển khai
+  directory services trong chính tổ chức của mình.
+
+
+────────────────────────────────────────────────────────────────
+Chúc mừng bạn đã hoàn thành TOÀN BỘ khóa học
+"LFCS Additional User Topics"!
+Cảm ơn bạn rất nhiều vì đã dành thời gian và công sức đầu tư vào
+việc học tập qua các khóa học này.
+────────────────────────────────────────────────────────────────

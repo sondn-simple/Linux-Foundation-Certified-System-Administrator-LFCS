@@ -1,0 +1,207 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║          IMPLEMENTING LDAP AUTHENTICATION ON UBUNTU                          ║
+║        (Thực Hành: Triển Khai Xác Thực LDAP Trên Ubuntu)                    ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Cấu hình SSSD để Ubuntu xác thực qua LDAP directory
+  Hệ thống   : ubuntu1 (đồng thời là LDAP server)
+  Mục tiêu   : Thực hành đầy đủ từ cài đặt package đến đăng nhập
+               thành công bằng tài khoản Alice từ directory
+
+XÁC NHẬN VẤN ĐỀ BAN ĐẦU: TÀI KHOẢN CHƯA ĐƯỢC CHIA SẺ
+────────────────────────────────────────────────────────────────
+
+  • Dù ubuntu1 CHÍNH LÀ máy chạy LDAP server, nhưng KHÔNG có nghĩa
+    là máy này TỰ ĐỘNG dùng được các tài khoản trong directory
+
+  • Kiểm tra database password hiện tại:
+      getent passwd
+
+      → Vẫn CHỈ hiển thị nội dung từ /etc/passwd LOCAL, KHÔNG có
+        tài khoản từ LDAP
+
+  • Kết luận: CẦN cấu hình LDAP CLIENT (ngay cả trên chính LDAP
+    server) để có thể xác thực qua directory service
+
+CÀI ĐẶT PACKAGE CẦN THIẾT
+────────────────────────────────────────────────────────────────
+
+  • Nâng quyền root (vì sẽ làm việc nhiều với quyền root)
+
+  • Cài đặt:
+      sudo apt install sssd-ldap ldap-utils
+
+      - sssd-ldap  : dịch vụ xác thực tập trung (System Security
+                      Services Daemon với hỗ trợ LDAP)
+      - ldap-utils  : các công cụ LDAP cơ bản (có thể ĐÃ CÀI SẴN
+                       nếu đang dùng máy này làm LDAP server, nhưng
+                       trên máy KHÁC/SẠCH thì CẦN cài thêm)
+
+TẠO FILE CẤU HÌNH SSSD.CONF
+────────────────────────────────────────────────────────────────
+
+  • Tạo file mới:
+      sudo nano /etc/sssd/sssd.conf
+
+  • Có thể LẤY SẴN nội dung từ Git repository của khóa học:
+      Đường dẫn: lfcs/additional_user/sssd.conf
+
+  • Giải thích các thành phần cấu hình chính:
+
+      [sssd]
+      domains = default
+          → Đặt tên domain là "default", được tham chiếu ở phần
+            cấu hình chính của SSSD (chỉ định domain nào được PHÉP
+            dùng cho dịch vụ)
+
+      [domain/default]
+      id_provider = ldap
+          → Dùng LDAP làm IDENTITY PROVIDER (nguồn định danh)
+
+      autofs_provider = ldap
+          → Dùng LDAP cho AUTOFS (tự động mount, nếu có cấu hình
+            mount points lưu trong LDAP directory)
+
+      auth_provider = ldap
+      chpass_provider = ldap
+          → Dùng LDAP cho cả XÁC THỰC (auth) VÀ THAY ĐỔI MẬT KHẨU
+            (chpass/password provision)
+
+      ldap_uri = ldap://ubuntu1
+          → URL kết nối. LÝ TƯỞNG nên dùng LDAPS thay vì LDAP thường
+
+      ldap_search_base = dc=example,dc=com
+          → Base DN để tìm kiếm, giống ví dụ đã dùng trước đó
+
+      ldap_id_use_start_tls = false
+          → false : KHÔNG tự động nâng cấp kết nối LDAP thường lên
+            LDAPS
+
+      ldap_tls_cacertdir = /etc/ssl/certs
+          → Chỉ định thư mục chứa CHỨNG CHỈ CA (Certificate
+            Authority)
+
+      cache_credentials = true
+          → RẤT HỮU ÍCH cho USER DI ĐỘNG (mobile users): sau khi
+            đã xác thực thành công 1 lần trong văn phòng, thông tin
+            đăng nhập được LƯU CACHE cục bộ, giúp user vẫn đăng
+            nhập được kể cả khi MẤT KẾT NỐI mạng
+
+      ldap_tls_reqcert = never
+          → Tương tự cấu hình đã làm với ldap.conf trước đây: BỎ
+            QUA việc kiểm tra chứng chỉ nếu dùng self-signed
+            certificate
+
+      [nss]
+      homedir_substring = /home
+          → Chỉ định đường dẫn nơi lưu trữ home directory
+
+  • ĐIỂM QUAN TRỌNG: file cấu hình này có thể TÁI SỬ DỤNG (dùng
+    CHUNG) trên NHIỀU hệ thống khác nhau (cả Ubuntu lẫn Rocky Linux)
+
+BẢO MẬT FILE CẤU HÌNH
+────────────────────────────────────────────────────────────────
+
+  • Đặt quyền RIÊNG TƯ cho file, chỉ ROOT được đọc/ghi:
+      sudo chmod 600 /etc/sssd/sssd.conf
+
+      - LƯU Ý QUAN TRỌNG: nếu KHÔNG đặt đúng quyền này, dịch vụ
+        SSSD SẼ KHÔNG KHỞI ĐỘNG ĐƯỢC (fail to start)
+
+KHỞI ĐỘNG LẠI VÀ KIỂM TRA DỊCH VỤ SSSD
+────────────────────────────────────────────────────────────────
+
+  • Khởi động lại dịch vụ:
+      sudo systemctl restart sssd
+
+      → KHÔNG có lỗi hiện ra là dấu hiệu tốt
+
+  • Kiểm tra trạng thái chi tiết:
+      sudo systemctl status sssd
+
+      → Xác nhận dịch vụ đã khởi động THÀNH CÔNG (active/running)
+
+XÁC MINH KẾT NỐI ĐẾN DIRECTORY SERVICE
+────────────────────────────────────────────────────────────────
+
+  • Kiểm tra tài khoản Alice (đã tạo ở bài trước) có truy vấn được
+    không:
+      getent passwd alice
+
+      → THÀNH CÔNG: thấy thông tin Alice với UID 2000, GID 100
+      → Xác nhận: user Alice đang dùng GROUP LOCAL (GID 100 - group
+        "users" có sẵn trên hệ thống) nhưng TÀI KHOẢN đến từ DOMAIN
+        (LDAP)
+
+ĐẢM BẢO HOME DIRECTORY ĐƯỢC TỰ ĐỘNG TẠO
+────────────────────────────────────────────────────────────────
+
+  • Vì KHÔNG dùng NFS share tập trung cho Alice, cần đảm bảo home
+    directory được TẠO NGAY KHI ĐĂNG NHẬP (giống kỹ thuật đã học ở
+    module PAM)
+
+  • Thêm dòng cấu hình vào common-session:
+      echo "session optional pam_mkhomedir.so" | sudo tee -a /etc/pam.d/common-session
+
+      - session   : xảy ra SAU KHI xác thực (login session)
+      - optional  : KHÔNG quan tâm thành công/thất bại (home
+                     directory có thể đã tồn tại hoặc chưa, đều
+                     chấp nhận được)
+      - pam_mkhomedir.so : module tạo home directory tự động
+
+  • Kiểm tra file /etc/pam.d/su có tham chiếu đến common-session
+    hay không:
+      cat /etc/pam.d/su
+
+      → XÁC NHẬN: file su CÓ include common-session ở phía dưới
+      → Nghĩa là: khi dùng lệnh su, cấu hình mkhomedir vừa thêm sẽ
+        ĐƯỢC ÁP DỤNG (vì su tham chiếu chung đến common-session)
+
+KIỂM TRA CUỐI CÙNG: ĐĂNG NHẬP VỚI TÀI KHOẢN ALICE
+────────────────────────────────────────────────────────────────
+
+  • Thoát về tài khoản vagrant thông thường:
+      exit
+
+  • Thử đăng nhập full login shell với Alice:
+      su - alice
+
+      (nhập mật khẩu đã đặt cho Alice ở bài trước)
+
+  • Kết quả:
+      → Home directory /home/alice được TỰ ĐỘNG TẠO (vì trước đó
+        chưa tồn tại)
+
+  • Xác nhận đang đăng nhập đúng tài khoản:
+      whoami
+
+      → Kết quả: alice
+      → XÁC NHẬN THÀNH CÔNG: đăng nhập bằng tài khoản DÙNG CHUNG từ
+        directory service, với 1 tài khoản + 1 mật khẩu có thể dùng
+        trên NHIỀU hệ thống
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Qua bài thực hành đầy đủ này, ta đã:
+    - Cài đặt package sssd-ldap và ldap-utils
+    - Tạo và cấu hình chi tiết file /etc/sssd/sssd.conf (identity
+      provider, auth provider, TLS settings, cache credentials...)
+    - Bảo mật file cấu hình đúng cách (chmod 600) - điều kiện BẮT
+      BUỘC để SSSD hoạt động
+    - Khởi động và xác minh dịch vụ SSSD hoạt động thành công
+    - Xác nhận truy vấn được tài khoản LDAP qua getent passwd
+    - Đảm bảo home directory tự động được tạo qua pam_mkhomedir
+    - THÀNH CÔNG đăng nhập bằng tài khoản chia sẻ Alice từ LDAP
+      directory, chứng minh mô hình "1 tài khoản, 1 mật khẩu, dùng
+      trên nhiều hệ thống" đã hoạt động
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Cấu hình tương tự trên hệ thống Rocky Linux để xác nhận
+tài khoản LDAP có thể dùng chung giữa CẢ HAI distro khác nhau.
+────────────────────────────────────────────────────────────────

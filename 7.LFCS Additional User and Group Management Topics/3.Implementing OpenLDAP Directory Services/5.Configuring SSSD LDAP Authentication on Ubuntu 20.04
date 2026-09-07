@@ -1,0 +1,96 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║      CONFIGURING SSSD LDAP AUTHENTICATION ON UBUNTU 20.04                    ║
+║   (Cấu Hình Xác Thực SSSD LDAP Trên Ubuntu 20.04)                            ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Cấu hình xác thực SSSD LDAP để kết nối Ubuntu vào
+               389-ds directory server
+  Mục tiêu   : Giới thiệu tổng quan trước khi thực hành trên dòng
+               lệnh
+
+LDAP CÓ THỂ DÙNG CHO NHIỀU MỤC ĐÍCH
+────────────────────────────────────────────────────────────────
+
+  • Directory service CÓ THỂ hoạt động như ứng dụng "WHITE PAGES"
+    (danh bạ)
+      - Người dùng tìm kiếm thông tin: số điện thoại, số máy lẻ,...
+      - KHÔNG BẮT BUỘC phải dùng cho xác thực
+
+  • Tuy nhiên, THƯỜNG được dùng cho AUTHENTICATION (xác thực)
+      - Xác thực user Linux
+      - Xác thực user vào database server, web server
+      - Lưu trữ thông tin user VÀ credentials liên quan tại MỘT NƠI
+
+VẤN ĐỀ VỀ HOME DIRECTORY KHI DÙNG LDAP
+────────────────────────────────────────────────────────────────
+
+  • QUAN TRỌNG: Tạo user trong LDAP KHÔNG TỰ ĐỘNG tạo home
+    directory tương ứng
+      - Ngay cả khi tạo trên chính directory server
+
+  • Cần chọn 1 trong 2 CÁCH TIẾP CẬN:
+
+      1. TẬP TRUNG HÓA (Centralized) home directory qua NFS share
+          - Ví dụ: tạo /export/home trên mỗi máy client, mount vào
+            home directory chính từ NFS server
+          - ƯU ĐIỂM: user đăng nhập từ BẤT KỲ hệ thống nào cũng
+            truy cập được CÙNG nội dung home directory
+          - LÝ TƯỞNG nếu muốn 1 tài khoản + 1 mật khẩu + 1 bộ dữ
+            liệu ĐỒNG BỘ trên mọi máy
+
+      2. TẠO HOME DIRECTORY RIÊNG trên từng máy khi đăng nhập
+          - Dùng oddjob hoặc pam_mkhomedir (đã học ở module PAM)
+          - Mỗi hệ thống sẽ có home directory RIÊNG cho từng user
+          - HOẠT ĐỘNG TỐT, cho user CÓ nơi lưu trữ
+          - NHƯỢC ĐIỂM: nội dung KHÔNG được ĐỒNG BỘ giữa các máy
+
+CÁC BƯỚC CẤU HÌNH TỔNG QUAN (SẼ THỰC HÀNH CHI TIẾT SAU)
+────────────────────────────────────────────────────────────────
+
+  1. Cài đặt các package cần thiết trên Ubuntu
+
+  2. Tạo và chỉnh sửa file cấu hình sssd.conf
+      - Có thể copy từ Git repository của khóa học
+      - File này PHẢI được bảo mật RIÊNG TƯ, chỉ ROOT mới đọc được
+        (thao tác với quyền root)
+
+  3. Khởi động lại dịch vụ SSSD
+      - Kiểm tra trạng thái "successful" sau khi restart
+
+  4. Kiểm tra database password đã kết nối LDAP:
+      - Không chỉ tra cứu /etc/passwd nữa
+      - Mà còn REDIRECT qua directory service
+      - Có thể thấy thông tin user Alice (đã tạo ở bài trước) xuất
+        hiện
+
+  5. Đảm bảo home directory được tạo tự động:
+      - Dùng echo để APPEND cấu hình vào common-session (giống kỹ
+        thuật pam_mkhomedir đã học ở module PAM)
+
+  6. Đăng nhập thử với user Alice bằng lệnh su:
+      - Home directory sẽ được TỰ ĐỘNG TẠO vì chưa tồn tại
+      - Xác nhận: user Alice giờ có thể đăng nhập bằng TÀI KHOẢN
+        DÙNG CHUNG từ directory service
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Đây là phần giới thiệu tổng quan trước khi đi vào thực hành chi
+  tiết. Các điểm cần nhớ:
+    - LDAP không chỉ dùng cho xác thực mà còn có thể là "danh bạ"
+      thông tin
+    - Tạo user LDAP KHÔNG tự động tạo home directory
+    - Cần chọn giữa NFS share (đồng bộ) hoặc pam_mkhomedir (riêng
+      từng máy) để giải quyết vấn đề home directory
+    - Quy trình gồm: cài package → cấu hình sssd.conf → restart
+      SSSD → kiểm tra → đảm bảo home directory được tạo
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Thực hành trực tiếp trên dòng lệnh để cấu hình SSSD
+LDAP authentication trên Ubuntu 20.04.
+────────────────────────────────────────────────────────────────

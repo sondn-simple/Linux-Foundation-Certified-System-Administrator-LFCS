@@ -1,0 +1,141 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║   CONFIGURING SSSD LDAP AUTHENTICATION ON ROCKY LINUX 9                       ║
+║   (Thực Hành: Cấu Hình Xác Thực SSSD LDAP Trên Rocky Linux 9)                ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Cấu hình Rocky Linux 9 xác thực qua CÙNG một LDAP
+               directory service đã dùng cho Ubuntu
+  Mục tiêu   : Chứng minh khả năng CHIA SẺ tài khoản giữa các
+               distro khác nhau
+
+Ý NGHĨA CỦA VIỆC DÙNG DIRECTORY SERVICE
+────────────────────────────────────────────────────────────────
+
+  • Đây chính là điểm MẠNH của OpenLDAP: CHIA SẺ tài khoản giữa
+    NHIỀU hệ thống, KHÔNG PHÂN BIỆT distro
+      - Cùng 1 tài khoản Alice đã tạo trước đó có thể dùng CHO CẢ
+        Ubuntu LẪN Rocky Linux
+
+QUY TRÌNH TRÊN ROCKY LINUX - TƯƠNG TỰ NHƯNG CÓ ĐIỂM KHÁC
+────────────────────────────────────────────────────────────────
+
+  • Cài đặt package cần thiết:
+      sudo yum install openldap-clients sssd sssd-ldap oddjob \
+        oddjob-mkhomedir vim git
+
+      - openldap-clients   : tương đương ldap-utils trên Ubuntu
+      - sssd, sssd-ldap     : giống Ubuntu
+      - oddjob, oddjob-mkhomedir : CƠ CHẾ TẠO HOME DIRECTORY riêng
+                                    của hệ thống RED HAT-BASED
+                                    (KHÁC với pam_mkhomedir dùng
+                                    trên Ubuntu)
+      - vim                 : text editor để chỉnh sửa file
+      - git                 : để clone repository lấy file cấu hình
+
+CẤU HÌNH AUTHENTICATION VỚI AUTHSELECT
+────────────────────────────────────────────────────────────────
+
+  • Trên hệ thống RED HAT-based, có công cụ ĐƠN GIẢN HÓA việc cấu
+    hình gọi là authselect
+
+  • Xem các profile hiện có:
+      authselect list
+
+      → Sau khi cài SSSD, thấy có profile "sssd" khả dụng
+      → Lệnh này chạy được với USER THƯỜNG (không cần sudo)
+
+  • Chọn và kích hoạt profile SSSD, KÈM tính năng mkhomedir:
+      sudo authselect select sssd with-mkhomedir --force
+
+      - select sssd          : chọn profile xác thực SSSD
+      - with-mkhomedir        : BẬT KÈM tính năng tạo home
+                                 directory tự động
+      - --force               : ghi đè cấu hình hiện có nếu cần
+
+  • Sau khi chọn, hệ thống sẽ HIỂN THỊ HƯỚNG DẪN cần enable dịch vụ
+    oddjob (thường tự in ra lệnh gợi ý ngay trên màn hình):
+      sudo systemctl enable --now oddjobd
+
+      - Chỉ cần thêm "sudo" vào trước lệnh được gợi ý và copy/paste
+        chạy lại
+
+CẤU HÌNH SSSD.CONF - DÙNG LẠI FILE TỪ UBUNTU
+────────────────────────────────────────────────────────────────
+
+  • Clone Git repository của khóa học (nếu chưa có):
+      git clone https://github.com/urbanpenguin/lfcs
+
+  • Copy file cấu hình sssd.conf từ repository sang vị trí đúng:
+      sudo cp lfcs/additional_user/sssd.conf /etc/sssd/sssd.conf
+
+      - ĐIỂM QUAN TRỌNG: đây LÀ file cấu hình Y HỆT đã dùng trên
+        Ubuntu - MINH CHỨNG rằng 1 file cấu hình CÓ THỂ DÙNG CHUNG
+        cho nhiều hệ thống/distro khác nhau
+
+  • Đặt quyền bảo mật cho file (giống bước trên Ubuntu):
+      sudo chmod 600 /etc/sssd/sssd.conf
+
+      (có thể dùng Esc + . để lấy lại đường dẫn file vừa gõ)
+
+KHỞI ĐỘNG LẠI VÀ KIỂM TRA SSSD
+────────────────────────────────────────────────────────────────
+
+  • Khởi động lại dịch vụ:
+      sudo systemctl restart sssd
+
+  • Kiểm tra tài khoản Alice qua getent:
+      getent passwd alice
+
+      → THÀNH CÔNG: hiển thị thông tin tài khoản Alice từ directory
+        service (giống kết quả đã thấy trên Ubuntu)
+
+KIỂM TRA CUỐI CÙNG: ĐĂNG NHẬP VỚI ALICE
+────────────────────────────────────────────────────────────────
+
+  • Chuyển sang tài khoản Alice:
+      su - alice
+
+      (nhập MẬT KHẨU đã đặt cho Alice từ trước - VẪN LÀ mật khẩu
+      DUY NHẤT, dùng chung trên cả 2 hệ thống)
+
+  • Kết quả:
+      - Home directory của Alice được TỰ ĐỘNG TẠO trên Rocky Linux
+        (thông qua oddjob, KHÔNG PHẢI pam_mkhomedir như Ubuntu)
+      - Đăng nhập THÀNH CÔNG với tài khoản Alice
+
+SO SÁNH: UBUNTU vs ROCKY LINUX
+────────────────────────────────────────────────────────────────
+
+  │ Thành phần          │ Ubuntu              │ Rocky Linux         │
+  ├─────────────────────┼─────────────────────┼─────────────────────┤
+  │ LDAP client tools    │ ldap-utils          │ openldap-clients    │
+  │ Tạo home directory   │ pam_mkhomedir       │ oddjob + oddjob-    │
+  │                      │ (qua common-session) │  mkhomedir          │
+  │                      │                      │ (qua authselect)    │
+  │ File cấu hình SSSD   │ /etc/sssd/sssd.conf │ /etc/sssd/sssd.conf │
+  │                      │ (GIỐNG HỆT NHAU - dùng chung 1 file)      │
+  │ Tài khoản dùng chung │ Alice (từ LDAP)                            │
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Qua bài thực hành này, ta đã CHỨNG MINH THÀNH CÔNG khả năng CỐT
+  LÕI của directory service (OpenLDAP/389-ds):
+    - MỘT tài khoản (Alice) + MỘT mật khẩu
+    - Dùng được trên NHIỀU hệ thống khác nhau (Ubuntu VÀ Rocky
+      Linux), dù cơ chế tạo home directory và công cụ hỗ trợ khác
+      nhau giữa 2 distro (pam_mkhomedir vs oddjob)
+    - Đây chính là GIÁ TRỊ THỰC SỰ của việc triển khai directory
+      service: TẬP TRUNG HÓA quản lý tài khoản trên toàn bộ hạ tầng
+      (estate), bất kể sự khác biệt về distro
+
+
+────────────────────────────────────────────────────────────────
+Đây là bài thực hành cuối cùng của module OpenLDAP. Module này đã
+hoàn thành mục tiêu triển khai directory service và xác thực xuyên
+suốt nhiều hệ thống Linux khác nhau.
+────────────────────────────────────────────────────────────────

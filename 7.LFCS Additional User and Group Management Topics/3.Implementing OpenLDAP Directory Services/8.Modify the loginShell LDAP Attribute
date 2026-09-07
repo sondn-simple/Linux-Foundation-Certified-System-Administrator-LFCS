@@ -1,0 +1,122 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║           MODIFY THE LOGINSHELL LDAP ATTRIBUTE                               ║
+║        (Thực Hành: Sửa Thuộc Tính loginShell Trong LDAP)                     ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Khắc phục sự KHÔNG NHẤT QUÁN về shell mặc định giữa
+               các hệ thống bằng cách thiết lập loginShell trong LDAP
+  Mục tiêu   : Đảm bảo trải nghiệm SHELL ĐỒNG NHẤT khi user đăng
+               nhập từ bất kỳ hệ thống nào
+
+PHÁT HIỆN VẤN ĐỀ: SHELL KHÔNG NHẤT QUÁN
+────────────────────────────────────────────────────────────────
+
+  • Trên Rocky Linux 9:
+      su - alice
+
+      → Nhận được PROMPT BASH TIÊU CHUẨN
+      → Dùng phím MŨI TÊN LÊN xem lại lịch sử lệnh HOẠT ĐỘNG BÌNH
+        THƯỜNG
+      → Đây là shell TƯƠNG TÁC TỐT như mong đợi
+
+  • Trên Ubuntu (làm với quyền root):
+      su - alice
+
+      → Prompt trông KHÁC, ĐƠN GIẢN HƠN
+      → Dùng phím MŨI TÊN LÊN chỉ hiện ra KÝ TỰ ESCAPE (không hoạt
+        động như mong đợi)
+      → NGUYÊN NHÂN: đang chạy shell BOURNE (đơn giản), KHÔNG PHẢI
+        BASH
+
+  • VẤN ĐỀ: sự KHÔNG NHẤT QUÁN này sẽ gây KHÓ CHỊU và BỐI RỐI cho
+    người dùng khi chuyển đổi giữa các hệ thống khác nhau
+
+GIẢI PHÁP: THIẾT LẬP LOGINSHELL TRONG DIRECTORY
+────────────────────────────────────────────────────────────────
+
+  • Thay vì phụ thuộc vào SHELL MẶC ĐỊNH khác nhau của từng hệ
+    thống khách (guest system), ta có thể cấu hình SHELL CỐ ĐỊNH
+    NGAY TRONG DIRECTORY SERVICE
+
+  • Tương tự cách tài khoản LOCAL có thể cấu hình login shell, ta
+    cũng có thể làm điều đó với tài khoản LDAP
+
+XEM THÔNG TIN CHI TIẾT USER VỚI DSIDM
+────────────────────────────────────────────────────────────────
+
+  • Đảm bảo đang đăng nhập với quyền ROOT (để dùng file .dsrc đã
+    cấu hình sẵn từ trước)
+
+  • Xem chi tiết thông tin của user alice:
+      dsidm localhost user get alice
+
+      - Khác với "user list" (chỉ liệt kê TÊN), lệnh "user get" cho
+        xem ĐẦY ĐỦ CÁC ATTRIBUTE (thuộc tính) của user
+
+  • Kết quả: KHÔNG THẤY thuộc tính loginShell nào được thiết lập
+
+THÊM THUỘC TÍNH LOGINSHELL
+────────────────────────────────────────────────────────────────
+
+  • Lệnh chỉnh sửa (dùng "modify" thay vì "get"):
+      dsidm localhost user modify alice add loginShell /bin/bash
+
+      - modify        : chỉnh sửa user
+      - add            : vì thuộc tính loginShell CHƯA TỒN TẠI, nên
+                          dùng "add" để THÊM MỚI (không phải
+                          "replace")
+      - loginShell     : tên thuộc tính cần thêm
+      - /bin/bash       : giá trị muốn thiết lập
+
+  • Kiểm tra lại:
+      dsidm localhost user get alice
+
+      → Xác nhận: thuộc tính loginShell ĐÃ ĐƯỢC THIẾT LẬP thành
+        công với giá trị /bin/bash
+
+LƯU Ý QUAN TRỌNG: VẤN ĐỀ VỀ CACHE
+────────────────────────────────────────────────────────────────
+
+  • Dù đã sửa thành công TRONG DIRECTORY, thông tin user vẫn có thể
+    ĐANG ĐƯỢC CACHE (lưu tạm) trên client (nhớ lại cấu hình
+    cache_credentials = true đã thiết lập trong sssd.conf)
+
+  • CẦN khởi động lại dịch vụ SSSD để XÓA CACHE và LẤY LẠI thông tin
+    MỚI NHẤT từ directory:
+      sudo systemctl restart sssd
+
+      - Việc restart SSSD daemon trên LDAP CLIENT sẽ XÓA BỘ ĐỆM
+        (cache) cũ
+
+KIỂM TRA KẾT QUẢ SAU KHI KHỞI ĐỘNG LẠI
+────────────────────────────────────────────────────────────────
+
+  • Đăng nhập lại với tài khoản alice:
+      su - alice
+
+  • Kết quả: LẦN NÀY, hệ thống đã NHẬN ĐÚNG shell mặc định là
+    /bin/bash
+      → Có được shell BASH ĐẦY ĐỦ TÍNH NĂNG, TƯƠNG TÁC như mong đợi
+      → VẤN ĐỀ KHÔNG NHẤT QUÁN đã được KHẮC PHỤC HOÀN TOÀN
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Bằng cách thiết lập thuộc tính loginShell TRỰC TIẾP trong
+  DIRECTORY SERVICE (thay vì phụ thuộc vào cấu hình mặc định của
+  từng hệ thống khách), ta đảm bảo được TRẢI NGHIỆM SHELL NHẤT
+  QUÁN cho user dù họ đăng nhập từ BẤT KỲ hệ thống nào (Ubuntu hay
+  Rocky Linux). Đây là một ví dụ điển hình cho thấy SỨC MẠNH của
+  việc TẬP TRUNG HÓA cấu hình user qua directory service, giúp GIẢM
+  THIỂU sự khác biệt và tăng TRẢI NGHIỆM ĐỒNG NHẤT trên toàn bộ hạ
+  tầng hệ thống.
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Quay lại slide để tổng kết toàn bộ module về OpenLDAP
+Directory Services.
+────────────────────────────────────────────────────────────────
