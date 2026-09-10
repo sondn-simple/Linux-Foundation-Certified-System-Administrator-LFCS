@@ -1,0 +1,91 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                     SUMMARY AND WHAT'S NEXT                                  ║
+║                 (Tổng Kết Và Nội Dung Tiếp Theo)                             ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Tổng kết Module về Hostname và Name Resolution
+  Mục tiêu   : Điểm lại toàn bộ kiến thức đã học
+
+VỀ HOSTNAMECTL
+────────────────────────────────────────────────────────────────
+
+  • Có thể thiết lập PRETTY NAME chứa ký tự KHÔNG HỢP LỆ trong
+    hostname truyền thống
+
+  • Phân biệt 2 loại hostname:
+      • Transient hostname
+          - Quản lý bằng lệnh hostname TRUYỀN THỐNG
+          - CHỈ tồn tại trong bộ nhớ, KHÔNG ghi vào file cấu hình
+            back-end
+      • Static hostname
+          - Lưu tại file: /etc/hostname
+          - Bền vững qua các lần reboot
+
+VỀ DNS VÀ CỔNG KẾT NỐI
+────────────────────────────────────────────────────────────────
+
+  • DNS server lắng nghe trên CỔNG 53
+      - Có thể dùng CẢ TCP port 53 lẫn UDP port 53
+
+VỀ NSSWITCH.CONF VÀ THỨ TỰ TRA CỨU
+────────────────────────────────────────────────────────────────
+
+  • File /etc/nsswitch.conf kiểm soát THỨ TỰ tra cứu cho nhiều
+    dịch vụ, bao gồm cả hostname lookup
+
+  • Mặc định: kiểm tra LOCALHOST FILE trước, rồi mới đến DNS
+
+  • VẤN ĐỀ BẢO MẬT: dễ bị lợi dụng nếu ai đó CHÈN entry độc hại vào
+    file host
+
+  • GIẢI PHÁP: đổi thứ tự thành DNS trước, files sau
+      - NHƯNG cần LƯU Ý: DNS server BACK-END trên Ubuntu mặc định
+        VẪN đọc localhost file, nên cần cấu hình THÊM để khắc phục
+        triệt để (ReadEtcHosts=no)
+
+  • Công cụ kiểm tra: getent
+      - getent hosts : xem TOÀN BỘ database host (kể cả localhost
+        entries)
+
+VỀ RESOLVECTL VÀ SYSTEMD-RESOLVED
+────────────────────────────────────────────────────────────────
+
+  • resolvectl status
+      - Xem cấu hình RUNTIME của DNS server BACK-END trên Ubuntu 20.04
+
+  • Dịch vụ quản lý: systemd-resolved
+      - LƯU Ý QUAN TRỌNG: dịch vụ này KHÔNG TỰ LƯU TRỮ database DNS
+        nào cả
+      - Nó chỉ ĐÓNG VAI TRÒ CHUYỂN TIẾP (forward) request đến các
+        DNS SERVER TRÊN INTERNET
+
+  • File cấu hình cần chỉnh sửa:
+      /etc/systemd/resolved.conf
+
+  • QUY TRÌNH BẮT BUỘC sau khi chỉnh sửa:
+      1. Sửa file cấu hình
+      2. KHỞI ĐỘNG LẠI dịch vụ (systemctl restart
+         systemd-resolved.service)
+      3. KIỂM TRA LẠI bằng resolvectl status để xác nhận cấu hình
+         RUNTIME đã đúng như mong đợi
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Module này đã trang bị đầy đủ kiến thức về:
+    - hostnamectl và sự khác biệt giữa transient/static hostname
+    - Cổng DNS (TCP/UDP 53)
+    - Thứ tự tra cứu tên qua nsswitch.conf và vấn đề bảo mật liên
+      quan
+    - Cách quản lý và cấu hình systemd-resolved qua resolved.conf
+    - Cách kiểm tra cấu hình runtime bằng resolvectl status
+
+
+────────────────────────────────────────────────────────────────
+Module tiếp theo: Triển Khai NTP Client Trong Ubuntu Linux
+(Implementing an NTP Client)
+────────────────────────────────────────────────────────────────

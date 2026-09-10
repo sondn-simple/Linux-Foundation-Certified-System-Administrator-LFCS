@@ -1,0 +1,167 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║              CONFIGURING LLMNR ON UBUNTU 20.04                               ║
+║           (Thực Hành: Cấu Hình LLMNR Trên Ubuntu 20.04)                     ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Bật LLMNR trên cả 2 hệ thống để phân giải tên qua
+               multicast
+  Hệ thống   : ubuntu1 và ubuntu2
+  Mục tiêu   : Hiểu resolv.conf, resolvectl, và dig; thực hành bật
+               LLMNR thành công
+
+XEM CẤU HÌNH DNS CLIENT TRUYỀN THỐNG
+────────────────────────────────────────────────────────────────
+
+  • File: /etc/resolv.conf
+      - LƯU Ý CHÍNH TẢ: "resolv" KHÔNG CÓ chữ "e" (khác với
+        "resolved.conf" CÓ chữ "e")
+
+  • Xem nội dung:
+      cat /etc/resolv.conf
+
+      → Name server hiện tại: 127.0.0.53 (LOCALHOST)
+
+  • Kiểm tra cổng đang lắng nghe:
+      ss -lt
+
+      → Thấy đang LẮNG NGHE trên 127.0.0.53:53 (DNS)
+      → Có thể thêm option "-n" để hiển thị SỐ CỔNG THÔ (raw port
+        number) thay vì tên dịch vụ, sẽ thấy rõ port 53
+
+  • Kiểm tra file resolv.conf thực chất là gì:
+      ls -l /etc/resolv.conf
+
+      → Đây là SYMBOLIC LINK trỏ đến:
+          /run/systemd/resolve/stub-resolv.conf
+      → File này được TỰ ĐỘNG TẠO bởi dịch vụ systemd-resolved
+
+XEM CẤU HÌNH RUNTIME BẰNG RESOLVECTL
+────────────────────────────────────────────────────────────────
+
+  • Thay vì đọc file cấu hình, có thể xem TRỰC TIẾP trạng thái đang
+    chạy:
+      resolvectl status
+
+  • Kết quả cho thấy:
+      - CÀI ĐẶT TOÀN CỤC (global settings)
+          → LLMNR HIỆN ĐANG TẮT (off)
+      - CÀI ĐẶT RIÊNG cho từng NETWORK CARD (khi cuộn xuống)
+
+BẬT LLMNR TRÊN UBUNTU1
+────────────────────────────────────────────────────────────────
+
+  • Mở file cấu hình:
+      sudo vim /etc/systemd/resolved.conf
+
+  • Tìm dòng LLMNR (thường bị comment với giá trị mặc định "no"):
+      #LLMNR=no
+
+  • Chỉnh sửa bằng Vim:
+      - Di chuyển đến ĐẦU DÒNG
+      - X : xóa ký tự comment (#)
+      - A (uppercase) : chuyển đến CUỐI DÒNG để chèn thêm
+      - Backspace xóa "no", gõ "yes" thay thế
+      - Kết quả: LLMNR=yes
+
+  • Lưu và thoát Vim:
+      Esc, sau đó :x (lưu và thoát)
+
+  • KHỞI ĐỘNG LẠI dịch vụ để áp dụng thay đổi (chỉ sửa file KHÔNG
+    tự động áp dụng):
+      sudo systemctl restart systemd-resolved.service
+
+  • Kiểm tra trạng thái (mẹo: chỉ cần đổi từ "restart" thành
+    "status" trong lệnh vừa chạy, dùng mũi tên lên rồi sửa):
+      sudo systemctl status systemd-resolved.service
+
+      → Màu XANH LÁ = TỐT, dịch vụ đang HOẠT ĐỘNG (running)
+      → Cũng xác nhận dịch vụ đã ĐƯỢC ENABLED (tự khởi động cùng hệ
+        thống)
+
+  • Đảm bảo dịch vụ VỪA chạy VỪA tự khởi động khi boot (làm CẢ 2
+    việc trong 1 lệnh, để chắc chắn hơn):
+      sudo systemctl enable --now systemd-resolved.service
+
+      - enable  : bật tự khởi động cùng hệ thống (boot)
+      - --now   : nếu CHƯA chạy, khởi động NGAY LẬP TỨC
+
+BẬT LLMNR TRÊN UBUNTU2 (BẮT BUỘC)
+────────────────────────────────────────────────────────────────
+
+  • LÝ DO CẦN LÀM TRÊN CẢ 2 MÁY:
+      - Khi ping ubuntu2 từ ubuntu1, hệ thống hỏi: "có ai tên
+        ubuntu2 trên mạng không?"
+      - Nếu ubuntu2 KHÔNG có "RESPONDER" được bật (tức LLMNR chưa
+        enable), nó sẽ KHÔNG PHẢN HỒI
+
+  • Thực hiện TƯƠNG TỰ trên ubuntu2:
+      sudo vim /etc/systemd/resolved.conf
+
+      → Bỏ comment, đổi LLMNR=no thành LLMNR=yes
+
+  • Khởi động lại dịch vụ:
+      sudo systemctl restart systemd-resolved.service
+
+KIỂM TRA KẾT QUẢ TRÊN UBUNTU1
+────────────────────────────────────────────────────────────────
+
+  • Quay lại ubuntu1, kiểm tra lại cấu hình runtime:
+      !res    (lặp lại lệnh gần nhất bắt đầu bằng "res", tức
+                resolvectl)
+
+      - MẸO AN TOÀN: nếu KHÔNG CHẮC lệnh đó là gì, có thể thêm
+        ":p" để CHỈ IN RA lệnh (không chạy), rồi mới quyết định
+        chạy hay không
+      - Sau khi xác nhận đúng, dùng mũi tên lên để chạy lại
+
+  • Kết quả:
+      → GLOBAL SETTING của LLMNR giờ hiển thị: ON (đã bật thành
+        công)
+
+  • Thử ping ubuntu2:
+      ping ubuntu2
+
+      → LẦN NÀY: NHẬN ĐƯỢC PHẢN HỒI (trước đó KHÔNG có phản hồi)
+      → Cơ chế: gửi gói MULTICAST hỏi "ai là ubuntu2?", và LẦN NÀY
+        ubuntu2 đã BẬT RESPONDER nên TRẢ LỜI
+
+KIỂM TRA BẰNG LỆNH DIG
+────────────────────────────────────────────────────────────────
+
+  • Thay vì dùng ping, có thể dùng dig để CHỈ THỰC HIỆN TRUY VẤN
+    DNS THUẦN TÚY (không gửi gói ping):
+      dig ubuntu2
+
+  • Cách đọc kết quả:
+      - LUÔN kiểm tra phần "ANSWER SECTION"
+      - Thấy: địa chỉ IP của ubuntu2 được trả về
+      - Cũng thấy: SERVER đã truy vấn là 127.0.0.53 (LOCAL DNS
+        RESOLVER, đúng như đã tìm hiểu ở phần trước)
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Qua bài thực hành, ta đã:
+    - Hiểu cấu trúc /etc/resolv.conf (symbolic link trỏ đến
+      stub-resolv.conf do systemd-resolved quản lý)
+    - Dùng resolvectl status để xem cấu hình DNS RUNTIME (không
+      cần đọc file)
+    - BẬT THÀNH CÔNG LLMNR trên CẢ HAI hệ thống (ubuntu1 và
+      ubuntu2) bằng cách sửa resolved.conf và restart dịch vụ
+    - Xác nhận LLMNR hoạt động bằng CẢ ping LẪN dig
+    - Hiểu tầm quan trọng của việc DÙNG systemctl enable --now để
+      vừa CHẠY NGAY vừa ĐẢM BẢO tự khởi động cùng hệ thống
+
+  LLMNR là công cụ HỮU ÍCH cho phân giải tên trên MẠNG LOCAL mà
+  KHÔNG CẦN DNS SERVER TRUNG TÂM, nhưng CẦN được BẬT trên TẤT CẢ
+  các máy tham gia để hoạt động đúng.
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Tổng kết lại toàn bộ nội dung về Hostname và Name
+Resolution đã học trong module này.
+────────────────────────────────────────────────────────────────

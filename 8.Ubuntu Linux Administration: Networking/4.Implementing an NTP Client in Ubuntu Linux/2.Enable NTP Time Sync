@@ -1,0 +1,131 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                      ENABLE NTP TIME SYNC                                    ║
+║           (Thực Hành: Bật Đồng Bộ Thời Gian NTP)                            ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Thực hành thiết lập time zone và bật NTP đồng bộ
+               bằng timedatectl
+  Hệ thống   : ubuntu1 (chỉ cần 1 máy)
+  Mục tiêu   : Thấy rõ sức mạnh của timedatectl trong việc quản lý
+               TOÀN DIỆN dịch vụ thời gian mà KHÔNG CẦN biết chi
+               tiết backend
+
+XEM THÔNG TIN THỜI GIAN HIỆN TẠI
+────────────────────────────────────────────────────────────────
+
+  • Lệnh:
+      timedatectl
+
+  • Kết quả ban đầu:
+      - Time zone: Etc/UTC (múi giờ MẶC ĐỊNH, chưa đúng vị trí thực)
+      - NTP service: INACTIVE (chưa hoạt động)
+
+THIẾT LẬP TIME ZONE
+────────────────────────────────────────────────────────────────
+
+  • Nâng quyền root
+
+  • Lệnh:
+      sudo timedatectl set-timezone <timezone>
+
+  • MẸO SỬ DỤNG TAB COMPLETION:
+      - KHÔNG CẦN nhớ chính xác tên timezone
+      - CHỈ CẦN biết CHÂU LỤC mình đang ở (vd: Europe)
+      - Gõ: Europe/ rồi nhấn Tab → hiện DANH SÁCH các thành phố
+        khả dụng
+      - Gõ tiếp vài ký tự đầu của thành phố gần vị trí mình (vd:
+        "Lo" cho London), nhấn Tab → TAB COMPLETION tự động điền
+        nốt phần còn lại
+
+  • Ví dụ:
+      sudo timedatectl set-timezone Europe/London
+
+  • Kiểm tra lại:
+      timedatectl
+
+      → Xác nhận: TIME ZONE đã được ĐẶT ĐÚNG
+
+KIỂM TRA DỊCH VỤ BACKEND (CHỈ MANG TÍNH MINH HỌA)
+────────────────────────────────────────────────────────────────
+
+  • LƯU Ý: KHÔNG CẦN PHẢI biết dịch vụ backend để sử dụng
+    timedatectl, nhưng để HIỂU RÕ HƠN, có thể kiểm tra:
+      systemctl status systemd-timesyncd
+
+  • Kết quả:
+      - Dịch vụ ĐÃ ENABLED (sẽ tự khởi động khi boot)
+      - NHƯNG hiện KHÔNG ĐANG CHẠY (not running) vì lý do nào đó
+
+BẬT NTP HOÀN TOÀN QUA TIMEDATECTL (KHÔNG CẦN ĐỘNG ĐẾN BACKEND)
+────────────────────────────────────────────────────────────────
+
+  • Lệnh:
+      sudo timedatectl set-ntp true
+
+      - MẸO PHÍM TẮT: dùng Ctrl+E (echo) để nhảy NGAY đến CUỐI
+        DÒNG lệnh, tiện khi cần thêm tham số vào cuối lệnh dài
+
+  • Kiểm tra lại:
+      timedatectl
+
+      → Xác nhận: NTP service giờ ĐÃ ACTIVE
+
+  • Kiểm tra CHÉO với dịch vụ backend để XÁC NHẬN sự ĐỒNG BỘ giữa
+    front-end (timedatectl) và back-end (systemd-timesyncd):
+      systemctl status systemd-timesyncd
+
+      → Kết quả: ENABLED và RUNNING (màu XANH LÁ = tốt)
+
+MINH HỌA SỨC MẠNH CỦA TIMEDATECTL: TẮT DỊCH VỤ
+────────────────────────────────────────────────────────────────
+
+  • Thử TẮT dịch vụ CHỈ QUA MỘT LỆNH:
+      sudo timedatectl set-ntp false
+
+      - Hành động này sẽ:
+          • DỪNG (stop) dịch vụ backend
+          • VÔ HIỆU HÓA (disable) tự khởi động cùng hệ thống
+
+  • Kiểm tra backend:
+      systemctl status systemd-timesyncd
+
+      → Xác nhận: dịch vụ giờ ĐÃ DISABLED VÀ DỪNG (stopped)
+
+  • Bật lại như cũ:
+      sudo timedatectl set-ntp true
+
+      → Kiểm tra lại backend để XÁC NHẬN đã trở lại trạng thái
+        ENABLED và RUNNING
+
+Ý NGHĨA QUAN TRỌNG NHẤT CỦA BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  • timedatectl là công cụ TOÀN DIỆN, KHÔNG CẦN người quản trị phải
+    BIẾT hay CAN THIỆP TRỰC TIẾP vào dịch vụ backend cụ thể nào
+      - Dù backend là systemd-timesyncd hay bất kỳ NTP client nào
+        khác, timedatectl sẽ QUẢN LÝ ĐÚNG CÁCH thông qua GIAO DIỆN
+        NHẤT QUÁN của systemd
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Qua bài thực hành, ta đã:
+    - Thiết lập TIME ZONE chính xác bằng timedatectl set-timezone,
+      tận dụng TAB COMPLETION để tiết kiệm thời gian gõ lệnh
+    - Bật/tắt HOÀN TOÀN dịch vụ đồng bộ NTP chỉ bằng timedatectl
+      set-ntp true/false
+    - XÁC NHẬN mối liên hệ giữa lệnh QUẢN LÝ FRONT-END
+      (timedatectl) và dịch vụ BACKEND THỰC TẾ (systemd-timesyncd)
+    - Hiểu được TRIẾT LÝ THIẾT KẾ của hệ sinh thái systemd: cung
+      cấp GIAO DIỆN THỐNG NHẤT, ĐƠN GIẢN, giúp quản trị viên KHÔNG
+      CẦN phải nhớ chi tiết TỪNG dịch vụ backend riêng lẻ
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Tìm hiểu cách CẤU HÌNH NTP CLIENT để đồng bộ với time
+server RIÊNG (thay vì server mặc định) qua file timesyncd.conf.
+────────────────────────────────────────────────────────────────

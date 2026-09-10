@@ -1,0 +1,96 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║               CONFIGURING TIME AND NTP IN UBUNTU                             ║
+║           (Cấu Hình Thời Gian Và NTP Trong Ubuntu)                           ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Giảng viên : Andrew Mallett
+  Chủ đề     : Triển khai NTP Client trong Ubuntu Linux
+  Mục tiêu   : Giới thiệu tổng quan module về đồng bộ thời gian
+
+NỘI DUNG SẼ HỌC TRONG MODULE
+────────────────────────────────────────────────────────────────
+
+  • NTP (Network Time Protocol) - giao thức đồng bộ thời gian mạng
+  • Quản lý qua hệ sinh thái systemd với lệnh timedatectl
+  • Thiết lập múi giờ (time zone)
+  • Đảm bảo NTP client được BẬT (enabled)
+  • Xem trạng thái đồng bộ và thông tin đồng bộ GẦN NHẤT (latest
+    timesync data) - TẤT CẢ chỉ qua MỘT lệnh timedatectl
+  • Cấu hình NTP client (khi cần dùng SERVER RIÊNG thay vì server
+    mặc định)
+
+DỊCH VỤ BACKEND: SYSTEMD-TIMESYNCD
+────────────────────────────────────────────────────────────────
+
+  • Dịch vụ NTP client thực tế trên Ubuntu: systemd-timesyncd
+      - KHÔNG CẦN thao tác trực tiếp với dịch vụ này
+      - CÓ THỂ quản lý HOÀN TOÀN thông qua lệnh timedatectl
+
+  • File cấu hình (khi cần tùy chỉnh):
+      /etc/systemd/timesyncd.conf
+
+      - CẦN CHỈNH SỬA khi:
+          • KHÔNG muốn dùng time server MẶC ĐỊNH
+          • Muốn đồng bộ với THIẾT BỊ HẠ TẦNG RIÊNG trong data
+            center của tổ chức
+
+TẦM QUAN TRỌNG CỦA NTP
+────────────────────────────────────────────────────────────────
+
+  • Giao thức NTP giúp DUY TRÌ THỜI GIAN CHÍNH XÁC trên hệ thống
+      - Áp dụng cho: Linux, UNIX, Windows, và nhiều OS khác
+
+  • systemd-timesyncd là dịch vụ CHỈ ĐÓNG VAI TRÒ NTP CLIENT
+      - KHÁC với các distro khác dùng Chrony hoặc NTP (đầy đủ) -
+        những công cụ này có thể vừa làm TIME SERVER vừa làm TIME
+        CLIENT
+      - Thực tế: 95% TRƯỜNG HỢP chỉ cần triển khai NHƯ TIME CLIENT
+        là đủ
+
+QUẢN LÝ QUA TIMEDATECTL
+────────────────────────────────────────────────────────────────
+
+  • Bước 1: Thiết lập MÚI GIỜ (time zone)
+      - Đảm bảo THỜI GIAN HIỂN THỊ chính xác theo VỊ TRÍ ĐỊA LÝ của
+        hệ thống
+
+  • Bước 2: Kiểm tra trạng thái dịch vụ đồng bộ
+      - Trên máy Vagrant (môi trường lab), dịch vụ này THƯỜNG SẼ
+        CHƯA ĐƯỢC BẬT (not enabled) mặc định
+
+  • Bước 3: Bật và khởi động dịch vụ:
+      timedatectl set-ntp true
+
+  • Bước 4: Kiểm tra lại:
+      timedatectl
+
+      → Xác nhận: đang ĐỒNG BỘ với NTP, trạng thái NTP là ACTIVE
+
+  • Bước 5 (không bắt buộc, chỉ để hiểu thêm): Kiểm tra dịch vụ
+    BACKEND
+      - Nhắc lại: KHÔNG CẦN BIẾT chi tiết dịch vụ backend, nhưng
+        NẾU kiểm tra, sẽ thấy dịch vụ đã ĐƯỢC ENABLED và ĐANG CHẠY
+
+CHUẨN BỊ THỰC HÀNH
+────────────────────────────────────────────────────────────────
+
+  • CHỈ CẦN 1 máy Ubuntu (ubuntu1) đang chạy - KHÔNG CẦN 2 máy như
+    các module trước
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Đây là phần giới thiệu tổng quan cho module về NTP, nhấn mạnh vào
+  việc lệnh timedatectl có thể QUẢN LÝ TOÀN DIỆN việc đồng bộ thời
+  gian mà KHÔNG CẦN can thiệp trực tiếp vào dịch vụ backend
+  (systemd-timesyncd).
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Thực hành trực tiếp trên dòng lệnh với timedatectl để
+thiết lập múi giờ và bật đồng bộ NTP.
+────────────────────────────────────────────────────────────────

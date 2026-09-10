@@ -1,0 +1,93 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                  UNDERSTANDING NAME RESOLUTION                               ║
+║              (Hiểu Về Phân Giải Tên - Name Resolution)                       ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+TỔNG QUAN BÀI HỌC
+────────────────────────────────────────────────────────────────
+
+  Chủ đề     : Tổng quan về DNS, systemd-resolved, và LLMNR
+  Mục tiêu   : Giới thiệu trước khi thực hành cấu hình LLMNR giữa
+               2 hệ thống ubuntu1 và ubuntu2
+
+CẤU TRÚC FILE /ETC/HOSTS
+────────────────────────────────────────────────────────────────
+
+  • Định dạng: IP address, CANONICAL NAME (tên đầy đủ), rồi một
+    hoặc nhiều ALIAS (tên gọi khác)
+
+  • Ví dụ:
+      <IP>   www.ibm.com   ibm
+
+  • Tham khảo chi tiết cấu trúc file:
+      man 5 hosts
+
+      (số 5 = phần FILE FORMAT, không phải lệnh)
+
+VỀ DNS (DOMAIN NAME SERVICES)
+────────────────────────────────────────────────────────────────
+
+  • DNS lắng nghe trên CỔNG 53
+      - Có thể dùng CẢ UDP lẫn TCP cổng 53
+
+  • Trên Ubuntu 20.04:
+      - Có DNS SERVER LOCAL, lắng nghe TRÊN CHÍNH MÁY
+      - Dịch vụ quản lý: systemd-resolved.service
+      - Đã CHỈNH SỬA ở bài trước để KHÔNG đọc /etc/hosts
+        (ReadEtcHosts=no)
+
+GIỚI THIỆU LLMNR (LINK-LOCAL MULTICAST NAME RESOLUTION)
+────────────────────────────────────────────────────────────────
+
+  • Tên đầy đủ: Link-Local Multicast Name Resolution
+      (tên khá khó đọc, nhưng chức năng rất hữu ích)
+
+  • Cách hoạt động:
+      - Cho phép các host trên MẠNG LOCAL (local area network) TỰ
+        QUẢNG BÁ (advertise) TÊN của mình qua MULTICAST
+      - Khi cần tìm 1 server, máy sẽ GỬI YÊU CẦU đến MULTICAST GROUP
+      - LẮNG NGHE phản hồi từ các máy trong group đó
+
+  • Ý NGHĨA: giúp PHÂN GIẢI TÊN dễ dàng trên MẠNG LOCAL mà KHÔNG CẦN
+    có DNS SERVER TRUNG TÂM
+
+CẤU HÌNH LLMNR
+────────────────────────────────────────────────────────────────
+
+  • Chỉnh sửa CÙNG FILE đã dùng ở bài trước:
+      /etc/systemd/resolved.conf
+
+  • Sau khi thay đổi cấu hình, cần KHỞI ĐỘNG LẠI dịch vụ để áp dụng
+
+  • Kiểm tra trạng thái DNS server:
+      resolvectl status
+
+  • Kiểm tra kết nối bằng ping đến host KHÁC trên cùng mạng
+
+CHUẨN BỊ CHO BÀI THỰC HÀNH TIẾP THEO
+────────────────────────────────────────────────────────────────
+
+  • Cần LÀM VIỆC TRÊN CẢ 2 hệ thống:
+      • ubuntu1
+      • ubuntu2
+
+  • Cần thực hiện thay đổi cấu hình TRÊN CẢ HAI máy để LLMNR hoạt
+    động (vì đây là cơ chế QUẢNG BÁ + LẮNG NGHE giữa các máy trên
+    mạng)
+
+KẾT LUẬN
+────────────────────────────────────────────────────────────────
+
+  Đây là phần giới thiệu tổng quan trước khi thực hành, giúp hiểu:
+    - Cấu trúc file /etc/hosts và cách tham khảo man page
+    - DNS hoạt động trên cổng 53 (UDP/TCP)
+    - LLMNR - cơ chế phân giải tên qua MULTICAST trên mạng local,
+      hữu ích khi KHÔNG có DNS server trung tâm
+    - Cần cấu hình TRÊN CẢ 2 MÁY để LLMNR hoạt động đúng
+
+
+────────────────────────────────────────────────────────────────
+Tiếp theo: Thực hành trực tiếp trên dòng lệnh để cấu hình LLMNR
+giữa ubuntu1 và ubuntu2.
+────────────────────────────────────────────────────────────────
